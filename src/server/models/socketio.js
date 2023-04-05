@@ -1,4 +1,6 @@
 import { Server } from "socket.io";
+import dotenv from "dotenv";
+import { terminateRoom, leaveRoom } from "../models/game.js";
 
 export const socketio = async function (server) {
   const io = new Server(server);
@@ -7,16 +9,14 @@ export const socketio = async function (server) {
     socket.on("join", async (object) => {
       const { userId, username, roomId, hostId, hostname } = object;
       socket.join(roomId);
-
+      socket.roomId = roomId;
       if (!username && !userId) {
         socket.emit("showControllerInterface", { hostname, hostId, roomId });
-        socket.roomId = roomId;
         socket.hostId = hostId;
         io.host = {};
         io.host[roomId] = { hostId, hostname, roomId };
       } else {
         socket.emit("message", `Welcome to the game room, ${username} !`);
-        socket.roomId = roomId;
         socket.userId = userId;
         const user = { userId, username };
         if (!io.users) {
@@ -24,11 +24,10 @@ export const socketio = async function (server) {
         }
         if (!io.users[roomId]) io.users[roomId] = [];
         io.users[roomId].push(user);
-        console.log(io.users[roomId]);
         io.to(roomId).emit("userJoined", [io.host[roomId], io.users[roomId]]);
       }
     });
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
       console.log("A user disconnected");
       const roomId = socket.roomId;
       if (socket.hostId) {
@@ -38,13 +37,18 @@ export const socketio = async function (server) {
         io.users[roomId] = io.users[roomId].filter(
           (user) => user.userId !== socket.userId
         );
-        console.log(io.users[roomId]);
+        await leaveRoom(roomId, socket.userId);
         io.to(roomId).emit("userLeft", io.users[roomId]);
       }
-      if (!io.users[roomId] && !io.host[roomId][0]) {
+      if (!io.users[roomId][0] && !io.host[roomId]) {
         // terminate the room!(也不用存資料)
+        const result = await terminateRoom(roomId);
         delete io.users[roomId];
       }
+    });
+    socket.on("startGame", () => {
+      const roomId = socket.roomId;
+      io.to(roomId).emit("loadFirstQuizz");
     });
   });
 };

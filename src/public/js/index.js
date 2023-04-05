@@ -10,8 +10,6 @@ $("#join").on("click", async () => {
   const name = $("#name").val();
   const id = $("#id").val();
   const roomId = $("#roomId").val();
-  localStorage.setItem("username", name);
-  localStorage.setItem("userId", id);
   const object = { roomId, id, name };
   const result = await fetch("/api/1.0/game/enter", {
     method: "POST",
@@ -22,6 +20,8 @@ $("#join").on("click", async () => {
   });
   const data = await result.json();
   if (data.error) return console.log(data.error);
+  localStorage.setItem("username", name);
+  localStorage.setItem("userId", id);
   localStorage.setItem("roomId", roomId);
   window.location.href = `/game/room/${roomId}`;
 });
@@ -29,8 +29,6 @@ $("#join").on("click", async () => {
 $("#create").on("click", async () => {
   const name = $("#name").val();
   const id = $("#id").val();
-  localStorage.setItem("hostname", name);
-  localStorage.setItem("hostId", id);
   const limitPlayers = $("#roomSize").val();
   const object = { name, id, limitPlayers };
   const result = await fetch("/api/1.0/game/create", {
@@ -41,8 +39,10 @@ $("#create").on("click", async () => {
     body: JSON.stringify(object),
   });
   const data = await result.json();
+  if (data.error) return console.log(data.error);
   const roomId = data.data.id;
   localStorage.setItem("roomId", roomId);
-  if (data.error) return console.log(data.error);
+  localStorage.setItem("hostname", name);
+  localStorage.setItem("hostId", id);
   window.location.href = "/game/createroom.html";
 });

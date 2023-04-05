@@ -16,6 +16,7 @@ socket.on("showControllerInterface", (host) => {
   $("#host").text(
     `Host: ${host.hostname}, id: ${host.hostId}, roomId: ${host.roomId}`
   );
+  socket.host = true;
   $startButton.appendTo($(".container"));
 });
 
@@ -32,10 +33,6 @@ socket.on("userJoined", ([host, users]) => {
   });
 });
 
-socket.on("disconnect", () => {
-  console.log("Disconnected from server");
-});
-
 socket.on("userLeft", (users) => {
   console.log("Users in room:", users);
   $("#player-list").empty();
@@ -44,4 +41,16 @@ socket.on("userLeft", (users) => {
     const $userDiv = $(`<div>${username} (ID: ${userId})</div>`);
     $("#player-list").append($userDiv);
   });
+});
+
+$(".container").on("click", "#start-game-btn", () => {
+  socket.emit("startGame");
+});
+
+socket.on("loadFirstQuizz", () => {
+  if (socket.host) {
+    console.log(789)
+  }else{
+    console.log(123)
+  }
 });

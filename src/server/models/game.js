@@ -71,7 +71,7 @@ export const leaveRoom = async function (roomId, playerId) {
     }).session(session);
     if (!gameRoom) return null;
     const playerIndex = gameRoom.players.findIndex(
-      (player) => player.id === +playerId
+      (player) => player.id === playerId
     );
     if (playerIndex === -1) {
       return undefined;
