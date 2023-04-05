@@ -58,6 +58,43 @@ socket.on("loadFirstQuizz", () => {
   if (socket.host) {
     console.log(789);
   } else {
-    console.log(123);
+    console.log(676);
+    let intervalId;
+    let count = 5;
+    $(".count-down").css("display", "block").html(count);
+    intervalId = setInterval(function () {
+      count--;
+      $(".count-down").html(count);
+      if (count === 0) {
+        clearInterval(intervalId);
+        $(".count-down").css("display", "none");
+      }
+    }, 1000);
   }
+});
+
+const $countdown = $("<div class='count-down'>").css({
+  position: "fixed",
+  top: "20px",
+  right: "20px",
+  backgroundColor: "#fff",
+  padding: "10px",
+  borderRadius: "5px",
+  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+  display: "none",
+});
+$(".container").append($countdown);
+
+$(".btn-container").on("click", "#leave-btn", async () => {
+  const id = localStorage.getItem("userId");
+  const roomId = localStorage.getItem("roomId");
+  const object = { id, roomId };
+  await fetch("/api/1.0/game/leave", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(object),
+  });
+  window.location.href = "/";
 });
