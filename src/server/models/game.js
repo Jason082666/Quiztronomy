@@ -123,12 +123,9 @@ export const startRoom = async function (roomId) {
   }
 };
 
-export const terminateRoom = async function (roomId) {
-  const deletedRoom = await MyGameRoom.findByIdAndDelete({
-    id: roomId,
-    roomStatus: "ready",
-  });
-  if (!deletedRoom) {
+export const terminateRoom = async function (id) {
+  const result = await MyGameRoom.deleteOne({ id, roomStatus: "ready" });
+  if (result.deletedCount === 0) {
     return false;
   }
   return true;

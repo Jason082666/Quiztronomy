@@ -3,6 +3,7 @@ import {
   createRoom,
   enterRoom,
   leaveRoom,
+  terminateRoom,
   saveQuizzIntoRoom,
   startRoom,
   getCurrentQuizzFromMongo,
@@ -20,9 +21,21 @@ export const createGameRoom = async (req, res, next) => {
   res.json({ data });
 };
 
-// TODO: 這個ROUTE前面還要做一些身分驗證驗證ID,NAME
 export const enterGameRoom = async (req, res, next) => {
   const { roomId, id, name } = req.body;
+  if (!roomId || !id || !name)
+    return next(new errors.ParameterError(["id", "roomId", "name"], 400));
+  if (
+    typeof roomId !== "string" ||
+    typeof id !== "string" ||
+    typeof name !== "string"
+  )
+    return next(
+      new errors.TypeError(
+        { roomId: "string", id: "string", name: "string" },
+        400
+      )
+    );
   const result = await enterRoom(roomId, id, name);
   if (result === null)
     return next(
@@ -38,6 +51,10 @@ export const enterGameRoom = async (req, res, next) => {
 
 export const leaveGameRoom = async (req, res, next) => {
   const { roomId, id } = req.body;
+  if (!roomId || !id)
+    return next(new errors.ParameterError(["id", "roomId", "name"], 400));
+  if (typeof roomId !== "string" || typeof id !== "string")
+    return next(new errors.TypeError({ roomId: "string", id: "string" }, 400));
   const result = await leaveRoom(roomId, id);
   if (result === null)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
@@ -49,7 +66,9 @@ export const leaveGameRoom = async (req, res, next) => {
 export const saveQuizzIntoGameRoom = async (req, res, next) => {
   const { array, roomId } = req.body;
   if (!array || !roomId)
-    return next(new errors.ParameterError([Array, roomId], 400));
+    return next(new errors.ParameterError(["Array", "roomId"], 400));
+  if (typeof roomId !== "string")
+    return next(new errors.TypeError({ roomId: "string" }, 400));
   const result = await saveQuizzIntoRoom(array, roomId);
   if (result === undefined)
     return next(
@@ -64,6 +83,8 @@ export const saveQuizzIntoGameRoom = async (req, res, next) => {
 export const startGameRoom = async (req, res, next) => {
   const { roomId } = req.body;
   if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
+  if (typeof roomId !== "string")
+    return next(new errors.TypeError({ roomId: "string" }, 400));
   const data = await startRoom(roomId);
   if (data === false)
     return next(new errors.CustomError("Quizz list is empty", 400));
@@ -72,12 +93,32 @@ export const startGameRoom = async (req, res, next) => {
   return res.json({ data });
 };
 
+export const terminateGameRoom = async (req, res, next) => {
+  const { roomId } = req.body;
+  if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
+  if (typeof roomId !== "string")
+    return next(new errors.TypeError({ roomId: "string" }, 400));
+  const data = await terminateRoom(roomId);
+  if (!data)
+    return next(
+      new errors.CustomError(
+        `Room ${roomId} with roomStatus equals to ready is not existed`,
+        400
+      )
+    );
+  return res.json({ message: `Terminated room ${roomId}` });
+};
+
 export const getCurrentQuizz = async (req, res, next) => {
   // 這個redisfailed 是從local storage拿到的，如果failed，系統將去mongo拿資料
   // 如過題目當時沒有存到redis，queryString應該要redisStatus = failed, 反則redisStatus = success
   const { roomId, currentQuizz, redisStatus } = req.query;
   if (!roomId || !currentQuizz)
     return next(new errors.ParameterError(["roomId,currentQuizz"], 400));
+  if (typeof roomId !== "string" || typeof currentQuizz !== "string")
+    return next(
+      new errors.TypeError({ roomId: "string", currentQuizz: "string" }, 400)
+    );
   if (redisClient.status === "reconnecting" || redisStatus === "failed") {
     const data = await getCurrentQuizzFromMongo(roomId, currentQuizz);
     if (!data)
@@ -94,6 +135,10 @@ export const updateGameRoomStatus = async (req, res, next) => {
   const { roomId, status } = req.body;
   if (!roomId || !status)
     return next(new errors.ParameterError(["roomId,status"], 400));
+  if (typeof roomId !== "string" || typeof status !== "string")
+    return next(
+      new errors.TypeError({ roomId: "string", status: "string" }, 400)
+    );
   const result = await updateRoomStatus(roomId, status);
   if (result === null)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
