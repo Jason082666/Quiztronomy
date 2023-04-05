@@ -11,15 +11,10 @@ export const gameRoomExistence = async function (id) {
 };
 
 export const updateRoomStatus = async function (roomId, newStatus) {
-  try {
-    const gameRoom = await MyGameRoom.findOne({ id: roomId });
-    if (!gameRoom) return null;
-    gameRoom.roomStatus = newStatus;
-    await gameRoom.save();
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
+  const gameRoom = await MyGameRoom.findOne({ id: roomId });
+  if (!gameRoom) return null;
+  gameRoom.roomStatus = newStatus;
+  await gameRoom.save();
   return true;
 };
 
@@ -126,6 +121,17 @@ export const startRoom = async function (roomId) {
   } finally {
     await session.endSession();
   }
+};
+
+export const terminateRoom = async function (roomId) {
+  const deletedRoom = await MyGameRoom.findByIdAndDelete({
+    id: roomId,
+    roomStatus: "ready",
+  });
+  if (!deletedRoom) {
+    return false;
+  }
+  return true;
 };
 
 export const saveQuizzIntoRoom = async function (array, roomId) {

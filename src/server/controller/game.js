@@ -33,8 +33,6 @@ export const enterGameRoom = async (req, res, next) => {
     );
   if (result === undefined)
     return next(new errors.CustomError(`Room ${roomId} has no seats`, 400));
-  if (!result)
-    return next(new errors.MongoError(`Enter room ${roomId} failed`, 500));
   return res.json({ message: `Enter room ${roomId} !` });
 };
 
@@ -45,8 +43,6 @@ export const leaveGameRoom = async (req, res, next) => {
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
   if (result === undefined)
     return next(new errors.CustomError(`Player is not in room ${roomId}`, 400));
-  if (!result)
-    return next(new errors.MongoError(`Leave room ${roomId} failed !`, 500));
   return res.json({ message: `Leave room ${roomId} !` });
 };
 
@@ -73,7 +69,6 @@ export const startGameRoom = async (req, res, next) => {
     return next(new errors.CustomError("Quizz list is empty", 400));
   if (data === null)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
-  if (!data) return next(new errors.MongoError(`Fail to start the game`, 500));
   return res.json({ data });
 };
 
@@ -102,7 +97,5 @@ export const updateGameRoomStatus = async (req, res, next) => {
   const result = await updateRoomStatus(roomId, status);
   if (result === null)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
-  if (!result)
-    return next(new errors.MongoError("Failed to update room status", 500));
   return res.json({ message: "Room status updated" });
 };

@@ -40,31 +40,11 @@ class TypeError extends CustomError {
   }
 }
 
-class MongoError extends CustomError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
-    this.isOperational = true;
-    this.type = "MongoDB error";
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
-
-class ESError extends CustomError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
-    this.isOperational = true;
-    this.type = "ElasticSearch error";
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
-
 const errors = {
   CustomError,
   ParameterError,
   AuthenticateError,
   TypeError,
-  MongoError,
-  ESError,
 };
 
 export default errors;
