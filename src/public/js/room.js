@@ -26,6 +26,13 @@ socket.on("userJoined", ([host, users]) => {
   );
   console.log("Users in room:", users);
   $("#player-list").empty();
+  if (!socket.host) {
+    const $leaveRoomButton = $(
+      '<button id="leave-btn">Leave the room</button>'
+    );
+    $(".btn-container").empty();
+    $(".btn-container").append($leaveRoomButton);
+  }
   users.forEach((user) => {
     const { username, userId } = user;
     const $userDiv = $(`<div>${username} (ID: ${userId})</div>`);
@@ -49,8 +56,8 @@ $(".container").on("click", "#start-game-btn", () => {
 
 socket.on("loadFirstQuizz", () => {
   if (socket.host) {
-    console.log(789)
-  }else{
-    console.log(123)
+    console.log(789);
+  } else {
+    console.log(123);
   }
 });

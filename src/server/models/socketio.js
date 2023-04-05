@@ -1,5 +1,4 @@
 import { Server } from "socket.io";
-import dotenv from "dotenv";
 import { terminateRoom, leaveRoom } from "../models/game.js";
 
 export const socketio = async function (server) {
