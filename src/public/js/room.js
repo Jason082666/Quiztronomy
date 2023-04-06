@@ -89,12 +89,6 @@ $(".btn-container").on("click", "#leave-btn", async () => {
   const id = localStorage.getItem("userId");
   const roomId = localStorage.getItem("roomId");
   const object = { id, roomId };
-  await fetch("/api/1.0/game/leave", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(object),
-  });
+  await axios.post("/api/1.0/game/leave", object);
   window.location.href = "/";
 });

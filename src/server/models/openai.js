@@ -44,7 +44,7 @@ export const generateQuestionByAI = async function (text, mode) {
     }, TIMEOUT);
   });
 
-  const openAIQuery = trainModel(text, +mode);
+  const openAIQuery = trainModel(text, mode);
   const completionPromise = openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -67,4 +67,3 @@ export const generateQuestionByAI = async function (text, mode) {
   }
 };
 
-// console.log(await generateQuestionByAI(process.argv[2], process.argv[3]));

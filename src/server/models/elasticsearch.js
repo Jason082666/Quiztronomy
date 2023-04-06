@@ -2,10 +2,6 @@ import { Client } from "@elastic/elasticsearch";
 import { chstopWordsAarray, enstopWordsAarray } from "../../util/stopwords.js";
 export const client = new Client({
   node: "http://localhost:9200",
-  auth: {
-    username: "elastic",
-    password: "QP9Ze31YCEoo5XgjryQA",
-  },
 });
 
 const createQuestionText = async function () {
@@ -111,4 +107,3 @@ const createQuestionText = async function () {
   });
 };
 
-// await createQuestionText();
