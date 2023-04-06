@@ -1,11 +1,10 @@
-import { generateQuestionByPlayer } from "../middleware/question.js";
+
 import {
   updateNewPopById,
   insertQuestionIntoES,
   addPopIntoMongo,
   searchQuestionText,
 } from "../models/question.js";
-import { model } from "../../util/openaimodel.js";
 import errors from "../models/errorhandler.js";
 
 export const insertQuestionByPlayerIntoES = async (req, res, next) => {
@@ -29,10 +28,8 @@ export const updateNewPoptoMongoAndES = async (req, res, next) => {
 export const searchRelatedQuizz = async (req, res, next) => {
   if (!req.query.q || !req.query.type)
     return next(new errors.ParameterError(["q", "type"], 400));
-  if (!model[req.query.type])
-    return next(new errors.CustomError("Wrong question type", 400));
   const { q, type } = req.query;
-  const result = await searchQuestionText(q, model[type]);
+  const result = await searchQuestionText(q, type);
   const resultarray = result.map((e) => {
     return e._source;
   });

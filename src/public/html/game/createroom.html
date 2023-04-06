@@ -22,7 +22,21 @@
   </head>
   <body>
     <h1></h1>
-    <button id="select-quizz">Select the quizz</button>
+    <div id="container">
+      <label for="search-language">選擇語言：</label>
+      <select id="search-language">
+        <option value="EN">英文</option>
+        <option value="CH">中文</option>
+      </select>
+      <br />
+      <label for="handy-or-system">生成方式 : </label>
+      <input type="radio" name="handy-or-system" id="create-by-hand" />
+      <label for="create-by-hand">手動輸入</label>
+      <input type="radio" id="create-by-system" name="handy-or-system" />
+      <label for="create-by-hand">系統題庫</label>
+      <div class="create-container"></div>
+      <div id="search-result"></div>
+    </div>
     <button id="finish-button">Finished</button>
     <script src="/js/createroom.js" type="module"></script>
   </body>

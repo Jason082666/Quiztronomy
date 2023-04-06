@@ -41,7 +41,7 @@ export const socketio = async function (server) {
       }
       if (!io.users[roomId][0] && !io.host[roomId]) {
         // terminate the room!(也不用存資料)
-        const result = await terminateRoom(roomId);
+        await terminateRoom(roomId);
         delete io.users[roomId];
       }
     });

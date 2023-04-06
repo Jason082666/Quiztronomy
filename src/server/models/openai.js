@@ -10,31 +10,8 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// export const generateQuestion = async function (text, mode) {
-//   try {
-//     const openAIQuery = trainModel(text, +mode);
-//     const completion = await openai.createChatCompletion({
-//       model: "gpt-3.5-turbo",
-//       messages: [
-//         {
-//           role: "user",
-//           content: openAIQuery,
-//         },
-//       ],
-//     });
-//     console.log(completion.data.choices[0].message);
-//     const content = completion.data.choices[0].message.content;
-//     return JSON.parse(content);
-//   } catch (error) {
-//     if (error.response)
-//       console.error(error.response.status, error.response.data);
-//     else console.error(error.message);
-//     return generateQuestion(text);
-//   }
-// };
-
-export const generateQuestionByAI = async function (text, mode) {
-  const TIMEOUT = 20000;
+export const generateQuestionByAI = async function (text, type) {
+  const TIMEOUT = 12000;
 
   let timer;
   const timeoutPromise = new Promise((resolve, reject) => {
@@ -44,7 +21,7 @@ export const generateQuestionByAI = async function (text, mode) {
     }, TIMEOUT);
   });
 
-  const openAIQuery = trainModel(text, mode);
+  const openAIQuery = trainModel(text, type);
   const completionPromise = openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -66,4 +43,3 @@ export const generateQuestionByAI = async function (text, mode) {
     clearTimeout(timer);
   }
 };
-
