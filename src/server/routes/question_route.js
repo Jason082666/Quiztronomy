@@ -6,13 +6,22 @@ import {
   insertQuestionByPlayerIntoES,
   updateNewPoptoMongoAndES,
 } from "../controller/question.js";
-import { generateQuestionByPlayer } from "../middleware/question.js";
+import {
+  generateQuestionByPlayer,
+  generateQuestionManually,
+} from "../middleware/question.js";
 
 router.route("/question/search").get(catchError(searchRelatedQuizz));
 router
   .route("/question/create")
   .post(
     catchError(generateQuestionByPlayer),
+    catchError(insertQuestionByPlayerIntoES)
+  );
+router
+  .route("/question/createmanual")
+  .post(
+    catchError(generateQuestionManually),
     catchError(insertQuestionByPlayerIntoES)
   );
 
