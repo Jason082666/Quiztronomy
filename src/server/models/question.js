@@ -24,7 +24,7 @@ export const insertQuestionIntoES = async function (body) {
 };
 
 export const searchQuestionText = async function (text, type) {
-  const body = await client.search({
+  const response = await client.search({
     index: "questiontext",
     body: {
       query: {
@@ -79,8 +79,11 @@ export const searchQuestionText = async function (text, type) {
       sort: [{ _score: { order: "desc" } }, { popularity: { order: "desc" } }],
     },
   });
-  const hits = body.hits.hits;
-  return hits;
+  const array = response.hits.hits.map((hit) => ({
+    ...hit._source,
+    id: hit._id,
+  }));
+  return array.splice(0, 2);
 };
 
 export const updateNewPopById = async function (id, num) {
@@ -111,4 +114,37 @@ export const searchTimeAndPopById = async function (id) {
   const timestamp = questionText.timestamp;
   const popularity = questionText.popularity;
   return { timestamp, popularity };
+};
+
+export const searchQuestionSortByTime = async function (query, type) {
+  const response = await client.search({
+    index: "questiontext",
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                type: {
+                  query: type,
+                  operator: "and",
+                },
+              },
+            },
+            {
+              match: {
+                question: query,
+              },
+            },
+          ],
+        },
+      },
+      sort: [{ timestamp: { order: "desc" } }],
+    },
+  });
+  const array = response.hits.hits.map((hit) => ({
+    ...hit._source,
+    id: hit._id,
+  }));
+  return array.splice(0, 2);
 };

@@ -2,6 +2,7 @@ import {
   updateNewPopById,
   insertQuestionIntoES,
   searchQuestionText,
+  searchQuestionSortByTime,
 } from "../models/question.js";
 import errors from "../models/errorhandler.js";
 
@@ -29,8 +30,10 @@ export const searchRelatedQuizz = async (req, res, next) => {
     return next(new errors.ParameterError(["q", "type"], 400));
   const { q, type } = req.query;
   const result = await searchQuestionText(q, type);
-  const resultarray = result.map((e) => {
-    return e._source;
+  const resultByTime = await searchQuestionSortByTime(q, type);
+  const resultArray = [...result, ...resultByTime];
+  const uniqueResults = resultArray.filter((item, index) => {
+    return resultArray.findIndex((other) => other.id === item.id) === index;
   });
-  res.json({ data: resultarray });
+  res.json({ data: uniqueResults });
 };
