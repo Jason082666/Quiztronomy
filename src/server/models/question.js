@@ -1,5 +1,6 @@
 import { client } from "./elasticsearch.js";
 import { calculatePopularity } from "./gaussain.js";
+import { redisClient } from "../models/redis.js";
 export const searchCertainId = async function (id) {
   const body = await client.get({
     index: "questiontext",
@@ -23,7 +24,7 @@ export const insertQuestionIntoES = async function (body) {
   return result;
 };
 
-export const searchQuestionText = async function (text, type) {
+export const searchQuestionText = async function (text, type, excludeIds) {
   const response = await client.search({
     index: "questiontext",
     body: {
@@ -74,6 +75,10 @@ export const searchQuestionText = async function (text, type) {
               },
             },
           ],
+          must_not:
+            excludeIds.length > 0
+              ? [{ terms: { _id: excludeIds } }]
+              : undefined,
         },
       },
       sort: [{ _score: { order: "desc" } }, { popularity: { order: "desc" } }],
@@ -83,7 +88,7 @@ export const searchQuestionText = async function (text, type) {
     ...hit._source,
     id: hit._id,
   }));
-  return array.splice(0, 2);
+  return array.splice(0, 3);
 };
 
 export const updateNewPopById = async function (id, num) {
@@ -116,7 +121,12 @@ export const searchTimeAndPopById = async function (id) {
   return { timestamp, popularity };
 };
 
-export const searchQuestionSortByTime = async function (query, type) {
+export const searchQuestionSortByTime = async function (
+  query,
+  type,
+  excludeIds,
+  slice
+) {
   const response = await client.search({
     index: "questiontext",
     body: {
@@ -137,14 +147,18 @@ export const searchQuestionSortByTime = async function (query, type) {
               },
             },
           ],
+          must_not:
+            excludeIds.length > 0
+              ? [{ terms: { _id: excludeIds } }]
+              : undefined,
         },
       },
-      sort: [{ timestamp: { order: "desc" } }],
+      sort: [{ createTime: { order: "desc" } }],
     },
   });
   const array = response.hits.hits.map((hit) => ({
     ...hit._source,
     id: hit._id,
   }));
-  return array.splice(0, 2);
+  return array.splice(0, slice);
 };

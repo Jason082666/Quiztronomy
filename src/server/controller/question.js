@@ -26,11 +26,12 @@ export const updateNewPop = async (req, res, next) => {
 };
 
 export const searchRelatedQuizz = async (req, res, next) => {
-  if (!req.query.q || !req.query.type)
-    return next(new errors.ParameterError(["q", "type"], 400));
-  const { q, type } = req.query;
-  const result = await searchQuestionText(q, type);
-  const resultByTime = await searchQuestionSortByTime(q, type);
+  if (!req.body.q || !req.body.type || !req.body.excludeIds)
+    return next(new errors.ParameterError(["q", "type", "excludeIds"], 400));
+  const { q, type, excludeIds } = req.body;
+  const result = await searchQuestionText(q, type, excludeIds);
+  const num = 5 - +result.length;
+  const resultByTime = await searchQuestionSortByTime(q, type, excludeIds, num);
   const resultArray = [...result, ...resultByTime];
   const uniqueResults = resultArray.filter((item, index) => {
     return resultArray.findIndex((other) => other.id === item.id) === index;

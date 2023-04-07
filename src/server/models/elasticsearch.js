@@ -54,6 +54,10 @@ const createQuestionText = async function () {
             type: "date",
             format: "epoch_millis",
           },
+          createTime: {
+            type: "date",
+            format: "epoch_millis",
+          },
         },
       },
       settings: {

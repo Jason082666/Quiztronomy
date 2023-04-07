@@ -8,6 +8,7 @@ export const generateQuestionByPlayer = async (req, res, next) => {
   const question = await generateQuestionByAI(q, type);
   question.type = type;
   question.timestamp = Date.now();
+  question.createTime = Date.now();
   question.popularity = 2;
   req.question = question;
   next();
@@ -35,6 +36,7 @@ export const generateQuestionManually = async (req, res, next) => {
     type,
     popularity: 2,
     timestamp: Date.now(),
+    createTime: Date.now(),
   };
   req.question = object;
   next();

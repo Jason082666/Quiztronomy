@@ -11,7 +11,7 @@ import {
   generateQuestionManually,
 } from "../middleware/question.js";
 
-router.route("/question/search").get(catchError(searchRelatedQuizz));
+router.route("/question/search").post(catchError(searchRelatedQuizz));
 router
   .route("/question/create")
   .post(

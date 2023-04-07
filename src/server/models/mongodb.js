@@ -20,12 +20,6 @@ await mongoose
     console.log("Error connecting to MongoDB Atlas", error);
   });
 
-const MyPopularitySchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  popularity: { type: Number, required: true },
-  date: { type: Date, default: Date.now },
-});
-
 const MyGameRoomSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   founder: {
@@ -59,11 +53,5 @@ const MyGameRoomSchema = new mongoose.Schema({
     },
   ],
 });
-
-// 創建模型
-export const MyQizzPopularity = mongoose.model(
-  "MyQizzPopularity",
-  MyPopularitySchema
-);
 
 export const MyGameRoom = mongoose.model("MyGameRoom", MyGameRoomSchema);
