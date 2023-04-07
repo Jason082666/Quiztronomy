@@ -24,28 +24,6 @@ export const insertQuestionIntoES = async function (body) {
   return result;
 };
 
-// export const searchQuestionText = async function (text) {
-//   try {
-//     const body = await client.search({
-//       index: "questiontext",
-//       body: {
-//         query: {
-//           match: {
-//             question: {
-//               query: text,
-//               fuzziness: "AUTO",
-//             },
-//           },
-//         },
-//       },
-//     });
-
-//     return body.hits.hits;
-//   } catch (e) {
-//     console.error(e);
-//     return { error: e.message };
-//   }
-// };
 
 export const searchQuestionText = async function (text, type) {
   const body = await client.search({
