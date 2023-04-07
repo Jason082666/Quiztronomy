@@ -6,7 +6,7 @@ export const client = new Client({
 
 const createQuestionText = async function () {
   await client.indices.delete({
-    index: "question",
+    index: "questiontext",
     ignore_unavailable: true,
   });
   const response = await client.indices.create({
@@ -49,6 +49,10 @@ const createQuestionText = async function () {
           },
           popularity: {
             type: "float",
+          },
+          timestamp: {
+            type: "date",
+            format: "epoch_millis",
           },
         },
       },
@@ -107,3 +111,4 @@ const createQuestionText = async function () {
   });
 };
 
+// createQuestionText();

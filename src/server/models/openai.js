@@ -11,7 +11,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export const generateQuestionByAI = async function (text, type) {
-  const TIMEOUT = 15000;
+  const TIMEOUT = 30000;
 
   let timer;
   const timeoutPromise = new Promise((resolve, reject) => {

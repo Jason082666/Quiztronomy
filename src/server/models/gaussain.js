@@ -14,9 +14,8 @@ export function calculatePopularity(
   previousPopularity,
   lastUpdate
 ) {
-  const date = new Date(Date.parse(lastUpdate)).getTime();
   const currentTime = Date.now();
-  const popularityAge = currentTime - date;
+  const popularityAge = currentTime - lastUpdate;
   const decay = gaussian(popularityAge, decayWindow);
   return (
     (1 - decayFactor) * currentLikes + decayFactor * decay * previousPopularity

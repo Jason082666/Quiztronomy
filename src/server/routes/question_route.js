@@ -4,7 +4,7 @@ import { catchError } from "../../util/catcherror.js";
 import {
   searchRelatedQuizz,
   insertQuestionByPlayerIntoES,
-  updateNewPoptoMongoAndES,
+  updateNewPop,
 } from "../controller/question.js";
 import {
   generateQuestionByPlayer,
@@ -25,6 +25,6 @@ router
     catchError(insertQuestionByPlayerIntoES)
   );
 
-router.route("/question/update").post(catchError(updateNewPoptoMongoAndES));
+router.route("/question/update").post(catchError(updateNewPop));
 
 export default router;
