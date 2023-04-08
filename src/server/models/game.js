@@ -1,20 +1,13 @@
+import { RedirectHandler } from "undici";
 import { MyGameRoom } from "../models/mongodb.js";
 import { redisClient } from "../models/redis.js";
+//TODO:之後可以用CRONTAB來刪掉建立太久的房間
 export const gameRoomExistence = async function (id) {
   const result = await MyGameRoom.findOne({
     id,
-    roomStatus: { $ne: "closed" },
+    roomStatus: "preparing",
   });
   if (!result) return false;
-  console.log(result);
-  return true;
-};
-
-export const updateRoomStatus = async function (roomId, newStatus) {
-  const gameRoom = await MyGameRoom.findOne({ id: roomId });
-  if (!gameRoom) return null;
-  gameRoom.roomStatus = newStatus;
-  await gameRoom.save();
   return true;
 };
 
@@ -36,112 +29,32 @@ export const createRoom = async function (id, name, limitPlayers) {
   return dataObj;
 };
 
-export const enterRoom = async function (roomId, id, name) {
-  const session = await MyGameRoom.startSession();
-  session.startTransaction();
-  try {
-    const gameRoom = await MyGameRoom.findOne({
-      id: roomId,
-      roomStatus: "ready",
-    }).session(session);
-    if (!gameRoom) return null;
-    if (gameRoom.players.length >= gameRoom.limitPlayers) {
-      return undefined;
-    }
-    gameRoom.players.push({ id, name });
-    await gameRoom.save({ session });
-    await session.commitTransaction();
-    return true;
-  } catch (error) {
-    await session.abortTransaction();
-    console.error(error);
-    return false;
-  } finally {
-    session.endSession();
-  }
-};
-
-export const leaveRoom = async function (roomId, playerId) {
-  const session = await MyGameRoom.startSession();
-  session.startTransaction();
-  try {
-    const gameRoom = await MyGameRoom.findOne({
-      id: roomId,
-      roomStatus: "ready",
-    }).session(session);
-    if (!gameRoom) return null;
-    const playerIndex = gameRoom.players.findIndex(
-      (player) => player.id === playerId
-    );
-    if (playerIndex === -1) {
-      return undefined;
-    }
-    gameRoom.players.splice(playerIndex, 1);
-    await gameRoom.save({ session });
-    await session.commitTransaction();
-    return true;
-  } catch (error) {
-    await session.abortTransaction();
-    console.error(error);
-    return false;
-  } finally {
-    session.endSession();
-  }
-};
-
-export const startRoom = async function (roomId) {
-  const session = await MyGameRoom.startSession();
-  session.startTransaction();
-  try {
-    const gameRoom = await MyGameRoom.findOne({
-      id: roomId,
-      roomStatus: "ready",
-    }).session(session);
-    if (!gameRoom) return null;
-    if (!gameRoom.quizz[0]) return false;
-    gameRoom.roomStatus = "started";
-    await gameRoom.save({ session });
-    await session.commitTransaction();
-    if (redisClient.status === "reconnecting") {
-      return gameRoom.quizz[0];
-    }
-    const players = gameRoom.players;
-    players.forEach(async (player) => {
-      const newPlayer = player.toObject();
-      delete newPlayer._id;
-      delete newPlayer.__v;
-      const playerData = JSON.stringify(newPlayer);
-      await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
-    });
-    return gameRoom.quizz[0];
-  } catch (error) {
-    await session.abortTransaction();
-    console.error(error);
-    return undefined;
-  } finally {
-    await session.endSession();
-  }
-};
-
-export const terminateRoom = async function (id) {
-  const result = await MyGameRoom.deleteOne({ id, roomStatus: "ready" });
-  if (result.deletedCount === 0) {
+export const createRoomOnRedis = async function (roomId, hostId, limits) {
+  const gameRoom = await MyGameRoom.findOne({
+    id: roomId,
+    "founder.id": hostId,
+  });
+  if (!gameRoom.quizz[0]) return undefined;
+  if (!gameRoom) return null;
+  await gameRoom.save();
+  if (redisClient.status === "reconnecting") {
     return false;
   }
+  await redisClient.hset(`${roomId}-room`, "host", hostId, "limits", limits);
   return true;
 };
 
-export const saveQuizzIntoRoom = async function (array, roomId) {
+export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
   if (array.length > 40) return undefined;
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
     roomStatus: "preparing",
+    "founder.id": founderId,
   });
   if (!gameRoom) return null;
   gameRoom.quizz = array;
   await gameRoom.save();
   if (redisClient.status === "reconnecting") {
-    // 讓這個訊息給前端知道這些題目沒有被加到redis去，前端可以把這個訊息放在local storage。因此要題目需要到mongodb去要
     return false;
   }
   await redisClient.rpush(
@@ -151,7 +64,97 @@ export const saveQuizzIntoRoom = async function (array, roomId) {
   return true;
 };
 
+export const enterRoom = async function (roomId, id, name) {
+  if (redisClient.status === "reconnecting") return null;
+  const result = await redisClient.exists(`${roomId}-room`);
+  if (result == 0) return null;
+  const lockKey = `${roomId}-lock`;
+  const acquiredLock = await redisClient.setnx(lockKey, true);
+  if (!acquiredLock) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return enterRoom(roomId, id, name);
+  }
+  try {
+    const space = await redisClient.hlen(`${roomId}-room`);
+    const limits = await redisClient.hget(`${roomId}-room`, "limits");
+    const hostId = await redisClient.hget(`${roomId}-room`, "host");
+    if (hostId === id) return undefined;
+    if (+limits <= +space - 2) return false;
+    const respond = await redisClient.hset(`${roomId}-room`, id, name);
+    if (respond == 0) return undefined;
+    return true;
+  } finally {
+    await redisClient.del(lockKey);
+  }
+};
+
+export const leaveRoom = async function (roomId, playerId) {
+  if (redisClient.status === "reconnecting") return null;
+  const result = await redisClient.exists(`${roomId}-room`);
+  if (result == 0) return null;
+  const lockKey = `${roomId}-lock`;
+  const acquiredLock = await redisClient.setnx(lockKey, true);
+  if (!acquiredLock) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return leaveRoom(roomId, playerId);
+  }
+  try {
+    const hostId = await redisClient.hget(`${roomId}-room`, "host");
+    if (hostId === playerId) {
+      const result = await redisClient.hdel(`${roomId}-room`, "host");
+      if (result == 0) return undefined;
+      return true;
+    }
+    const result = await redisClient.hdel(`${roomId}-room`, playerId);
+    if (result == 0) return undefined;
+    return true;
+  } finally {
+    const space = await redisClient.hlen(`${roomId}-room`);
+    if (space == 1) await redisClient.del(`${roomId}-room`);
+    await redisClient.del(lockKey);
+  }
+};
+
+export const startRoom = async function (roomId, founderId) {
+  const gameRoom = await MyGameRoom.findOne({
+    id: roomId,
+    roomStatus: "preparing",
+    "founder.id": founderId,
+  });
+  if (!gameRoom) return null;
+  gameRoom.roomStatus = "started";
+  await gameRoom.save();
+  if (redisClient.status === "reconnecting") {
+    return false;
+  }
+  const players = await redisClient.hgetall(`${roomId}-room`);
+  delete players.host;
+  delete players.limits;
+  gameRoom.players = players;
+  await gameRoom.save();
+  for (let player of players) {
+    const playerObj = {};
+    const name = players[player];
+    playerObj[player] = name;
+    const playerData = JSON.stringify(playerObj);
+    await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
+  }
+  await redisClient.del(`${roomId}-room`);
+  return gameRoom.quizz[0];
+};
+
+export const terminateRoom = async function (id) {
+  const result = await MyGameRoom.deleteOne({ id, roomStatus: "preparing" });
+  if (result.deletedCount === 0) {
+    return false;
+  }
+  return true;
+};
+
 export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
+  if (redisClient.status === "reconnecting") {
+    return undefined;
+  }
   const length = await redisClient.llen(roomId);
   const result = await redisClient.lindex(roomId, +currentQuizz - 1);
   const data = JSON.parse(result);

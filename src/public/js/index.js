@@ -32,5 +32,6 @@ $("#create").on("click", async () => {
   localStorage.setItem("roomId", roomId);
   localStorage.setItem("hostname", name);
   localStorage.setItem("hostId", id);
+  localStorage.setItem("limitPlayers", limitPlayers);
   window.location.href = "/game/createroom.html";
 });

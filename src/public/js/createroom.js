@@ -1,11 +1,13 @@
 import { MultiChoice, TrueFalse } from "./question_module.js";
 const roomId = localStorage.getItem("roomId");
+const hostId = localStorage.getItem("hostId");
+const limitPlayers = localStorage.getItem("limitPlayers");
 $("h1").text(`Room ID : ${roomId}`);
 
 $("#finish-button").on("click", async () => {
   // 這邊到時候要把savetoquizzapi做好
   const roomId = localStorage.getItem("roomId");
-  const object = { roomId, status: "ready" };
+  const object = { roomId, hostId, limitPlayers };
   const result = await axios.post("/api/1.0/game/roomupdate", object);
   const { data } = result;
   if (data.error) return console.log(data.error);

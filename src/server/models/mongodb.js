@@ -27,12 +27,10 @@ const MyGameRoomSchema = new mongoose.Schema({
     name: { type: String, required: true },
   },
   limitPlayers: { type: Number, required: true },
-  players: [
-    {
-      id: { type: String },
-      name: { type: String },
-    },
-  ],
+  players: {
+    id: { type: String },
+  },
+
   roomStatus: { type: String, default: "preparing", required: true },
   date: { type: Date, default: Date.now },
   quizz: [

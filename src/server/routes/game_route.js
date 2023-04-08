@@ -9,7 +9,7 @@ import {
   saveQuizzIntoGameRoom,
   getCurrentQuizz,
   startGameRoom,
-  updateGameRoomStatus,
+  createGameRoomOnRedis,
 } from "../controller/game.js";
 
 router.route("/game/currentquizz").get(catchError(getCurrentQuizz));
@@ -19,6 +19,6 @@ router.route("/game/leave").post(catchError(leaveGameRoom));
 router.route("/game/start").post(catchError(startGameRoom));
 router.route("/game/terminate").post(catchError(terminateGameRoom));
 router.route("/game/savequizz").post(catchError(saveQuizzIntoGameRoom));
-router.route("/game/roomupdate").post(catchError(updateGameRoomStatus));
+router.route("/game/roomupdate").post(catchError(createGameRoomOnRedis));
 
 export default router;
