@@ -5,7 +5,7 @@ import { redisClient } from "../models/redis.js";
 export const gameRoomExistence = async function (id) {
   const result = await MyGameRoom.findOne({
     id,
-    roomStatus: "preparing",
+    roomStatus: { $ne: "closed" },
   });
   if (!result) return false;
   return true;
@@ -55,7 +55,7 @@ export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
   gameRoom.quizz = array;
   await gameRoom.save();
   if (redisClient.status === "reconnecting") {
-    return false;
+    return;
   }
   await redisClient.rpush(
     gameRoom.id,
@@ -130,9 +130,10 @@ export const startRoom = async function (roomId, founderId) {
   const players = await redisClient.hgetall(`${roomId}-room`);
   delete players.host;
   delete players.limits;
+  console.log(players);
   gameRoom.players = players;
   await gameRoom.save();
-  for (let player of players) {
+  for (let player in players) {
     const playerObj = {};
     const name = players[player];
     playerObj[player] = name;

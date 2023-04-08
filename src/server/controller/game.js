@@ -22,12 +22,16 @@ export const createGameRoom = async (req, res, next) => {
 
 // TODO: 這個前面要身分驗證
 export const saveQuizzIntoGameRoom = async (req, res, next) => {
-  const { array, roomId } = req.body;
-  if (!array || !roomId)
-    return next(new errors.ParameterError(["Array", "roomId"], 400));
-  if (typeof roomId !== "string")
-    return next(new errors.TypeError({ roomId: "string" }, 400));
-  const result = await saveQuizzIntoRoom(array, roomId);
+  const { array, roomId, founderId } = req.body;
+  if (!array || !roomId || !founderId)
+    return next(
+      new errors.ParameterError(["Array", "roomId", "founderId"], 400)
+    );
+  if (typeof roomId !== "string" || typeof founderId !== "string")
+    return next(
+      new errors.TypeError({ roomId: "string", founderId: "string" }, 400)
+    );
+  const result = await saveQuizzIntoRoom(array, roomId, founderId);
   if (result === undefined)
     return next(
       new errors.CustomError("There sould be at max 40 quizzes in a room", 400)
