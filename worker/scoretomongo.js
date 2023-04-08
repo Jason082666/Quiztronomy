@@ -1,22 +1,5 @@
 import { MyGameRoom } from "../src/server/models/mongodb.js";
-import dotenv from "dotenv";
-import path from "path";
-import * as url from "url";
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
-dotenv.config({ path: path.join(__dirname, "..", "src", ".env") });
-import Redis from "ioredis";
-export const redisClient = new Redis({
-  host: process.env.MY_REDIS_HOST,
-  port: parseInt(process.env.MY_REDIS_PORT),
-  username: process.env.MY_REDIS_USERNAME,
-  password: process.env.MY_REDIS_PASSWORD,
-  retryStrategy: function (times) {
-    if (times >= 5) {
-      return 5000;
-    }
-    return 100;
-  },
-});
+import { redisClient } from "../src/server/models/redis.js";
 
 redisClient.on("connect", () => {
   console.log("Connected to Redis");

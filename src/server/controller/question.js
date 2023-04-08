@@ -3,6 +3,7 @@ import {
   insertQuestionIntoES,
   searchQuestionText,
   searchQuestionSortByTime,
+  updatePopToQueque,
 } from "../models/question.js";
 import errors from "../models/errorhandler.js";
 
@@ -14,15 +15,15 @@ export const insertQuestionByPlayerIntoES = async (req, res, next) => {
   res.json({ data: result });
 };
 
-// insertQuestionByPlayerIntoES().then(console.log);
-
-// TODO: 當使用者點即由系統提供的題目時觸發，之後再轉成(res,req)的形式，或者可以交給queque做
 export const updateNewPop = async (req, res, next) => {
-  if (!req.body.id || !req.body.num)
-    return next(new errors.ParameterError(["id", "num"], 400));
-  const { id, num } = req.body;
-  const result = await updateNewPopById(id, num);
-  res.json({ result: result.result });
+  if (!req.body.object) return next(new errors.ParameterError(["object"], 400));
+  const { object } = req.body;
+  const result = await updatePopToQueque(object);
+  if (!result)
+    return next(
+      new errors.CustomError("Add to queque for updating pop failed", 400)
+    );
+  res.json({ message: "success" });
 };
 
 export const searchRelatedQuizz = async (req, res, next) => {

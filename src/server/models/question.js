@@ -94,7 +94,7 @@ export const searchQuestionText = async function (text, type, excludeIds) {
 export const updateNewPopById = async function (id, num) {
   const result = await searchTimeAndPopById(id);
   const { timestamp, popularity } = result;
-  const currentPop = popularity + num;
+  const currentPop = popularity + +num;
   const newPop = calculatePopularity(currentPop, popularity, timestamp);
   const response = await client.update({
     index: "questiontext",
@@ -161,4 +161,11 @@ export const searchQuestionSortByTime = async function (
     id: hit._id,
   }));
   return array.splice(0, slice);
+};
+
+export const updatePopToQueque = async function (object) {
+  if (redisClient.status === "reconnecting") return false;
+  const data = JSON.stringify(object);
+  await redisClient.lpush("updatePopToES", data);
+  return true;
 };
