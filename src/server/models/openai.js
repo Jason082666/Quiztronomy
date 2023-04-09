@@ -27,10 +27,15 @@ export const generateQuestionByAI = async function (text, type) {
       model: "gpt-3.5-turbo",
       messages: [
         {
+          role: "system",
+          content: "You are a helpful assistant to generate quizz for me.",
+        },
+        {
           role: "user",
           content: openAIQuery,
         },
       ],
+      max_tokens: 500,
     })
     .then((completion) => {
       const content = completion.data.choices[0].message.content;
