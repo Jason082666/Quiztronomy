@@ -1,5 +1,5 @@
-import { redisClient } from "../backend/server/models/redis.js";
-import { updateNewPopById } from "../backend/server/models/question.js";
+import { redisClient } from "../server/models/redis.js";
+import { updateNewPopById } from "../server/models/question.js";
 redisClient.on("connect", () => {
   console.log("Connected to Redis");
 });

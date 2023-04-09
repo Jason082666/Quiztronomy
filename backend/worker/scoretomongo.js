@@ -1,5 +1,5 @@
-import { MyGameRoom } from "../backend/server/models/mongodb.js";
-import { redisClient } from "../backend/server/models/redis.js";
+import { MyGameRoom } from "../src/server/models/mongodb.js";
+import { redisClient } from "../src/server/models/redis.js";
 
 redisClient.on("connect", () => {
   console.log("Connected to Redis");
