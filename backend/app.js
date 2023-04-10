@@ -1,7 +1,6 @@
 import express from "express";
 import http from "http";
 import path from "path";
-import cors from "cors";
 import { socketio } from "./server/models/socketio.js";
 import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -11,17 +10,6 @@ const PORT = process.env.PORT || 3000;
 const APIVERSION = "1.0";
 const allowedOrigins = ["http://localhost:3000"];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
-);
 
 app.use(express.json());
 app.use(express.static("backend/public/html"));

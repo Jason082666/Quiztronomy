@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
   <head>
     <title>Enter the Game</title>
@@ -7,27 +6,10 @@
       integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
       crossorigin="anonymous"
     ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"
-      integrity="sha512-nnNHpffPSgINrsR8ZAIgFUIMexORL5tPwsfktOTxVYSv+AUAILuFYWES8IHl+hhIhpFGlKvWFiz9ZEusrPcSBQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+    <link rel="stylesheet" href="/index.css" />
   </head>
   <body>
-    <h1>Enter Game Room</h1>
-    <label for="name">Name:</label>
-    <input type="text" id="name" />
-    <label for="id">Id:</label>
-    <input type="text" id="id" />
-    <hr />
-    <label for="roomId">RoomId:</label>
-    <input type="text" id="roomId" />
-    <button id="join">Join Room !</button>
-    <button id="create">Create Room !</button>
-    <select id="roomSize">
-      <option value="">Select room size</option>
-    </select>
+    <canvas id="canvas"> </canvas>
     <script src="/js/index.js" type="module"></script>
   </body>
 </html>
