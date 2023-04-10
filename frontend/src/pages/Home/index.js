@@ -89,7 +89,7 @@ const Home = () => {
     const spiders = many(1, spawn);
 
     window.addEventListener("pointermove", (e) => {
-      const [x, y] = [e.clientX, e.clientY];
+      const [x, y] = [e.clientX + 200, e.clientY + 200];
       console.log(x, y);
       spiders.forEach((s) => s.follow(x, y));
     });
@@ -144,17 +144,39 @@ const Home = () => {
       h = window.innerHeight;
       canvas.width = w;
       canvas.height = h;
-
-      // // 將div置於canvas中央位置
-      // const containerDiv = document.querySelector(".container");
-      // containerDiv.style.position = "absolute";
-      // containerDiv.style.top = `${h / 2}px`;
-      // containerDiv.style.left = `${w / 2}px`;
+      document.querySelector(".container").style.position = "absolute";
+      document.querySelector(".container").style.top = "50%";
+      document.querySelector(".container").style.left = "50%";
+      document.querySelector(".container").style.transform =
+        "translate(-50%, -50%)";
+      document.querySelector(".container").style.backgroundColor =
+        "transparent";
+      document.querySelector(".container").style.color = "white";
+      document.querySelector(".container").style.borderRadius = "10px";
+      document.querySelector(".container").style.padding = "20px";
+      document.querySelector(".container").style.maxWidth = "600px";
+      document.querySelector(".container").style.width = "100%";
+      document
+        .querySelectorAll('button, input[type="text"]')
+        .forEach(function (item) {
+          item.style.backgroundColor = "black";
+          item.style.color = "silver";
+          item.style.border = "none";
+          item.style.borderRadius = "5px";
+          item.style.padding = "10px";
+          item.style.margin = "10px";
+          item.style.width = "80%";
+          item.style.maxWidth = "200px";
+        });
+      document
+        .querySelectorAll('button:hover, input[type="text"]:focus')
+        .forEach(function (item) {
+          item.style.backgroundColor = "gray";
+          item.style.color = "white";
+        });
     }
-
-    resize();
     loop();
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resize());
   }, []);
 
   return (
