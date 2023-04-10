@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import "./style.css";
 const Home = () => {
   const canvasRef = useRef(null);
-  const [spider, setSpider] = useState(null);
+  // const [spider, setSpider] = useState(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -143,6 +144,12 @@ const Home = () => {
       h = window.innerHeight;
       canvas.width = w;
       canvas.height = h;
+
+      // // 將div置於canvas中央位置
+      // const containerDiv = document.querySelector(".container");
+      // containerDiv.style.position = "absolute";
+      // containerDiv.style.top = `${h / 2}px`;
+      // containerDiv.style.left = `${w / 2}px`;
     }
 
     resize();
@@ -150,7 +157,15 @@ const Home = () => {
     window.addEventListener("resize", resize);
   }, []);
 
-  return <canvas ref={canvasRef} />;
+  return (
+    <div className="canvas-container">
+      <div className="container">
+        <input type="text" placeholder="Enter game" />
+        <button>Enter game</button>
+      </div>
+      <canvas ref={canvasRef} />
+    </div>
+  );
 };
 
 export default Home;
