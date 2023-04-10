@@ -1,11 +1,4 @@
 localStorage.clear();
-for (let i = 1; i <= 100; i++) {
-  let $option = $("<option>");
-  $option.text(i);
-  $option.val(i);
-  $("#roomSize").append($option);
-}
-
 $("#join").on("click", async () => {
   const name = $("#name").val();
   const id = $("#id").val();
@@ -32,6 +25,5 @@ $("#create").on("click", async () => {
   localStorage.setItem("roomId", roomId);
   localStorage.setItem("hostname", name);
   localStorage.setItem("hostId", id);
-  localStorage.setItem("limitPlayers", limitPlayers);
   window.location.href = "/game/createroom.html";
 });

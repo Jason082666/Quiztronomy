@@ -13,10 +13,8 @@ import errors from "../models/errorhandler.js";
 import { redisClient } from "../models/redis.js";
 
 export const createGameRoom = async (req, res, next) => {
-  const { id, name, limitPlayers } = req.body;
-  if (!limitPlayers)
-    return next(new errors.ParameterError([limitPlayers], 400));
-  const data = await createRoom(id, name, limitPlayers);
+  const { id, name } = req.body;
+  const data = await createRoom(id, name);
   res.json({ data });
 };
 
@@ -70,11 +68,8 @@ export const enterGameRoom = async (req, res, next) => {
         400
       )
     );
-  if (result === false)
-    return next(new errors.CustomError(`Room ${roomId} has no seats`, 400));
   if (!result)
     return next(new errors.CustomError(`You are already in the room`, 400));
-
   return res.json({ message: `Enter room ${roomId} !` });
 };
 
@@ -147,23 +142,14 @@ export const getCurrentQuizz = async (req, res, next) => {
 };
 //TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 export const createGameRoomOnRedis = async (req, res, next) => {
-  const { roomId, hostId, limitPlayers } = req.body;
-  if (!roomId || !hostId || !limitPlayers)
+  const { roomId, hostId } = req.body;
+  if (!roomId || !hostId)
+    return next(new errors.ParameterError(["roomId", "hostId"], 400));
+  if (typeof roomId !== "string" || typeof hostId !== "string")
     return next(
-      new errors.ParameterError(["roomId", "hostId", "limitPlayers"], 400)
+      new errors.TypeError({ roomId: "string", hostId: "string" }, 400)
     );
-  if (
-    typeof roomId !== "string" ||
-    typeof hostId !== "string" ||
-    typeof limitPlayers !== "string"
-  )
-    return next(
-      new errors.TypeError(
-        { roomId: "string", hostId: "string", limitPlayers: "string" },
-        400
-      )
-    );
-  const data = await createRoomOnRedis(roomId, hostId, limitPlayers);
+  const data = await createRoomOnRedis(roomId, hostId);
   if (data === undefined)
     return next(new errors.CustomError("Quizz list is empty", 400));
   if (data === null)

@@ -8,12 +8,11 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 const APIVERSION = "1.0";
-const allowedOrigins = ["http://localhost:3000"];
-
 
 app.use(express.json());
 app.use(express.static("backend/public/html"));
 app.use("/js", express.static("backend/public/js"));
+app.use("/css", express.static("backend/public/css"));
 
 import questionRoute from "./server/routes/question_route.js";
 import gameRoute from "./server/routes/game_route.js";

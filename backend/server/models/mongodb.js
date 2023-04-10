@@ -26,7 +26,6 @@ const MyGameRoomSchema = new mongoose.Schema({
     id: { type: String, required: true },
     name: { type: String, required: true },
   },
-  limitPlayers: { type: Number, required: true },
   players: {
     id: { type: String },
   },

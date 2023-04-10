@@ -1,4 +1,3 @@
-import { RedirectHandler } from "undici";
 import { MyGameRoom } from "../models/mongodb.js";
 import { redisClient } from "../models/redis.js";
 //TODO:之後可以用CRONTAB來刪掉建立太久的房間
@@ -12,7 +11,7 @@ export const gameRoomExistence = async function (id) {
 };
 
 // 當一場遊戲結束後founder的頁面會出現back to room 或是leave的按鈕，若是按下back to room其實就是再創一個新的房間號碼。(同一個api再發一次)(id,name,limitPlayers都應該在local storage中，其中預設的limitplayer可在個人設定中更改)
-export const createRoom = async function (id, name, limitPlayers) {
+export const createRoom = async function (id, name) {
   let roomId;
   do {
     roomId = Math.floor(Math.random() * 100000000).toString();
@@ -20,7 +19,6 @@ export const createRoom = async function (id, name, limitPlayers) {
   const game = new MyGameRoom({
     id: roomId,
     founder: { id, name },
-    limitPlayers,
   });
   const result = await game.save();
   let dataObj = result.toObject();
@@ -29,7 +27,7 @@ export const createRoom = async function (id, name, limitPlayers) {
   return dataObj;
 };
 
-export const createRoomOnRedis = async function (roomId, hostId, limits) {
+export const createRoomOnRedis = async function (roomId, hostId) {
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
     "founder.id": hostId,
@@ -40,7 +38,7 @@ export const createRoomOnRedis = async function (roomId, hostId, limits) {
   if (redisClient.status === "reconnecting") {
     return false;
   }
-  await redisClient.hset(`${roomId}-room`, "host", hostId, "limits", limits);
+  await redisClient.hset(`${roomId}-room`, "host", hostId);
   return true;
 };
 
@@ -68,50 +66,31 @@ export const enterRoom = async function (roomId, id, name) {
   if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
   if (result == 0) return null;
-  const lockKey = `${roomId}-lock`;
-  const acquiredLock = await redisClient.setnx(lockKey, true);
-  if (!acquiredLock) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    return enterRoom(roomId, id, name);
-  }
-  try {
-    const space = await redisClient.hlen(`${roomId}-room`);
-    const limits = await redisClient.hget(`${roomId}-room`, "limits");
-    const hostId = await redisClient.hget(`${roomId}-room`, "host");
-    if (hostId === id) return undefined;
-    if (+limits <= +space - 2) return false;
-    const respond = await redisClient.hset(`${roomId}-room`, id, name);
-    if (respond == 0) return undefined;
-    return true;
-  } finally {
-    await redisClient.del(lockKey);
-  }
+  const space = await redisClient.hlen(`${roomId}-room`);
+  const hostId = await redisClient.hget(`${roomId}-room`, "host");
+  if (hostId === id) return undefined;
+  const respond = await redisClient.hset(`${roomId}-room`, id, name);
+  if (respond == 0) return undefined;
+  return true;
 };
 
 export const leaveRoom = async function (roomId, playerId) {
   if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
   if (result == 0) return null;
-  const lockKey = `${roomId}-lock`;
-  const acquiredLock = await redisClient.setnx(lockKey, true);
-  if (!acquiredLock) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    return leaveRoom(roomId, playerId);
-  }
-  try {
-    const hostId = await redisClient.hget(`${roomId}-room`, "host");
-    if (hostId === playerId) {
-      const result = await redisClient.hdel(`${roomId}-room`, "host");
-      if (result == 0) return undefined;
-      return true;
-    }
-    const result = await redisClient.hdel(`${roomId}-room`, playerId);
+  const hostId = await redisClient.hget(`${roomId}-room`, "host");
+  if (hostId === playerId) {
+    const result = await redisClient.hdel(`${roomId}-room`, "host");
     if (result == 0) return undefined;
-    return true;
-  } finally {
     const space = await redisClient.hlen(`${roomId}-room`);
     if (space == 1) await redisClient.del(`${roomId}-room`);
-    await redisClient.del(lockKey);
+    return true;
+  } else {
+    const result = await redisClient.hdel(`${roomId}-room`, playerId);
+    if (result == 0) return undefined;
+    const space = await redisClient.hlen(`${roomId}-room`);
+    if (space == 1) await redisClient.del(`${roomId}-room`);
+    return true;
   }
 };
 
@@ -129,7 +108,6 @@ export const startRoom = async function (roomId, founderId) {
   }
   const players = await redisClient.hgetall(`${roomId}-room`);
   delete players.host;
-  delete players.limits;
   console.log(players);
   gameRoom.players = players;
   await gameRoom.save();
