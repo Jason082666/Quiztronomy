@@ -11,7 +11,6 @@ export const createUser = async function (name, email, password) {
   const hash = await bcrypt.hash(password, SALTROUNDS);
   const userData = { name, email, password: hash };
   const userInfo = await MyUser.create(userData);
-  console.log(789);
   return userInfo;
 };
 export const validationUser = async function (email, password) {

@@ -11,6 +11,7 @@ export const userLogin = async (req, res) => {
   const userId = normObject._id;
   req.session.userId = userId;
   req.session.name = pass.name;
+  res.cookie("connect.sid", req.sessionID);
   return res.json({ data: pass });
 };
 
@@ -22,7 +23,7 @@ export const userSignup = async (req, res) => {
     const userId = normObj._id;
     req.session.userId = userId;
     req.session.name = data.name;
-    console.log(req.session);
+    res.cookie("connect.sid", req.sessionID);
     return res.json({ data });
   } catch (e) {
     return new errors.CustomError("Sign up fail", 500);

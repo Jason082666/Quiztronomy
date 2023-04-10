@@ -1,6 +1,8 @@
 body {
   overflow: hidden;
   margin: 0;
+  background-image: url("https://images.pexels.com/photos/1738402/pexels-photo-1738402.jpeg?auto=compress&cs=tinysrgb&w=600");
+  background-size: cover;
 }
 
 .header {
@@ -187,4 +189,90 @@ form {
 
 .enter-btn:hover {
   background-color: #e5dbe7;
+}
+
+/* h1 {
+  color: white;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label-for-roomId {
+  color: white;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+.input-for-roomId {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 10px;
+  background-color: #121212;
+  color: white;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+button {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin-right: 10px;
+  margin-left: 10px;
+  background-color: #1e88e5;
+  color: white;
+  font-family: "Helvetica Neue", sans-serif;
+} */
+h1 {
+  color: #fff;
+  font-family: "Helvetica Neue", sans-serif;
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  text-shadow: 1px 1px #ccc;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.label-for-roomId {
+  color: #fff;
+  font-family: "Helvetica Neue", sans-serif;
+  margin-right: 10px;
+  text-shadow: 1px 1px #ccc;
+}
+
+.input-for-roomId {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 10px;
+  background-color: #333;
+  color: #fff;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+#create {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-left: 10px;
+  background-color: #3f505f;
+  color: #fff;
+  font-family: "Helvetica Neue", sans-serif;
+  cursor: pointer;
+}
+
+#create:hover {
+  background-color: #0d47a1;
 }

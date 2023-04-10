@@ -1,3 +1,16 @@
+const sessionId = document.cookie.match(/connect\.sid=([^;]+)/)[1];
+if (sessionId) {
+  const name = localStorage.getItem("userName");
+  $("canvas").hide();
+  $(".enter-container").hide();
+  $(".container").html(` <h1>Welcome back ${name} ! </h1>
+  <div class="button-container">
+    <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
+    <input class="input-for-roomId" type="text" id="roomId">
+    <button id="join">Join Room</button>
+    <button id="create">Create Room</button>
+  </div>`);
+}
 let w, h;
 const canvas = $("#canvas")[0];
 const ctx = canvas.getContext("2d");
@@ -201,7 +214,7 @@ $(".container").on("click", ".login", async function (e) {
   const userdata = { email, password };
   const result = await axios.post("/api/1.0/user/login", userdata);
   if (result.error) return;
-  window.location.href = "/game/main.html";
+  window.location.href = "/";
 });
 
 $(".container").on("click", ".signup", async function (e) {
@@ -212,5 +225,30 @@ $(".container").on("click", ".signup", async function (e) {
   const userdata = { name, email, password };
   const result = await axios.post("/api/1.0/user/signup", userdata);
   if (result.error) return;
-  window.location.href = "/game/main.html";
+  const userName = result.data.data.name;
+  localStorage.setItem("userName", userName);
+  $("canvas").hide();
+  $(".enter-container").hide();
+  $(".container").html(` <h1>Welcome back ${userName} ! </h1>
+  <div class="button-container">
+    <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
+    <input class="input-for-roomId" type="text" id="roomId">
+    <button id="join">Join Room</button>
+    <button id="create">Create Room</button>
+  </div>`);
+});
+
+$(".container").on("click", "#create", async (e) => {
+  e.preventDefault();
+  //TODO:
+  console.log(12334);
+  const result = await axios.post("/api/1.0/game/create", {});
+  console.log(result);
+  const { data } = result;
+  if (data.error) return console.log(data.error);
+  const roomId = data.data.id;
+  localStorage.setItem("roomId", roomId);
+  localStorage.setItem("hostname", name);
+  localStorage.setItem("hostId", id);
+  window.location.href = "/game/createroom.html";
 });
