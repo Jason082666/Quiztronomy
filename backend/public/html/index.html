@@ -6,27 +6,35 @@
       integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"
+      integrity="sha512-nnNHpffPSgINrsR8ZAIgFUIMexORL5tPwsfktOTxVYSv+AUAILuFYWES8IHl+hhIhpFGlKvWFiz9ZEusrPcSBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <link rel="stylesheet" href="/css/index.css" />
   </head>
   <body>
     <header class="header">
       <div class="nav">
         <ul>
-          <li><a class="home-page" href="#">Home</a></li>
+          <li><a class="home-page" href="/">Home</a></li>
           <li><a href="#">About Us</a></li>
           <li><a href="#">Contact Us</a></li>
         </ul>
       </div>
       <div class="account">
         <button class="login-btn">log in</button>
-        <button class="signin-btn">sign in</button>
+        <button class="signup-btn">sign up</button>
       </div>
     </header>
     <canvas id="canvas"> </canvas>
     <div class="container">
       <div class="enter-container">
-        <label for="room-name">Enter Room Name:</label>
+        <label for="room-name">Room number :</label>
         <input type="text" id="room-name" name="room-name" />
+        <label for="user-name">Your name :</label>
+        <input type="text" id="user-name" name="user-name" />
         <button class="enter-btn">Enter</button>
       </div>
     </div>

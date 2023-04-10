@@ -5,16 +5,12 @@ body {
 
 .header {
   display: flex;
+  height: 3vh;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
   background-color: rgba(55, 55, 55, 0.5);
   color: #fff;
-}
-
-.logo img {
-  height: 50px;
-  filter: drop-shadow(0 0 5px #fff);
 }
 
 .nav ul {
@@ -39,7 +35,7 @@ body {
 }
 
 .login-btn,
-.signin-btn {
+.signup-btn {
   border: none;
   outline: none;
   background: transparent;
@@ -53,7 +49,7 @@ body {
 }
 
 .login-btn::before,
-.signin-btn::before {
+.signup-btn::before {
   content: "";
   position: absolute;
   top: 0;
@@ -68,12 +64,12 @@ body {
 }
 
 .login-btn:hover::before,
-.signin-btn:hover::before {
+.signup-btn:hover::before {
   opacity: 1;
 }
 
 .login-btn:hover,
-.signin-btn:hover {
+.signup-btn:hover {
   color: #fff;
 }
 
@@ -83,7 +79,7 @@ body {
   border-radius: 30px;
 }
 
-.signin-btn {
+.signup-btn {
   padding: 12px 30px;
   border-radius: 30px;
 }
@@ -140,10 +136,11 @@ canvas {
 }
 
 .login-container,
-.signin-container {
+.signup-container {
   background-color: rgba(55, 55, 55, 0.5);
   padding: 20px;
   max-width: 400px;
+  min-height: 300px;
   margin: 50px auto;
   border-radius: 10px;
   box-shadow: 0px 0px 0px 0px #ffffff;
@@ -155,7 +152,7 @@ form {
 }
 
 .email-input,
-.passowrd-input {
+.password-input {
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -177,7 +174,7 @@ form {
   margin-top: 5%;
 }
 
-.signin {
+.signup {
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 18px;

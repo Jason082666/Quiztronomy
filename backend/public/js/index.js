@@ -138,7 +138,7 @@ function many(n, f) {
 
 $(".login-btn").on("click", () => {
   $(".login-container").hide();
-  $(".signin-container").hide();
+  $(".signup-container").hide();
   $(".container").html(
     `<div class="login-container">
       <form>
@@ -146,22 +146,22 @@ $(".login-btn").on("click", () => {
         <input class="email-input" type="text" id="email" name="email" />
         <label for="password">Password:</label>
         <input
-          class="passowrd-input"
+          class="password-input"
           type="password"
           id="password"
           name="password"
         />
-        <button class="login" type="submit">Log in</button>
+        <button class="login">Log in</button>
       </form>
     </div>`
   );
 });
 
-$(".signin-btn").on("click", () => {
+$(".signup-btn").on("click", () => {
   $(".enter-container").hide();
   $(".login-container").hide();
   $(".container").html(
-    `<div class="signin-container">
+    `<div class="signup-container">
   <form>
     <label for="name">Name:</label>
     <input class="name-input" type="text" id="name" name="name" />
@@ -169,13 +169,13 @@ $(".signin-btn").on("click", () => {
     <input class="email-input" type="text" id="email" name="email" />
     <label for="password">Password:</label>
     <input
-      class="passowrd-input"
+      class="password-input"
       type="password"
       id="password"
       name="password"
     />
-    <button class="signin" type="submit">
-      Sign in
+    <button class="signup">
+      Sign up
     </button>
   </form>
 </div>;`
@@ -184,10 +184,33 @@ $(".signin-btn").on("click", () => {
 
 $(".home-page").on("click", () => {
   $(".login-container").hide();
-  $(".signin-container").hide();
-  $(".container").html(`  <div class="enter-container">
-        <label for="room-name">Enter Room Name:</label>
+  $(".signup-container").hide();
+  $(".container").html(`<div class="enter-container">
+        <label for="room-name">Room number :</label>
         <input type="text" id="room-name" name="room-name" />
+        <label for="user-name">Your name :</label>
+        <input type="text" id="user-name" name="user-name" />
         <button class="enter-btn">Enter</button>
       </div>`);
+});
+
+$(".container").on("click", ".login", async function (e) {
+  e.preventDefault();
+  const email = $(".email-input").val();
+  const password = $(".password-input").val();
+  const userdata = { email, password };
+  const result = await axios.post("/api/1.0/user/login", userdata);
+  if (result.error) return;
+  window.location.href = "/game/main.html";
+});
+
+$(".container").on("click", ".signup", async function (e) {
+  e.preventDefault();
+  const name = $(".name-input").val();
+  const email = $(".email-input").val();
+  const password = $(".password-input").val();
+  const userdata = { name, email, password };
+  const result = await axios.post("/api/1.0/user/signup", userdata);
+  if (result.error) return;
+  window.location.href = "/game/main.html";
 });

@@ -27,6 +27,7 @@ export const createRoom = async function (id, name) {
   return dataObj;
 };
 
+
 export const createRoomOnRedis = async function (roomId, hostId) {
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,

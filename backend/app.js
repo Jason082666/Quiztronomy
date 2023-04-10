@@ -1,23 +1,44 @@
 import express from "express";
 import http from "http";
 import path from "path";
-import { socketio } from "./server/models/socketio.js";
+import session from "express-session";
+import RedisStore from "connect-redis";
+import { socketio } from "./socketio.js";
+import { redisClient } from "./server/models/redis.js";
 import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 const APIVERSION = "1.0";
-
+let redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "myapp:",
+});
 app.use(express.json());
 app.use(express.static("backend/public/html"));
 app.use("/js", express.static("backend/public/js"));
 app.use("/css", express.static("backend/public/css"));
+app.use(
+  session({
+    store: redisStore,
+    resave: false, // required: force lightweight session keep alive (touch)
+    saveUninitialized: false, // recommended: only save session when data exists
+    secret: "keyboard cat",
+    cookie: { secure: true },
+  })
+);
 
 import questionRoute from "./server/routes/question_route.js";
 import gameRoute from "./server/routes/game_route.js";
 import scoreRoute from "./server/routes/score_route.js";
-app.use("/api/" + APIVERSION, [questionRoute, gameRoute, scoreRoute]);
+import userRoute from "./server/routes/user_route.js";
+app.use("/api/" + APIVERSION, [
+  questionRoute,
+  gameRoute,
+  scoreRoute,
+  userRoute,
+]);
 
 app.get("/game/room/:roomId", (req, res) => {
   // 這邊到時候要做cookie裡面username,userid的驗證，其實就是再去fetch enterroom的api

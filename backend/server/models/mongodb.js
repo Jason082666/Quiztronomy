@@ -51,4 +51,12 @@ const MyGameRoomSchema = new mongoose.Schema({
   ],
 });
 
+const MyUserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  history: { type: Array, default: [] },
+});
+
+export const MyUser = mongoose.model("MyUser", MyUserSchema);
 export const MyGameRoom = mongoose.model("MyGameRoom", MyGameRoomSchema);

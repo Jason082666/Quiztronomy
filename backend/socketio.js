@@ -1,6 +1,5 @@
 import { Server } from "socket.io";
-import { terminateRoom } from "../models/game.js";
-
+import { terminateRoom } from "./server/models/game.js";
 export const socketio = async function (server) {
   const io = new Server(server);
   io.on("connection", (socket) => {
