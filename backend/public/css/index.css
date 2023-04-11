@@ -1,7 +1,7 @@
 body {
   overflow: hidden;
   margin: 0;
-  background-image: url("https://images.pexels.com/photos/1738402/pexels-photo-1738402.jpeg?auto=compress&cs=tinysrgb&w=600");
+  background-image: url("https://images.pexels.com/photos/176851/pexels-photo-176851.jpeg?auto=compress&cs=tinysrgb&w=600");
   background-size: cover;
 }
 
@@ -35,7 +35,7 @@ body {
   display: flex;
   align-items: center;
 }
-
+.logout-btn,
 .login-btn,
 .signup-btn {
   border: none;
@@ -49,7 +49,7 @@ body {
   position: relative;
   z-index: 1;
 }
-
+.logout-btn::before,
 .login-btn::before,
 .signup-btn::before {
   content: "";
@@ -64,7 +64,7 @@ body {
   opacity: 0;
   transition: all 0.3s ease;
 }
-
+.logout-btn:hover::before,
 .login-btn:hover::before,
 .signup-btn:hover::before {
   opacity: 1;

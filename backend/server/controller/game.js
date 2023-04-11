@@ -14,6 +14,9 @@ import { redisClient } from "../models/redis.js";
 
 export const createGameRoom = async (req, res, next) => {
   const { userId, name } = req.session;
+  // TODO:
+  console.log("userId", userId);
+  console.log("name", name);
   const data = await createRoom(userId, name);
   res.json({ data });
 };

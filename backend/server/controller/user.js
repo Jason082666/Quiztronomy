@@ -9,9 +9,9 @@ export const userLogin = async (req, res) => {
   if (!pass) return new errors.CustomError("Validation fail", 403);
   const normObject = pass.toObject();
   const userId = normObject._id;
-  req.session.userId = userId;
-  req.session.name = pass.name;
-  res.cookie("connect.sid", req.sessionID);
+  const name = normObject.name;
+  const user = { userId, name };
+  req.session.user = user;
   return res.json({ data: pass });
 };
 
@@ -21,11 +21,16 @@ export const userSignup = async (req, res) => {
     const data = await createUser(name, email, password);
     const normObj = data.toObject();
     const userId = normObj._id;
-    req.session.userId = userId;
-    req.session.name = data.name;
-    res.cookie("connect.sid", req.sessionID);
+    const userName = normObj.name;
+    const user = { userId, name: userName };
+    req.session.user = user;
     return res.json({ data });
   } catch (e) {
     return new errors.CustomError("Sign up fail", 500);
   }
+};
+
+export const userLogout = async (req, res) => {
+  req.session.destroy();
+  return res.json({ data: "log out seccess" });
 };
