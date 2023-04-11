@@ -1,0 +1,117 @@
+/* 銀河風格 CSS */
+
+/* Body 全局設置 */
+body {
+  background-color: #08080e;
+  color: #f5f5f5;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* 頁面主標題 */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin: 50px 0 30px;
+  color: #e5e5e5;
+}
+
+/* 內文段落 */
+p {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+/* 標籤樣式 */
+label {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* 按鈕樣式 */
+button {
+  background-color: #303030;
+  color: #e5e5e5;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #222222;
+}
+
+/* 輸入欄位樣式 */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background-color: #252525;
+  color: #e5e5e5;
+  font-size: 16px;
+}
+
+/*TODO:  */
+
+#container {
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  outline: 5px solid wheat;
+}
+.container-left {
+  width: 70vw;
+  outline: 5px solid white;
+}
+.container-right {
+  width: 30vw;
+  outline: 5px solid rgb(150, 52, 52);
+}
+
+.quiz-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 300px; /* 設定卡片寬度 */
+  cursor: pointer; /* 設定滑鼠指標為手形，讓使用者知道可以點擊 */
+  transition: box-shadow 0.2s ease; /* 設定卡片變化效果 */
+}
+
+.quiz-card:hover {
+  box-shadow: 0 0 5px #ccc; /* 設定卡片滑鼠懸停時的陰影效果 */
+}
+
+.quiz-card h1 {
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.quiz-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quiz-card ul li {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.correct-option {
+  color: green;
+}
+
+.wrong-option {
+  color: red;
+}

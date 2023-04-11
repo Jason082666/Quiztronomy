@@ -9,7 +9,7 @@ class Quizz {
     return this.answer.includes(selectedOption);
   }
   get html() {
-    const $element = $(`<div data-id='${this.id}'>`);
+    const $element = $(`<div data-id='${this.id}' class='quiz-card'>`);
     const $questionHeader = $(`<h1 class='quizz-question'>`).text(
       this.question
     );
@@ -25,33 +25,10 @@ export class TrueFalse extends Quizz {
 
   get html() {
     const $element = super.html;
-    const $trueLabel = $("<label>").text("True");
-    const $trueInput = $("<input>")
-      .attr("type", "radio")
-      .attr("name", `${this.id}-answer`)
-      .val("true");
-    $trueLabel.append($trueInput);
-    const $falseLabel = $("<label>").text("False");
-    const $falseInput = $("<input>")
-      .attr("type", "radio")
-      .attr("name", `${this.id}-answer`)
-      .val("false");
-    $falseLabel.append($falseInput);
-    $("#search-result").on("click", `input[name="${this.id}-answer"]`, (e) => {
-      const $selectedOption = $(
-        `input[name="${this.id}-answer"]:checked`
-      ).val();
-      const isCorrect = this.checkAnswer(parseBoolean($selectedOption));
-      if (isCorrect) {
-        console.log(true);
-      } else {
-        console.log(false);
-      }
-    });
-    const $optionsList = $(`<ul data-id=${this.id}>`)
-      .append($(`<li data-id=${this.id}>`).append($trueLabel))
-      .append($(`<li data-id=${this.id}>`).append($falseLabel));
-    $element.append($optionsList);
+    const $answerText = $(`<div>Answer: ${this.answer[0]}</div>`);
+    const $explainText = $(`<div>${this.explain}</div>`);
+    $element.append($answerText);
+    $element.append($explainText);
     return $element;
   }
 }
@@ -61,30 +38,27 @@ export class MultiChoice extends Quizz {
     super(question, answer, explain, id);
     this.option = option;
   }
-
   get html() {
     const $element = super.html;
     const $optionsList = $("<ul>");
+    const $explainText = $(`<div>${this.explain}</div>`);
     for (const option in this.option) {
-      const $optionItem = $(`<ul data-id=${this.id}>`);
+      const $label = $("<label>").text(`${option}`);
+      const $optionItem = $(`<li>`);
       $optionItem.html(this.option[option]);
-      $optionItem.attr("data-option", option);
-      $optionItem.click((event) => {
-        const $selectedOption = $(event.currentTarget).attr("data-option");
-        const isCorrect = this.checkAnswer($selectedOption);
-        if (isCorrect) {
-          console.log(true);
+      $optionItem.on("click", () => {
+        if (this.checkAnswer(option)) {
+          $optionItem.toggleClass("correct-option");
         } else {
-          console.log(false);
+          $optionItem.toggleClass("wrong-option");
         }
       });
+      $optionsList.append($label);
       $optionsList.append($optionItem);
-      $element.append($optionsList);
     }
+    $element.append($optionsList);
+    $element.append($explainText);
     return $element;
   }
 }
-
-function parseBoolean(str) {
-  return str === "true";
-}
+// this.answer.includes;

@@ -46,27 +46,97 @@ $("#create-by-hand").on("change", function () {
     $(".create-container").empty();
     $(".create-container").html(`
       <label for="question-type">選擇題型：</label>
-      <input type="radio" name="question-type" id="single-choice" value="MC" />
+      <input type="radio" name="question-type" class="MC-handy" id="single-choice" value="MC" />
       <label for="single-choice">單一選擇題</label>
-      <input type="radio" id="true-false" name="question-type" value="TF" />
+      <input type="radio" id="true-false" class="TF-handy" name="question-type" value="TF" />
       <label for="true-false">是非題</label>
       <input
         type="radio" 
         id="multiple-choice"
+        class="MCS-handy"
         name="question-type"
         value="MCS"
       />
       <label for="multiple-choice">多選題</label>
-      <input type="radio" id="open-ended" name="question-type" value="QA" />
+      <input type="radio" id="open-ended" class="QA-handy" name="question-type" value="QA" />
       <label for="open-ended">問答題</label>
       <br />
-        <div class="quizz">
-          <label for="search-input">待補上</label>
-          <input type="text" id="search-input" />
-          <button type="submit" id="search-submit">提交</button>
+        <div class="quizz-handy-container">
         </div>
       `);
   }
+});
+
+$(".create-container").on("click", ".MC-handy", function () {
+  $(".quizz-handy-container").html(`<div class="mcs-options">
+  <label>輸入題目:</label>
+  <input type="text" class="question-text">
+  <label>A</label>
+  <input type="radio" id="radioA" name="answer" value="A">
+  <input type="text" id="optionA" name="optionA">
+  <label>B</label>
+  <input type="radio" id="radioB" name="answer" value="B">
+  <input type="text" id="optionB" name="optionB">
+  <label>C</label>
+  <input type="radio" id="radioC" name="answer" value="C">
+  <input type="text" id="optionC" name="optionC">
+  <label>D</label>
+  <input type="radio" id="radioD" name="answer" value="D">
+  <input type="text" id="optionD" name="optionD">
+  <label>答案解釋:</label>
+  <textarea class= "explain-text"></textarea>
+  <button type="submit" class="create-quizz-btn">確認送出</button>
+</div>`);
+});
+
+$(".create-container").on("click", ".MCS-handy", function () {
+  $(".quizz-handy-container").html(`<div class="mcs-options">
+  <label>輸入題目:</label>
+  <input type="text" class="question-text">
+  <label>A</label>
+  <input type="checkbox" id="checkA" name="checkA">
+  <input type="text" id="optionA" name="optionA">
+  <label>B</label>
+  <input type="checkbox" id="checkB" name="checkB">
+  <input type="text" id="optionB" name="optionB">
+  <label>C</label>
+  <input type="checkbox" id="checkC" name="checkC">
+  <input type="text" id="optionC" name="optionC">
+  <label>D</label>
+  <input type="checkbox" id="checkD" name="checkD">
+  <input type="text" id="optionD" name="optionD">
+  <label>答案解釋:</label>
+  <textarea class= "explain-text"></textarea>
+  <button type="submit" class="create-quizz-btn">確認送出</button>
+</div>`);
+});
+
+$(".create-container").on("click", ".TF-handy", function () {
+  $(".quizz-handy-container").html(`<div class="tf-options">
+  <label>輸入題目:</label>
+  <input type="text" class="question-text">
+  <label>True</label>
+  <input type="radio" name="answer" value="true">
+  <label>False</label>
+  <input type="radio" name="answer" value="false">
+  <br>
+  <label>答案解釋:</label>
+  <textarea class= "explain-text"></textarea>
+  <button type="submit" class="create-quizz-btn">確認送出</button>
+</div>`);
+});
+
+$(".create-container").on("click", ".QA-handy", function () {
+  $(".quizz-handy-container").html(`<div class="qa-options">
+  <label>輸入題目:</label>
+  <input type="text" class="question-text">
+  <label>答案:</label>
+  <input type="text">
+  <br>
+  <label>答案解釋:</label>
+  <textarea class= "explain-text"></textarea>
+  <button type="submit" class="create-quizz-btn">確認送出</button>
+</div>`);
 });
 
 $(".create-container").on("click", "#search-submit", function () {
