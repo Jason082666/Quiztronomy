@@ -78,6 +78,8 @@ textarea {
 }
 
 .quiz-card {
+  width: 50vw;
+  position: relative;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
@@ -114,4 +116,18 @@ textarea {
 
 .wrong-option {
   color: red;
+}
+.hidden {
+  display: none;
+}
+
+.icon-container {
+  position: absolute;
+  top: 0;
+  right: 1px;
+}
+
+.icon-container img {
+  height: 20px;
+  width: 20px;
 }

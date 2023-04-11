@@ -1,5 +1,4 @@
 import {
-  updateNewPopById,
   insertQuestionIntoES,
   searchQuestionText,
   searchQuestionSortByTime,
@@ -16,9 +15,9 @@ export const insertQuestionByPlayerIntoES = async (req, res, next) => {
 };
 
 export const updateNewPop = async (req, res, next) => {
-  if (!req.body.object) return next(new errors.ParameterError(["object"], 400));
-  const { object } = req.body;
-  const result = await updatePopToQueque(object);
+  if (!req.body.popObj) return next(new errors.ParameterError(["popObj"], 400));
+  const { popObj } = req.body;
+  const result = await updatePopToQueque(popObj);
   if (!result)
     return next(
       new errors.CustomError("Add to queque for updating pop failed", 400)

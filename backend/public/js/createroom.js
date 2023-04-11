@@ -167,7 +167,7 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
       data.question,
       data.answer,
       data.explain,
-      data.option,
+      data.options,
       data.id
     );
     const html = quizz.html;
