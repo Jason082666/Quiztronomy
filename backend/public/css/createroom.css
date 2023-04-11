@@ -131,3 +131,63 @@ textarea {
   height: 20px;
   width: 20px;
 }
+#search-result,
+.language-container,
+.generate-container,
+.create-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quizz {
+  margin-top: 20px;
+}
+
+.quizz-card {
+  height: 110px;
+  width: 200px;
+}
+
+.label-for-question {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.search-container {
+  display: flex;
+  align-items: start;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+#search-input {
+  width: 65vw;
+}
+#search-submit {
+  position: absolute;
+  top: 5px;
+  left: 61vw;
+  width: 8vw;
+  height: 30px;
+  background-image: url("https://cdn-icons-png.flaticon.com/128/2285/2285537.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+#search-submit:hover {
+  cursor: pointer;
+}
+
+#search-submit-by-ai-pic {
+  height: 40px;
+  width: 4vw;
+  background-image: url("https://cdn-icons-png.flaticon.com/128/1693/1693820.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#search-result {
+  display: flex;
+  flex-wrap: wrap;
+}

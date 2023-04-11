@@ -31,7 +31,8 @@ class Quizz {
     });
     $element.append($questionHeader);
     $element.on("click", function (e) {
-      $(this).find(".question-container").toggleClass("hidden");
+      console.log(this);
+      $(this).children(".question-container").toggleClass("hidden");
     });
     return $element;
   }

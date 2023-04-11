@@ -36,21 +36,28 @@
     <h1>Roomid:1234</h1>
     <div id="container">
       <div class="container-left">
-        <label for="search-language">選擇語言：</label>
-        <select id="search-language">
-          <option value="EN">英文</option>
-          <option value="CH">中文</option>
-        </select>
-        <br />
+        <div class="language-container">
+          <label for="search-language">選擇語言：</label>
+          <select id="search-language">
+            <option value="EN">英文</option>
+            <option value="CH">中文</option>
+          </select>
+        </div>
         <div class="generate-container">
-          <label for="handy-or-system">生成方式 : </label>
+          <label for="handy-or-system" class="label-for-question"
+            >生成方式 :
+          </label>
           <input type="radio" name="handy-or-system" id="create-by-hand" />
-          <label for="create-by-hand">手動輸入</label>
+          <label for="create-by-hand" class="label-for-question"
+            >手動輸入</label
+          >
           <input type="radio" id="create-by-system" name="handy-or-system" />
-          <label for="create-by-hand">系統題庫</label>
+          <label for="create-by-hand" class="label-for-question"
+            >系統題庫</label
+          >
         </div>
         <div class="create-container"></div>
-        <div id="search-result"></div>
+        <!-- <div id="search-result"></div> -->
       </div>
       <div class="container-right">
         <button id="finish-button">Finished</button>
