@@ -27,7 +27,6 @@ export const createRoom = async function (id, name) {
   return dataObj;
 };
 
-
 export const createRoomOnRedis = async function (roomId, hostId) {
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
@@ -67,7 +66,7 @@ export const enterRoom = async function (roomId, id, name) {
   if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
   if (result == 0) return null;
-  const space = await redisClient.hlen(`${roomId}-room`);
+  await redisClient.hlen(`${roomId}-room`);
   const hostId = await redisClient.hget(`${roomId}-room`, "host");
   if (hostId === id) return undefined;
   const respond = await redisClient.hset(`${roomId}-room`, id, name);
@@ -145,20 +144,20 @@ export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
   return data;
 };
 
-export const getCurrentQuizzFromMongo = async function (roomId, currentQuizz) {
-  const gameRoom = await MyGameRoom.findOne({
-    id: roomId,
-    roomStatus: "ready",
-  });
-  if (!gameRoom) return null;
-  const { quizz } = gameRoom;
-  const length = quizz.length;
-  const data = quizz[+currentQuizz - 1];
-  if (!data) return null;
-  if (length === +currentQuizz) {
-    const newData = data.toObject();
-    newData.lastquizz = true;
-    return newData;
-  }
-  return data;
-};
+// export const getCurrentQuizzFromMongo = async function (roomId, currentQuizz) {
+//   const gameRoom = await MyGameRoom.findOne({
+//     id: roomId,
+//     roomStatus: "ready",
+//   });
+//   if (!gameRoom) return null;
+//   const { quizz } = gameRoom;
+//   const length = quizz.length;
+//   const data = quizz[+currentQuizz - 1];
+//   if (!data) return null;
+//   if (length === +currentQuizz) {
+//     const newData = data.toObject();
+//     newData.lastquizz = true;
+//     return newData;
+//   }
+//   return data;
+// };

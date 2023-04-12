@@ -6,11 +6,10 @@ import {
   terminateRoom,
   saveQuizzIntoRoom,
   startRoom,
-  getCurrentQuizzFromMongo,
+  // getCurrentQuizzFromMongo,
   getCurrentQuizzFromRedis,
 } from "../models/game.js";
 import errors from "../models/errorhandler.js";
-import { redisClient } from "../models/redis.js";
 
 export const createGameRoom = async (req, res) => {
   const { userId, name } = req.session.user;
@@ -121,7 +120,6 @@ export const terminateGameRoom = async (req, res, next) => {
 };
 
 export const getCurrentQuizz = async (req, res, next) => {
-  // 如過題目當時沒有存到redis，queryString應該要redisStatus = failed, 反則redisStatus = success
   const { roomId, currentQuizz } = req.query;
   if (!roomId || !currentQuizz)
     return next(new errors.ParameterError(["roomId,currentQuizz"], 400));
@@ -129,12 +127,12 @@ export const getCurrentQuizz = async (req, res, next) => {
     return next(
       new errors.TypeError({ roomId: "string", currentQuizz: "string" }, 400)
     );
-  if (redisClient.status === "reconnecting") {
-    const data = await getCurrentQuizzFromMongo(roomId, currentQuizz);
-    if (!data)
-      return next(new errors.CustomError("No this room or no this quizz", 400));
-    return res.json({ data });
-  }
+  // if (redisClient.status === "reconnecting") {
+  //   const data = await getCurrentQuizzFromMongo(roomId, currentQuizz);
+  //   if (!data)
+  //     return next(new errors.CustomError("No this room or no this quizz", 400));
+  //   return res.json({ data });
+  // }
   const data = await getCurrentQuizzFromRedis(roomId, currentQuizz);
   if (!data)
     return next(new errors.CustomError("No this room or no this quizz", 400));
