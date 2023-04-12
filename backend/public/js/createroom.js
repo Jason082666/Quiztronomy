@@ -430,6 +430,31 @@ $(document).ready(function () {
     helper: "clone",
   });
 
+  // Allow dropping on quiz-cards in container-right
+  $(".container-right").on("dragover", ".quiz-card", function (event) {
+    event.preventDefault();
+    $(this).addClass("drag-over");
+  });
+
+  // Remove drag-over class when leaving quiz-cards in container-right
+  $(".container-right").on("dragleave", ".quiz-card", function (event) {
+    event.preventDefault();
+    $(this).removeClass("drag-over");
+  });
+
+  // Handle dropping quiz-cards in container-right
+  $(".container-right").on("drop", ".quiz-card", function (event) {
+    event.preventDefault();
+    $(this).removeClass("drag-over");
+    const dataId = event.originalEvent.dataTransfer.getData("text/plain");
+    const droppedQuizCard = $(`[data-id="${dataId}"]`);
+    const targetQuizCard = $(this);
+    if (droppedQuizCard.index() < targetQuizCard.index()) {
+      targetQuizCard.after(droppedQuizCard);
+    } else {
+      targetQuizCard.before(droppedQuizCard);
+    }
+  });
   // Helper function to find drop target
   function getDropTarget(container, mouseY) {
     const children = container.children();
@@ -497,6 +522,4 @@ $("body").on("click", ".room-ready-btn", async () => {
   );
   const createResult = createRoomOnRedis.data.data;
   if (createResult.error) return console.log(data.error);
-
 });
-
