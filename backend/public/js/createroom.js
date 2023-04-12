@@ -333,3 +333,43 @@ const transToBoolean = (answer) => {
   if (answer === "true") return true;
   return false;
 };
+
+// TODO:
+$(document).ready(function () {
+  $("#search-result").on("dragstart", ".quiz-card", function (event) {
+    const dataId = $(event.target).attr("data-id");
+    event.originalEvent.dataTransfer.setData("text/plain", dataId);
+  });
+
+  $(".container-right").on("dragover", function (event) {
+    console.log("dragover");
+    event.preventDefault();
+  });
+
+  $(".container-right").on("drop", function (event) {
+    console.log("drop");
+    event.preventDefault();
+    const dataId = event.originalEvent.dataTransfer.getData("text");
+    const draggedElement = $(`[data-id="${dataId}"]`);
+    const containerRight = $(this);
+    const dropTarget = getDropTarget(containerRight, event.pageY);
+    if (dropTarget) {
+      draggedElement.insertBefore(dropTarget);
+    } else {
+      containerRight.append(draggedElement);
+    }
+  });
+
+  function getDropTarget(container, mouseY) {
+    const children = container.children();
+    for (let i = 0; i < children.length; i++) {
+      const child = $(children[i]);
+      const childTop = child.offset().top;
+      const childHeight = child.outerHeight();
+      if (mouseY >= childTop && mouseY <= childTop + childHeight) {
+        return child;
+      }
+    }
+    return null;
+  }
+});

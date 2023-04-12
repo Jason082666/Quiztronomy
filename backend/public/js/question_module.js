@@ -11,7 +11,7 @@ class Quizz {
 
   get html() {
     const $element = $(
-      `<div data-id='${this.id}' class='quiz-card quiz-card-resize'>`
+      `<div data-id='${this.id}' class='quiz-card quiz-card-resize' draggable="true">`
     );
     const $cancelBtn = $(`<div class="icon-container">
     <img src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="icon">

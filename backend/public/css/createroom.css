@@ -75,6 +75,7 @@ textarea {
 .container-right {
   width: 25vw;
   outline: 5px solid rgb(150, 52, 52);
+  position: relative; /* 設定相對位置 */
 }
 
 .quiz-card {
@@ -85,14 +86,17 @@ textarea {
   padding: 10px;
   margin-bottom: 20px;
   margin-right: 20px;
-  cursor: pointer; /* 設定滑鼠指標為手形，讓使用者知道可以點擊 */
-  transition: box-shadow 0.2s ease; /* 設定卡片變化效果 */
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
 }
-
 .quiz-card-resize {
   height: 100%;
   overflow: hidden;
   height: 80px;
+}
+#search-result {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .quiz-card:hover {
@@ -157,19 +161,17 @@ textarea {
 }
 
 .search-container {
+  width: 60vw;
   display: flex;
   align-items: start;
   margin-bottom: 10px;
   position: relative;
 }
 
-#search-input {
-  width: 65vw;
-}
 #search-submit {
   position: absolute;
   top: 5px;
-  left: 61vw;
+  left: 57vw;
   width: 8vw;
   height: 30px;
   background-image: url("https://cdn-icons-png.flaticon.com/128/2285/2285537.png");
@@ -186,9 +188,4 @@ textarea {
   background-image: url("https://cdn-icons-png.flaticon.com/128/1693/1693820.png");
   background-size: contain;
   background-repeat: no-repeat;
-}
-
-#search-result {
-  display: flex;
-  flex-wrap: wrap;
 }
