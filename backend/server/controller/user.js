@@ -34,7 +34,7 @@ export const userLogout = async (req, res) => {
   return res.json({ data: "log out seccess" });
 };
 
-export const userLoginStatus = async (req, res, next) => {
+export const userLoginStatus = async (req, res) => {
   if (!req.session.user) return res.json({ data: { error: "log in fail" } });
   const { userId, name } = req.session.user;
   return res.json({ data: { userId, name } });
