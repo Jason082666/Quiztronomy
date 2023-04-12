@@ -1,12 +1,7 @@
 import { MultiChoice, TrueFalse } from "./question_module.js";
-const roomId = localStorage.getItem("roomId");
-const hostId = localStorage.getItem("hostId");
-$("h1").text(`Room ID : ${roomId}`);
 localStorage.setItem("searchedId", "[]");
 $("#finish-button").on("click", async () => {
   // 這邊到時候要把savetoquizzapi做好
-  const roomId = localStorage.getItem("roomId");
-  const object = { roomId, hostId };
   const result = await axios.post("/api/1.0/game/roomupdate", object);
   const { data } = result;
   if (data.error) return console.log(data.error);
@@ -19,7 +14,7 @@ $("#create-by-system").on("change", function () {
     $(".create-container").empty();
     $(".create-container").html(`
   <label class="label-for-question" for="question-type">選擇題型：</label>
-  <input type="radio" name="question-type" id="single-choice" value="MC">
+  <input type="radio" name="question-type" id="single-choice" value="MC" checked>
   <label class="label-for-question" for="single-choice">單一選擇題</label>
   <input type="radio" id="true-false" name="question-type" value="TF">
   <label class="label-for-question" for="true-false">是非題</label>
@@ -364,7 +359,6 @@ const transToBoolean = (answer) => {
 //     tolerance: "pointer",
 //     cursor: "move",
 //   });
-
 //   function getDropTarget(container, mouseY) {
 //     const children = container.children();
 //     for (let i = 0; i < children.length; i++) {
@@ -456,4 +450,26 @@ $(document).ready(function () {
     }
     return null;
   }
+});
+
+$(".exit-btn").on("click", () => {
+  const $popOut = $(`<div class="popup-container">
+  <div class="popup">
+    <p class="popup-text">是否要保存遊戲模板?</p>
+    <div class="popup-buttons">
+      <button class="save-and-exit-btn">保存並離開</button>
+      <button class="no-save-btn">不保存</button>
+      <button class="back-to-game-btn">回到遊戲房間</button>
+    </div>
+  </div>
+</div>`);
+  $("body").append($popOut);
+});
+
+$("body").on("click", ".back-to-game-btn", () => {
+  $(".popup-container").remove();
+});
+
+$("body").on("click", ".no-save-btn", () => {
+  window.location.href = "/";
 });

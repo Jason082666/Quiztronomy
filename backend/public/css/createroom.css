@@ -41,8 +41,19 @@ button {
   transition: all 0.3s ease;
 }
 
-button:hover {
+/* button:hover {
   background-color: #222222;
+} */
+button:hover {
+  background: linear-gradient(
+    90deg,
+    #4f5d75,
+    #3c4f6d,
+    #344a6e,
+    #2b4267,
+    #2a3f66
+  );
+  color: #fff;
 }
 
 /* 輸入欄位樣式 */
@@ -77,6 +88,13 @@ textarea {
   outline: 5px solid rgb(150, 52, 52);
   position: relative; /* 設定相對位置 */
 }
+#search-result {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1; /* 將搜索結果設置為彈性項目，占據所有可用空間 */
+  min-height: 200px; /* 設置搜索結果的最小高度 */
+  overflow: auto; /* 如果內容太長，則顯示滾動條 */
+}
 
 .quiz-card {
   position: relative;
@@ -93,10 +111,6 @@ textarea {
   height: 100%;
   overflow: hidden;
   height: 80px;
-}
-#search-result {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .quiz-card:hover {
@@ -188,4 +202,85 @@ textarea {
   background-image: url("https://cdn-icons-png.flaticon.com/128/1693/1693820.png");
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+/* TODO:  */
+header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #1d1e22;
+  height: 75px;
+  justify-content: center;
+  color: #fff;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.exit-btn {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  font-weight: bold;
+  transform: translateY(-50%);
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#finish-button {
+  position: absolute;
+  font-weight: bold;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* 彈出視窗 */
+
+.popup-container {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.popup {
+  background: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  max-width: 1000px;
+}
+
+.popup-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.popup-buttons button {
+  font-size: 15px;
+  font-weight: bold;
+  width: 30%;
 }

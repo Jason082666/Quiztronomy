@@ -4,6 +4,10 @@ console.log(data);
 if (data.error) {
   localStorage.clear();
 }
+localStorage.removeItem("searchedId");
+localStorage.removeItem("hostId");
+localStorage.removeItem("hostname");
+localStorage.removeItem("roomId");
 const userId = localStorage.getItem("userId");
 const userName = localStorage.getItem("userName");
 if (userName && userId) {
@@ -272,12 +276,12 @@ $(".container").on("click", ".signup", async function (e) {
 
 $(".container").on("click", "#create", async (e) => {
   e.preventDefault();
-  const result = await axios.post("/api/1.0/game/create");
-  const { data } = result;
-  if (data.error) return console.log(data.error);
-  const roomId = data.data.id;
-  localStorage.setItem("roomId", roomId);
-  localStorage.setItem("hostname", data.data.founder.name);
-  localStorage.setItem("hostId", data.data.founder.id);
+  // const result = await axios.post("/api/1.0/game/create");
+  // const { data } = result;
+  // if (data.error) return console.log(data.error);
+  // const roomId = data.data.id;
+  // localStorage.setItem("roomId", roomId);
+  // localStorage.setItem("hostname", data.data.founder.name);
+  // localStorage.setItem("hostId", data.data.founder.id);
   window.location.href = "/game/createroom.html";
 });

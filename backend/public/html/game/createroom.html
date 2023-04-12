@@ -37,8 +37,12 @@
     ></script>
     <link rel="stylesheet" href="/css/createroom.css" />
   </head>
+  <header>
+    <div class="logo">Design your own game</div>
+    <button class="exit-btn">退出</button>
+    <button id="finish-button">創建遊戲房間</button>
+  </header>
   <body>
-    <h1>Roomid:1234</h1>
     <div id="container">
       <div class="container-left">
         <div class="language-container">
@@ -52,7 +56,12 @@
           <label for="handy-or-system" class="label-for-question"
             >生成方式 :
           </label>
-          <input type="radio" name="handy-or-system" id="create-by-hand" />
+          <input
+            type="radio"
+            name="handy-or-system"
+            id="create-by-hand"
+            checked
+          />
           <label for="create-by-hand" class="label-for-question"
             >手動輸入</label
           >
@@ -64,9 +73,7 @@
         <div class="create-container"></div>
         <div id="search-result"></div>
       </div>
-      <div class="container-right">
-        <button id="finish-button">Finished</button>
-      </div>
+      <div class="container-right"></div>
     </div>
 
     <script src="/js/createroom.js" type="module"></script>
