@@ -15,6 +15,7 @@ $("#finish-button").on("click", async () => {
 
 $("#create-by-system").on("change", function () {
   if ($(this).is(":checked")) {
+    $("#search-result").show();
     $(".create-container").empty();
     $(".create-container").html(`
   <label class="label-for-question" for="question-type">選擇題型：</label>
@@ -36,13 +37,12 @@ $("#create-by-system").on("change", function () {
     </div>
     <div class="content"></div>
   </div>`);
-    const $searchResult = $("<div id= search-result>");
-    $(".create-container").after($searchResult);
   }
 });
 
 $("#create-by-hand").on("change", function () {
   if ($(this).is(":checked")) {
+    $("#search-result").hide();
     $(".create-container").empty();
     $(".create-container").html(`
       <label for="question-type">選擇題型：</label>

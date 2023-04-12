@@ -10,7 +10,9 @@ class Quizz {
   }
 
   get html() {
-    const $element = $(`<div data-id='${this.id}' class='quiz-card'>`);
+    const $element = $(
+      `<div data-id='${this.id}' class='quiz-card quiz-card-resize'>`
+    );
     const $cancelBtn = $(`<div class="icon-container">
     <img src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="icon">
   </div>`);
@@ -31,8 +33,8 @@ class Quizz {
     });
     $element.append($questionHeader);
     $element.on("click", function (e) {
-      console.log(this);
       $(this).children(".question-container").toggleClass("hidden");
+      $(this).toggleClass("quiz-card-resize");
     });
     return $element;
   }
