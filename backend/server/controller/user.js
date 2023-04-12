@@ -1,5 +1,4 @@
 import { createUser, validationUser } from "../models/user.js";
-
 import errors from "../models/errorhandler.js";
 
 export const userLogin = async (req, res) => {
@@ -33,4 +32,10 @@ export const userSignup = async (req, res) => {
 export const userLogout = async (req, res) => {
   req.session.destroy();
   return res.json({ data: "log out seccess" });
+};
+
+export const userLoginStatus = async (req, res, next) => {
+  if (!req.session.user) return res.json({ data: { error: "log in fail" } });
+  const { userId, name } = req.session.user;
+  return res.json({ data: { userId, name } });
 };

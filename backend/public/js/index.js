@@ -1,6 +1,11 @@
+const userStatus = await axios.get("/api/1.0/user/status");
+const { data } = userStatus.data;
+console.log(data);
+if (data.error) {
+  localStorage.clear();
+}
 const userId = localStorage.getItem("userId");
 const userName = localStorage.getItem("userName");
-
 if (userName && userId) {
   $("canvas").hide();
   $(".enter-container").hide();

@@ -69,7 +69,7 @@ body {
 .signup-btn:hover::before {
   opacity: 1;
 }
-
+.logout-btn,
 .login-btn:hover,
 .signup-btn:hover {
   color: #fff;
@@ -77,6 +77,10 @@ body {
 
 .login-btn {
   margin-right: 20px;
+  padding: 12px 30px;
+  border-radius: 30px;
+}
+.logout-btn {
   padding: 12px 30px;
   border-radius: 30px;
 }
