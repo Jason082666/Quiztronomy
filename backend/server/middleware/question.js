@@ -14,24 +14,44 @@ export const generateQuestionByPlayer = async (req, res, next) => {
   next();
 };
 
+// question: string,
+// option: object, ex {A:"123",B:"456",C:"789",D:"222"}  (就算是是非題問答題也要)
+// answer: array, ex {[true] or ["A","B","C"] or ["B"] or ["答案是我"] (問答題)}
+// explain: string
+// type: string ex: "MC-EN"
 export const generateQuestionManually = async (req, res, next) => {
-  const { question, option, answer, explain, type } = req.body;
-  // question: string,
-  // option: object, ex {A:"123",B:"456",C:"789",D:"222"}  (就算是是非題問答題也要)
-  // answer: array, ex {[true] or ["A","B","C"] or ["B"] or ["答案是我"] (問答題)}
-  // explain: string
-  // type: string ex: "MC-EN"
-  if (!question || !option || !answer || !explain || !type)
+  const { question, options, answer, explain, type } = req.body;
+  if (["TF-CH", "TF-EN"].includes(type)) {
+    if (!question || !answer || !explain || !type)
+      return next(
+        new errors.ParameterError(
+          ["question", "answer", "explain", "type"],
+          400
+        )
+      );
+    const object = {
+      question,
+      answer,
+      explain,
+      type,
+      popularity: 2,
+      timestamp: Date.now(),
+      createTime: Date.now(),
+    };
+    req.question = object;
+    return next();
+  }
+  if (!question || !answer || !options || !explain || !type)
     return next(
       new errors.ParameterError(
-        ["question", "option", "answer", "explain", "type"],
+        ["question", "answer", "options", "explain", "type"],
         400
       )
     );
   const object = {
     question,
-    option,
     answer,
+    options,
     explain,
     type,
     popularity: 2,
@@ -39,5 +59,5 @@ export const generateQuestionManually = async (req, res, next) => {
     createTime: Date.now(),
   };
   req.question = object;
-  next();
+  return next();
 };

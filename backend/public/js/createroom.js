@@ -2,7 +2,7 @@ import { MultiChoice, TrueFalse } from "./question_module.js";
 const roomId = localStorage.getItem("roomId");
 const hostId = localStorage.getItem("hostId");
 $("h1").text(`Room ID : ${roomId}`);
-
+localStorage.setItem("searchedId", "[]");
 $("#finish-button").on("click", async () => {
   // 這邊到時候要把savetoquizzapi做好
   const roomId = localStorage.getItem("roomId");
@@ -92,16 +92,16 @@ $(".create-container").on("click", ".MCS-handy", function () {
   <label>輸入題目:</label>
   <input type="text" class="question-text">
   <label>A</label>
-  <input type="checkbox" id="checkA" name="checkA">
+  <input type="checkbox" id="checkA" name="answer" value="A">
   <input type="text" id="optionA" name="optionA">
   <label>B</label>
-  <input type="checkbox" id="checkB" name="checkB">
+  <input type="checkbox" id="checkB" name="answer" value="B">
   <input type="text" id="optionB" name="optionB">
   <label>C</label>
-  <input type="checkbox" id="checkC" name="checkC">
+  <input type="checkbox" id="checkC" name="answer" value="C">
   <input type="text" id="optionC" name="optionC">
   <label>D</label>
-  <input type="checkbox" id="checkD" name="checkD">
+  <input type="checkbox" id="checkD" name="answer" value="D">
   <input type="text" id="optionD" name="optionD">
   <label>答案解釋:</label>
   <textarea class= "explain-text"></textarea>
@@ -124,13 +124,70 @@ $(".create-container").on("click", ".TF-handy", function () {
 </div>`);
 });
 
-$(".create-container").on("click", "#search-submit", function () {
-  search();
+$(".create-container").on("click", "#search-submit", async function () {
+  const quizzes = await search();
+  if (!quizzes[0]) return;
+  quizzes.forEach((quizz) => {
+    const searched = JSON.parse(localStorage.getItem("searchedId"));
+    if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quizz.type)) {
+      const question = new MultiChoice(
+        quizz.question,
+        quizz.answer,
+        quizz.explain,
+        quizz.options,
+        quizz.id
+      );
+      searched.push(quizz.id);
+      localStorage.setItem("searchedId", JSON.stringify(searched));
+      const html = question.html;
+      $("#search-result").append(html);
+    } else if (["TF-CH", "TF-EN"].includes(quizz.type)) {
+      const question = new TrueFalse(
+        quizz.question,
+        quizz.answer,
+        quizz.explain,
+        quizz.id
+      );
+      searched.push(quizz.id);
+      localStorage.setItem("searchedId", JSON.stringify(searched));
+      const html = question.html;
+      $("#search-result").append(html);
+    }
+  });
 });
 
-$(".create-container").on("keydown", "#search-input", function (e) {
+$(".create-container").on("keydown", "#search-input", async function (e) {
   if (e.keyCode == 13) {
-    search();
+    const quizzes = await search();
+    console.log(quizzes);
+    if (!quizzes[0]) return;
+    quizzes.forEach((quizz) => {
+      const searched = JSON.parse(localStorage.getItem("searchedId"));
+      if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quizz.type)) {
+        const question = new MultiChoice(
+          quizz.question,
+          quizz.answer,
+          quizz.explain,
+          quizz.options,
+          quizz.id
+        );
+        searched.push(quizz.id);
+        localStorage.setItem("searchedId", JSON.stringify(searched));
+        const html = question.html;
+        $("#search-result").append(html);
+      } else if (["TF-CH", "TF-EN"].includes(quizz.type)) {
+        const question = new TrueFalse(
+          quizz.question,
+          quizz.answer,
+          quizz.explain,
+          quizz.id
+        );
+        searched.push(quizz.id);
+        localStorage.setItem("searchedId", JSON.stringify(searched));
+        const html = question.html;
+        $("#search-result").append(html);
+      }
+    });
   }
 });
 
@@ -160,14 +217,103 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
   }
 });
 
+$(".create-container").on("click", ".create-quizz-btn", async () => {
+  const language = $("#search-language").val();
+  const create = $("input[name='question-type']:checked").val();
+  const type = `${create}-${language}`;
+  const question = $(".question-text").val();
+  const explain = $(".explain-text").val();
+  if (["TF-CH", "TF-EN"].includes(type)) {
+    const answer = $("input[name='answer']:checked").val();
+    const quizzObj = {
+      question,
+      answer: [transToBoolean(answer)],
+      type,
+      explain,
+    };
+    const data = await generateQuizzData(quizzObj);
+    const quizz = new TrueFalse(
+      data.question,
+      data.answer,
+      data.explain,
+      data.id
+    );
+    const html = quizz.html;
+    $(".container-right").append(html);
+  }
+  if (["MC-CH", "MC-EN"].includes(type)) {
+    const answer = $("input[name='answer']:checked").val();
+    const optionA = $("#optionA").val();
+    const optionB = $("#optionB").val();
+    const optionC = $("#optionC").val();
+    const optionD = $("#optionD").val();
+    const quizzObj = {
+      question,
+      options: { A: optionA, B: optionB, C: optionC, D: optionD },
+      answer: [answer],
+      type,
+      explain,
+    };
+    const data = await generateQuizzData(quizzObj);
+    const quizz = new MultiChoice(
+      data.question,
+      data.answer,
+      data.explain,
+      data.options,
+      data.id
+    );
+    const html = quizz.html;
+    $(".container-right").append(html);
+  }
+  if (["MCS-CH", "MCS-EN"].includes(type)) {
+    const answerArray = [];
+    $('input[name="answer"]:checked').each(function () {
+      answerArray.push($(this).val());
+    });
+    const optionA = $("#optionA").val();
+    const optionB = $("#optionB").val();
+    const optionC = $("#optionC").val();
+    const optionD = $("#optionD").val();
+    const quizzObj = {
+      question,
+      options: { A: optionA, B: optionB, C: optionC, D: optionD },
+      answer: answerArray,
+      type,
+      explain,
+    };
+    const data = await generateQuizzData(quizzObj);
+    const quizz = new MultiChoice(
+      data.question,
+      data.answer,
+      data.explain,
+      data.options,
+      data.id
+    );
+    const html = quizz.html;
+    $(".container-right").append(html);
+  }
+});
+
+const generateQuizzData = async (quizzObj) => {
+  const result = await axios.post("/api/1.0/question/createmanual", quizzObj);
+  const { data } = result.data;
+  return data;
+};
+
 const search = async () => {
   const language = $("#search-language").val();
   const create = $("input[name='question-type']:checked").val();
   const type = `${create}-${language}`;
   const query = $("#search-input").val();
-  const result = await axios.get(
-    `/api/1.0/question/search?q=${query}&type=${type}`
-  );
+  let searchedArray;
+  const resultArray = localStorage.getItem("searchedId");
+  if (!resultArray) {
+    searchedArray = [];
+  } else {
+    searchedArray = resultArray;
+  }
+  const searchObj = { q: query, type, excludeIds: searchedArray };
+  const result = await axios.post(`/api/1.0/question/search`, searchObj);
   const { data } = result.data;
   return data;
 };
@@ -181,4 +327,9 @@ const searchByAI = async () => {
   const result = await axios.post("/api/1.0/question/create", obj);
   const { data } = result.data;
   return data;
+};
+
+const transToBoolean = (answer) => {
+  if (answer === "true") return true;
+  return false;
 };

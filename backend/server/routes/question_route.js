@@ -18,6 +18,7 @@ router
     catchError(generateQuestionByPlayer),
     catchError(insertQuestionByPlayerIntoES)
   );
+
 router
   .route("/question/createmanual")
   .post(
