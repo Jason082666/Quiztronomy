@@ -342,12 +342,10 @@ $(document).ready(function () {
   });
 
   $(".container-right").on("dragover", function (event) {
-    console.log("dragover");
     event.preventDefault();
   });
 
   $(".container-right").on("drop", function (event) {
-    console.log("drop");
     event.preventDefault();
     const dataId = event.originalEvent.dataTransfer.getData("text");
     const draggedElement = $(`[data-id="${dataId}"]`);
@@ -358,6 +356,13 @@ $(document).ready(function () {
     } else {
       containerRight.append(draggedElement);
     }
+  });
+
+  $(".container-right").sortable({
+    axis: "y",
+    containment: "parent",
+    tolerance: "pointer",
+    cursor: "move",
   });
 
   function getDropTarget(container, mouseY) {
