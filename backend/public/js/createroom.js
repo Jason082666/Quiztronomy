@@ -335,16 +335,68 @@ const transToBoolean = (answer) => {
 };
 
 // TODO:
+// $(document).ready(function () {
+//   $("#search-result").on("dragstart", ".quiz-card", function (event) {
+//     const dataId = $(event.target).attr("data-id");
+//     event.originalEvent.dataTransfer.setData("text/plain", dataId);
+//   });
+
+//   $(".container-right").on("dragover", function (event) {
+//     event.preventDefault();
+//   });
+
+//   $(".container-right").on("drop", function (event) {
+//     event.preventDefault();
+//     const dataId = event.originalEvent.dataTransfer.getData("text");
+//     const draggedElement = $(`[data-id="${dataId}"]`);
+//     const containerRight = $(this);
+//     const dropTarget = getDropTarget(containerRight, event.pageY);
+//     if (dropTarget) {
+//       draggedElement.insertBefore(dropTarget);
+//     } else {
+//       containerRight.append(draggedElement);
+//     }
+//   });
+
+//   $(".container-right").sortable({
+//     axis: "y",
+//     containment: "parent",
+//     tolerance: "pointer",
+//     cursor: "move",
+//   });
+
+//   function getDropTarget(container, mouseY) {
+//     const children = container.children();
+//     for (let i = 0; i < children.length; i++) {
+//       const child = $(children[i]);
+//       const childTop = child.offset().top;
+//       const childHeight = child.outerHeight();
+//       if (mouseY >= childTop && mouseY <= childTop + childHeight) {
+//         return child;
+//       }
+//     }
+//     return null;
+//   }
+// });
 $(document).ready(function () {
+  // Drag quiz cards from search result to container-right
   $("#search-result").on("dragstart", ".quiz-card", function (event) {
     const dataId = $(event.target).attr("data-id");
     event.originalEvent.dataTransfer.setData("text/plain", dataId);
   });
 
+  // Drag quiz cards from container-right to search result
+  $(".container-right").on("dragstart", ".quiz-card", function (event) {
+    const dataId = $(event.target).attr("data-id");
+    event.originalEvent.dataTransfer.setData("text/plain", dataId);
+  });
+
+  // Allow dropping on container-right
   $(".container-right").on("dragover", function (event) {
     event.preventDefault();
   });
 
+  // Handle dropping on container-right
   $(".container-right").on("drop", function (event) {
     event.preventDefault();
     const dataId = event.originalEvent.dataTransfer.getData("text");
@@ -358,13 +410,40 @@ $(document).ready(function () {
     }
   });
 
-  $(".container-right").sortable({
-    axis: "y",
-    containment: "parent",
-    tolerance: "pointer",
-    cursor: "move",
+  // Allow dropping on search-result
+  $("#search-result").on("dragover", function (event) {
+    event.preventDefault();
   });
 
+  // Handle dropping on search-result
+  $("#search-result").on("drop", function (event) {
+    event.preventDefault();
+    const dataId = event.originalEvent.dataTransfer.getData("text");
+    const draggedElement = $(`[data-id="${dataId}"]`);
+    const searchResult = $(this);
+    searchResult.append(draggedElement);
+  });
+
+  // Enable draggable and sortable on quiz cards in container-right
+  $(".container-right .quiz-card")
+    .draggable({
+      revert: "invalid",
+      helper: "clone",
+    })
+    .sortable({
+      axis: "y",
+      containment: "parent",
+      tolerance: "pointer",
+      cursor: "move",
+    });
+
+  // Enable draggable on quiz cards in search-result
+  $("#search-result .quiz-card").draggable({
+    revert: "invalid",
+    helper: "clone",
+  });
+
+  // Helper function to find drop target
   function getDropTarget(container, mouseY) {
     const children = container.children();
     for (let i = 0; i < children.length; i++) {
