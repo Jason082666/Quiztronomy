@@ -1,12 +1,12 @@
 import { MultiChoice, TrueFalse } from "./question_module.js";
 localStorage.setItem("searchedId", "[]");
-$("#finish-button").on("click", async () => {
-  // 這邊到時候要把savetoquizzapi做好
-  const result = await axios.post("/api/1.0/game/roomupdate", object);
-  const { data } = result;
-  if (data.error) return console.log(data.error);
-  window.location.href = `/game/room/${roomId}`;
-});
+// $("#finish-button").on("click", async () => {
+//   // 這邊到時候要把savetoquizzapi做好
+//   const result = await axios.post("/api/1.0/game/roomupdate", object);
+//   const { data } = result;
+//   if (data.error) return console.log(data.error);
+//   window.location.href = `/game/room/${roomId}`;
+// });
 
 $("#create-by-system").on("change", function () {
   if ($(this).is(":checked")) {
@@ -472,4 +472,21 @@ $("body").on("click", ".back-to-game-btn", () => {
 
 $("body").on("click", ".no-save-btn", () => {
   window.location.href = "/";
+});
+
+$("#finish-button").on("click", () => {
+  const $popOut = $(`<div class="popup-container">
+  <div class="popup">
+    <p class="popup-text">確認創建?</p>
+    <div class="popup-buttons">
+      <button class="room-ready-btn">確認</button>
+      <button class="croom-ready-cancell-btn">取消</button>
+    </div>
+  </div>
+</div>`);
+  $("body").append($popOut);
+});
+
+$("body").on("click", ".croom-ready-cancell-btn", () => {
+  $(".popup-container").remove();
 });

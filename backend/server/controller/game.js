@@ -12,7 +12,7 @@ import {
 import errors from "../models/errorhandler.js";
 import { redisClient } from "../models/redis.js";
 
-export const createGameRoom = async (req, res, next) => {
+export const createGameRoom = async (req, res) => {
   const { userId, name } = req.session.user;
   const data = await createRoom(userId, name);
   res.json({ data });

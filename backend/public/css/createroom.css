@@ -279,8 +279,17 @@ header {
   margin-top: 20px;
 }
 
-.popup-buttons button {
+.popup-buttons .save-and-exit-btn,
+.popup-buttons .no-save-btn,
+.popup-buttons .back-to-game-btn {
   font-size: 15px;
   font-weight: bold;
   width: 30%;
+}
+
+.popup-buttons .room-ready-btn,
+.popup-buttons .croom-ready-cancell-btn {
+  font-size: 15px;
+  font-weight: bold;
+  width: 45%;
 }

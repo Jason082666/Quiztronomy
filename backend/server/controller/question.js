@@ -6,7 +6,7 @@ import {
 } from "../models/question.js";
 import errors from "../models/errorhandler.js";
 
-export const insertQuestionByPlayerIntoES = async (req, res, next) => {
+export const insertQuestionByPlayerIntoES = async (req, res) => {
   const { question } = req;
   const result = await insertQuestionIntoES(question);
   delete result.timestamp;
