@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import { MultiChoice, TrueFalse } from "./question_module.js";
 localStorage.setItem("searchedId", "[]");
+localStorage.setItem("quizzes", "{}");
 
 $("#create-by-system").on("change", function () {
   if ($(this).is(":checked")) {
@@ -143,13 +144,13 @@ $(".create-container").on("click", "#search-submit", async function () {
       $("#search-result").append(html);
     }
   });
+  saveQuizzArrayToLocal(quizzes);
 });
 
 $(".create-container").on("keydown", "#search-input", async function (e) {
   if (e.keyCode == 13) {
     const quizzes = await search();
-    console.log(quizzes);
-    if (!quizzes[0]) return;
+    // if (!quizzes[0]) return;
     quizzes.forEach((quizz) => {
       const searched = JSON.parse(localStorage.getItem("searchedId"));
       if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quizz.type)) {
@@ -177,6 +178,7 @@ $(".create-container").on("keydown", "#search-input", async function (e) {
         $("#search-result").append(html);
       }
     });
+    saveQuizzArrayToLocal(quizzes);
   }
 });
 
@@ -204,6 +206,7 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
     const html = quizz.html;
     $("#search-result").append(html);
   }
+  saveQuizzItemToLocal(data);
 });
 
 $(".create-container").on("click", ".create-quizz-btn", async () => {
@@ -547,10 +550,57 @@ $("body").on("click", ".room-ready-btn", async () => {
 });
 
 function updatePositionLabels() {
-  var $quizCards = $(".container-right .quiz-card");
+  const $quizCards = $(".container-right .quiz-card");
   $quizCards.each(function (i) {
     $(this)
       .find(".position-label")
       .text(i + 1);
   });
 }
+
+const saveQuizzArrayToLocal = (quizArray) => {
+  const quizzes = localStorage.getItem("quizzes");
+  const parseQuizzes = JSON.parse(quizzes);
+  quizArray.forEach((quizObj) => {
+    delete quizObj.timestamp;
+    delete quizObj.createTime;
+    delete quizObj.popularity;
+    parseQuizzes[quizObj.id] = quizObj;
+  });
+  const stringifyQuizzes = JSON.stringify(parseQuizzes);
+  localStorage.setItem("quizzes", stringifyQuizzes);
+};
+
+const saveQuizzItemToLocal = (quizObj) => {
+  const quizzes = localStorage.getItem("quizzes");
+  const parseQuizzes = JSON.parse(quizzes);
+  delete quizObj.timestamp;
+  delete quizObj.createTime;
+  delete quizObj.popularity;
+  parseQuizzes[quizObj.id] = quizObj;
+  const stringifyQuizzes = JSON.stringify(parseQuizzes);
+  localStorage.setItem("quizzes", stringifyQuizzes);
+};
+
+$("body").on("click", ".icon-container", async function (e) {
+  e.stopPropagation();
+  const id = $(this).parent().attr("data-id");
+  const quizzes = localStorage.getItem("quizzes");
+  const parseQuizz = JSON.parse(quizzes);
+  delete parseQuizz[id];
+  const stringifyObj = JSON.stringify(parseQuizz);
+  localStorage.setItem("quizzes", stringifyObj);
+  const obj = {};
+  obj[id] = -0.5;
+  const popObj = { popObj: obj };
+  console.log(popObj);
+  await axios.post("/api/1.0/question/update", popObj);
+  $(this).parent().remove();
+});
+
+$("body").on("click", ".quiz-card", async function (e) {
+  if (!$(e.target).is("input")) {
+    $(this).children(".question-container").toggleClass("hidden");
+    $(this).toggleClass("quiz-card-resize");
+  }
+});
