@@ -399,8 +399,8 @@ $(document).ready(function () {
     const dataId = event.originalEvent.dataTransfer.getData("text");
     const draggedElement = $(`[data-id="${dataId}"]`);
     draggedElement.find(".controls").remove();
-    const searchResult = $(this);
-    searchResult.append(draggedElement);
+    draggedElement.find(".icon-container").removeClass("hide-cancle-btn");
+    $(this).append(draggedElement);
     updatePositionLabels();
   });
 
@@ -441,6 +441,7 @@ $(document).ready(function () {
     $(this).removeClass("drag-over");
     const dataId = event.originalEvent.dataTransfer.getData("text/plain");
     const droppedQuizCard = $(`[data-id="${dataId}"]`);
+    droppedQuizCard.find(".icon-container").addClass("hide-cancle-btn");
     const targetQuizCard = $(this);
     const controls = droppedQuizCard.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
@@ -463,6 +464,7 @@ $(document).ready(function () {
     event.preventDefault();
     const dataId = event.originalEvent.dataTransfer.getData("text");
     const draggedElement = $(`[data-id="${dataId}"]`);
+    draggedElement.find(".icon-container").addClass("hide-cancle-btn");
     const controls = draggedElement.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
       const controls = $(`<div class="controls">

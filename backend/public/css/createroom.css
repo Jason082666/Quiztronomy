@@ -127,7 +127,7 @@ textarea {
 
 input[type="number"] {
   width: 100px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .quiz-card-resize {
@@ -165,6 +165,10 @@ input[type="number"] {
   color: red;
 }
 .hidden {
+  display: none;
+}
+
+.hide-cancle-btn {
   display: none;
 }
 
