@@ -26,15 +26,16 @@ class Quizz {
       console.log(this.id);
       obj[this.id] = -0.5;
       const popObj = { popObj: obj };
-      console.log(popObj);
       const result = await axios.post("/api/1.0/question/update", popObj);
       console.log("this", this);
       $(this).parent().remove();
     });
     $element.append($questionHeader);
     $element.on("click", function (e) {
-      $(this).children(".question-container").toggleClass("hidden");
-      $(this).toggleClass("quiz-card-resize");
+      if (!$(e.target).is("input")) {
+        $(this).children(".question-container").toggleClass("hidden");
+        $(this).toggleClass("quiz-card-resize");
+      }
     });
     return $element;
   }

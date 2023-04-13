@@ -398,6 +398,7 @@ $(document).ready(function () {
     draggedElement.find(".controls").remove();
     const searchResult = $(this);
     searchResult.append(draggedElement);
+    updatePositionLabels();
   });
 
   // Enable draggable and sortable on quiz cards in container-right
@@ -441,16 +442,17 @@ $(document).ready(function () {
     const controls = droppedQuizCard.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
-      <input type="number" placeholder="選擇秒數">
       <span class="position-label"></span>
+      <input type="number" min="0" max="60" placeholder="選擇秒數">
     </div>`);
-      droppedQuizCard.append(controls);
+      droppedQuizCard.prepend(controls);
     }
     if (droppedQuizCard.index() < targetQuizCard.index()) {
       targetQuizCard.after(droppedQuizCard);
     } else {
       targetQuizCard.before(droppedQuizCard);
     }
+    updatePositionLabels();
   });
 
   // Handle dropping on container-right
@@ -461,10 +463,10 @@ $(document).ready(function () {
     const controls = draggedElement.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
-      <input type="number" placeholder="選擇秒數">
       <span class="position-label">1</span>
+      <input type="number" min="0" max="60" placeholder="選擇秒數">
     </div>`);
-      draggedElement.append(controls);
+      draggedElement.prepend(controls);
     }
     const containerRight = $(this);
     const dropTarget = getDropTarget(containerRight, event.pageY);
@@ -473,6 +475,7 @@ $(document).ready(function () {
     } else {
       containerRight.append(draggedElement);
     }
+    updatePositionLabels();
   });
   // Helper function to find drop target
   function getDropTarget(container, mouseY) {
@@ -542,3 +545,12 @@ $("body").on("click", ".room-ready-btn", async () => {
   const createResult = createRoomOnRedis.data.data;
   if (createResult.error) return console.log(data.error);
 });
+
+function updatePositionLabels() {
+  var $quizCards = $(".container-right .quiz-card");
+  $quizCards.each(function (i) {
+    $(this)
+      .find(".position-label")
+      .text(i + 1);
+  });
+}
