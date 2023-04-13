@@ -90,8 +90,10 @@ textarea {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 400px;
 }
 #search-result {
+  padding-bottom: 400px;
   display: flex;
   flex-wrap: wrap;
   flex: 1; /* 將搜索結果設置為彈性項目，占據所有可用空間 */

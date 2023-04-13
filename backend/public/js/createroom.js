@@ -56,6 +56,7 @@ $("#create-by-hand").on("change", function () {
 });
 
 $(".create-container").on("click", ".MC-handy", function () {
+  $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="mcs-options">
   <label>輸入題目:</label>
   <input type="text" class="question-text">
@@ -78,6 +79,7 @@ $(".create-container").on("click", ".MC-handy", function () {
 });
 
 $(".create-container").on("click", ".MCS-handy", function () {
+  $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="mcs-options">
   <label>輸入題目:</label>
   <input type="text" class="question-text">
@@ -100,6 +102,7 @@ $(".create-container").on("click", ".MCS-handy", function () {
 });
 
 $(".create-container").on("click", ".TF-handy", function () {
+  $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="tf-options">
   <label>輸入題目:</label>
   <input type="text" class="question-text">
@@ -231,7 +234,17 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.id
     );
     const html = quizz.html;
+    html.find(".icon-container").addClass("hide-cancle-btn");
+    const controls = html.find(".controls"); // 檢查是否已經存在 controls
+    if (controls.length === 0) {
+      const control = $(`<div class="controls">
+      <span class="position-label"></span>
+      <input type="number" min="0" max="60" placeholder="選擇秒數">
+    </div>`);
+      html.prepend(control);
+    }
     $(".container-right").append(html);
+    updatePositionLabels();
   }
   if (["MC-CH", "MC-EN"].includes(type)) {
     const answer = $("input[name='answer']:checked").val();
@@ -255,7 +268,17 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.id
     );
     const html = quizz.html;
+    html.find(".icon-container").addClass("hide-cancle-btn");
+    const controls = html.find(".controls"); // 檢查是否已經存在 controls
+    if (controls.length === 0) {
+      const control = $(`<div class="controls">
+      <span class="position-label"></span>
+      <input type="number" min="0" max="60" placeholder="選擇秒數">
+    </div>`);
+      html.prepend(control);
+    }
     $(".container-right").append(html);
+    updatePositionLabels();
   }
   if (["MCS-CH", "MCS-EN"].includes(type)) {
     const answerArray = [];
@@ -282,7 +305,17 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.id
     );
     const html = quizz.html;
+    html.find(".icon-container").addClass("hide-cancle-btn");
+    const controls = html.find(".controls"); // 檢查是否已經存在 controls
+    if (controls.length === 0) {
+      const control = $(`<div class="controls">
+      <span class="position-label"></span>
+      <input type="number" min="0" max="60" placeholder="選擇秒數">
+    </div>`);
+      html.prepend(control);
+    }
     $(".container-right").append(html);
+    updatePositionLabels();
   }
 });
 

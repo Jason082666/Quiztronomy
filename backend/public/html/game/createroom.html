@@ -70,7 +70,37 @@
             >系統題庫</label
           >
         </div>
-        <div class="create-container"></div>
+        <div class="create-container">
+          <label for="question-type">選擇題型：</label>
+          <input
+            type="radio"
+            name="question-type"
+            class="MC-handy"
+            id="single-choice"
+            value="MC"
+          />
+          <label class="label-for-question" for="single-choice"
+            >單一選擇題</label
+          >
+          <input
+            type="radio"
+            id="true-false"
+            class="TF-handy"
+            name="question-type"
+            value="TF"
+          />
+          <label class="label-for-question" for="true-false">是非題</label>
+          <input
+            type="radio"
+            id="multiple-choice"
+            class="MCS-handy"
+            name="question-type"
+            value="MCS"
+          />
+          <label class="label-for-question" for="multiple-choice">多選題</label>
+          <br />
+          <div class="quizz-handy-container"></div>
+        </div>
         <div id="search-result"></div>
       </div>
       <div class="container-right"></div>
