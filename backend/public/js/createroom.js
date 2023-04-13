@@ -538,7 +538,7 @@ $("body").on("click", ".room-ready-btn", async () => {
   const createRoom = await axios.post("/api/1.0/game/create");
   const { data } = createRoom.data;
   // TODO:這邊要做＂請重新登錄的處理＂
-  console.log(data);
+  localStorage.setItem("roomId", data.id);
   if (data.error) return console.log(data.error);
   const createRoomObject = { roomId: data.id, hostId: data.founder.id };
   const createRoomOnRedis = await axios.post(
@@ -547,6 +547,37 @@ $("body").on("click", ".room-ready-btn", async () => {
   );
   const createResult = createRoomOnRedis.data.data;
   if (createResult.error) return console.log(data.error);
+  const quizzes = localStorage.getItem("quizzes");
+  const parseQuizz = JSON.parse(quizzes);
+  const readyQuizzesArray = [];
+  const readyQuizzesObject = {};
+  const unusedQuizzesObject = {};
+  $(".container-right .quiz-card").each(function () {
+    const id = $(this).attr("data-id");
+    const timeLimits = $(this).find('input[type="number"]').val();
+    const quizzObject = parseQuizz[id];
+    quizzObject.timeLimits = timeLimits;
+    readyQuizzesArray.push(quizzObject);
+  });
+  const founderId = localStorage.getItem("userId");
+  const roomId = localStorage.getItem("roomId");
+  await axios.post("/api/1.0/game/savequizz", {
+    array: readyQuizzesArray,
+    roomId,
+    founderId,
+  });
+  $("#search-result .quiz-card").each(function () {
+    const id = $(this).attr("data-id");
+    unusedQuizzesObject[id] = -0.5;
+  });
+  $(".container-right .quiz-card").each(function () {
+    const id = $(this).attr("data-id");
+    readyQuizzesObject[id] = 1.5;
+  });
+  const addPopObj = { popObj: readyQuizzesObject };
+  const deletePopObj = { popObj: unusedQuizzesObject };
+  await axios.post("/api/1.0/question/update", addPopObj);
+  await axios.post("/api/1.0/question/update", deletePopObj);
 });
 
 function updatePositionLabels() {
@@ -593,7 +624,6 @@ $("body").on("click", ".icon-container", async function (e) {
   const obj = {};
   obj[id] = -0.5;
   const popObj = { popObj: obj };
-  console.log(popObj);
   await axios.post("/api/1.0/question/update", popObj);
   $(this).parent().remove();
 });
