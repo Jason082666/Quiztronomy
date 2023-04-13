@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { MultiChoice, TrueFalse } from "./question_module.js";
 localStorage.setItem("searchedId", "[]");
 
@@ -374,6 +375,7 @@ $(document).ready(function () {
 
   // Drag quiz cards from container-right to search result
   $(".container-right").on("dragstart", ".quiz-card", function (event) {
+    // $(event.target).find(".controls").remove();
     const dataId = $(event.target).attr("data-id");
     event.originalEvent.dataTransfer.setData("text/plain", dataId);
   });
@@ -381,20 +383,6 @@ $(document).ready(function () {
   // Allow dropping on container-right
   $(".container-right").on("dragover", function (event) {
     event.preventDefault();
-  });
-
-  // Handle dropping on container-right
-  $(".container-right").on("drop", function (event) {
-    event.preventDefault();
-    const dataId = event.originalEvent.dataTransfer.getData("text");
-    const draggedElement = $(`[data-id="${dataId}"]`);
-    const containerRight = $(this);
-    const dropTarget = getDropTarget(containerRight, event.pageY);
-    if (dropTarget) {
-      draggedElement.insertBefore(dropTarget);
-    } else {
-      containerRight.append(draggedElement);
-    }
   });
 
   // Allow dropping on search-result
@@ -407,6 +395,7 @@ $(document).ready(function () {
     event.preventDefault();
     const dataId = event.originalEvent.dataTransfer.getData("text");
     const draggedElement = $(`[data-id="${dataId}"]`);
+    draggedElement.find(".controls").remove();
     const searchResult = $(this);
     searchResult.append(draggedElement);
   });
@@ -449,10 +438,40 @@ $(document).ready(function () {
     const dataId = event.originalEvent.dataTransfer.getData("text/plain");
     const droppedQuizCard = $(`[data-id="${dataId}"]`);
     const targetQuizCard = $(this);
+    const controls = droppedQuizCard.find(".controls"); // 檢查是否已經存在 controls
+    if (controls.length === 0) {
+      const controls = $(`<div class="controls">
+      <input type="number" placeholder="選擇秒數">
+      <span class="position-label"></span>
+    </div>`);
+      droppedQuizCard.append(controls);
+    }
     if (droppedQuizCard.index() < targetQuizCard.index()) {
       targetQuizCard.after(droppedQuizCard);
     } else {
       targetQuizCard.before(droppedQuizCard);
+    }
+  });
+
+  // Handle dropping on container-right
+  $(".container-right").on("drop", function (event) {
+    event.preventDefault();
+    const dataId = event.originalEvent.dataTransfer.getData("text");
+    const draggedElement = $(`[data-id="${dataId}"]`);
+    const controls = draggedElement.find(".controls"); // 檢查是否已經存在 controls
+    if (controls.length === 0) {
+      const controls = $(`<div class="controls">
+      <input type="number" placeholder="選擇秒數">
+      <span class="position-label">1</span>
+    </div>`);
+      draggedElement.append(controls);
+    }
+    const containerRight = $(this);
+    const dropTarget = getDropTarget(containerRight, event.pageY);
+    if (dropTarget) {
+      draggedElement.insertBefore(dropTarget);
+    } else {
+      containerRight.append(draggedElement);
     }
   });
   // Helper function to find drop target
