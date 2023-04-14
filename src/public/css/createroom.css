@@ -2,7 +2,11 @@
 
 /* Body 全局設置 */
 body {
-  background-color: #08080e;
+  background-image: url("https://images.pexels.com/photos/7649105/pexels-photo-7649105.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
   color: #f5f5f5;
   font-family: "Segoe UI", sans-serif;
 }
@@ -41,9 +45,6 @@ button {
   transition: all 0.3s ease;
 }
 
-/* button:hover {
-  background-color: #222222;
-} */
 button:hover {
   background: linear-gradient(
     90deg,
@@ -66,7 +67,8 @@ textarea {
   border: none;
   border-radius: 5px;
   margin-bottom: 20px;
-  background-color: #252525;
+  background-color: transparent;
+  outline: 1px solid rgb(239, 231, 231);
   color: #e5e5e5;
   font-size: 16px;
 }

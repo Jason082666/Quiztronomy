@@ -35,7 +35,7 @@ export const socketio = async function (server) {
       if (socket.hostId) {
         delete io.host[roomId];
         await leaveRoom(roomId, socket.hostId, true);
-        if (!io.users) return;
+        if (!io.users || !io.users[roomId]) return;
         if (!io.users[roomId][0] && !io.host[roomId]) {
           // terminate the room!(也不用存資料)
           await terminateRoom(roomId);
@@ -50,7 +50,7 @@ export const socketio = async function (server) {
         await leaveRoom(roomId, socket.userId);
         io.to(roomId).emit("userLeft", io.users[roomId]);
       }
-      if (!io.users) return;
+      if (!io.users || !io.users[roomId]) return;
 
       if (!io.users[roomId][0] && !io.host[roomId]) {
         // terminate the room!(也不用存資料)

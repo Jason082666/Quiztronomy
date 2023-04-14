@@ -5,19 +5,19 @@ const roomId = localStorage.getItem("roomId");
 // Join chatroom
 socket.emit("join", { userName, userId, roomId });
 socket.on("message", (message) => {
-  $("h2").empty();
-  $("h2").text(message);
+  $("h1").empty();
+  $("h1").text(message);
 });
 socket.on("welcomeMessage", () => {
-  $("h2").empty();
-  $("h2").text("Waiting for more players.");
+  $("h1").empty();
+  $("h1").text("Waiting for more players.");
 });
 
 socket.on("showControllerInterface", (host) => {
   const $startButton = $('<button id="start-game-btn">Start the game</button>');
-  $("#host").text(`Host: ${host.userName}, roomId: ${host.roomId}`);
+  $("#host").text(`Host: ${host.userName}  roomId: ${host.roomId}`);
   socket.host = true;
-  $startButton.appendTo($(".container"));
+  $startButton.appendTo($(".host-container"));
 });
 
 socket.on("userJoined", ([host, users]) => {
@@ -30,8 +30,8 @@ socket.on("userJoined", ([host, users]) => {
     const $leaveRoomButton = $(
       '<button id="leave-btn">Leave the room</button>'
     );
-    $(".btn-container").empty();
-    $(".btn-container").append($leaveRoomButton);
+    $(".host-container").find("#leave-btn").remove();
+    $leaveRoomButton.appendTo($(".host-container"));
   }
   users.forEach((user) => {
     const { userName } = user;
@@ -85,7 +85,6 @@ const $countdown = $("<div class='count-down'>").css({
 });
 $(".container").append($countdown);
 
-$(".btn-container").on("click", "#leave-btn", async () => {
+$(".host-container").on("click", "#leave-btn", async () => {
   window.location.href = "/";
 });
-
