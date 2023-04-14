@@ -1,22 +1,26 @@
 import { Server } from "socket.io";
-import { terminateRoom } from "./server/models/game.js";
+import { terminateRoom, leaveRoom } from "./server/models/game.js";
+import { gameHostValidation } from "./server/models/user.js";
+
 export const socketio = async function (server) {
   const io = new Server(server);
   io.on("connection", (socket) => {
     console.log("A user connected");
     socket.on("join", async (object) => {
-      const { userId, username, roomId, hostId, hostname } = object;
+      const { userId, userName, roomId } = object;
+      const validationUser = await gameHostValidation(userId, userName, roomId);
       socket.join(roomId);
       socket.roomId = roomId;
-      if (!username && !userId) {
-        socket.emit("showControllerInterface", { hostname, hostId, roomId });
-        socket.hostId = hostId;
+      if (validationUser) {
+        socket.emit("showControllerInterface", { userName, userId, roomId });
+        socket.hostId = userId;
         io.host = {};
-        io.host[roomId] = { hostId, hostname, roomId };
+        io.host[roomId] = { userId, userName, roomId };
+        socket.emit("welcomeMessage");
       } else {
-        socket.emit("message", `Welcome to the game room, ${username} !`);
+        socket.emit("message", `Welcome to the game room, ${userName} !`);
         socket.userId = userId;
-        const user = { userId, username };
+        const user = { userId, userName };
         if (!io.users) {
           io.users = {};
         }
@@ -30,6 +34,14 @@ export const socketio = async function (server) {
       const roomId = socket.roomId;
       if (socket.hostId) {
         delete io.host[roomId];
+        await leaveRoom(roomId, socket.hostId, true);
+        if (!io.users) return;
+        if (!io.users[roomId][0] && !io.host[roomId]) {
+          // terminate the room!(也不用存資料)
+          await terminateRoom(roomId);
+          delete io.users[roomId];
+        }
+        return;
       }
       if (io.users && io.users[roomId]) {
         io.users[roomId] = io.users[roomId].filter(
@@ -38,6 +50,8 @@ export const socketio = async function (server) {
         await leaveRoom(roomId, socket.userId);
         io.to(roomId).emit("userLeft", io.users[roomId]);
       }
+      if (!io.users) return;
+
       if (!io.users[roomId][0] && !io.host[roomId]) {
         // terminate the room!(也不用存資料)
         await terminateRoom(roomId);

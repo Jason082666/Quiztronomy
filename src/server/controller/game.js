@@ -1,14 +1,15 @@
 import {
   createRoom,
   enterRoom,
-  leaveRoom,
+  // leaveRoom,
   createRoomOnRedis,
   terminateRoom,
   saveQuizzIntoRoom,
   startRoom,
-  // getCurrentQuizzFromMongo,
+  getCurrentQuizzFromMongo,
   getCurrentQuizzFromRedis,
 } from "../models/game.js";
+import { redisClient } from "../models/redis.js";
 import errors from "../models/errorhandler.js";
 
 export const createGameRoom = async (req, res) => {
@@ -43,23 +44,23 @@ export const saveQuizzIntoGameRoom = async (req, res, next) => {
   return res.json({ message: "saved" });
 };
 
-//TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 export const enterGameRoom = async (req, res, next) => {
-  const { roomId, id, name } = req.body;
-  if (!roomId || !id || !name)
-    return next(new errors.ParameterError(["id", "roomId", "name"], 400));
+  const { userId, name } = req.session.user;
+  const { roomId } = req.body;
+  if (!roomId || !userId || !name)
+    return next(new errors.ParameterError(["userId", "roomId", "name"], 400));
   if (
     typeof roomId !== "string" ||
-    typeof id !== "string" ||
+    typeof userId !== "string" ||
     typeof name !== "string"
   )
     return next(
       new errors.TypeError(
-        { roomId: "string", id: "string", name: "string" },
+        { roomId: "string", userId: "string", name: "string" },
         400
       )
     );
-  const result = await enterRoom(roomId, id, name);
+  const result = await enterRoom(roomId, userId, name);
   if (result === null)
     return next(
       new errors.CustomError(
@@ -69,23 +70,23 @@ export const enterGameRoom = async (req, res, next) => {
     );
   if (!result)
     return next(new errors.CustomError(`You are already in the room`, 400));
-  return res.json({ message: `Enter room ${roomId} !` });
+  return res.json({ data: { userId, userName: name } });
 };
 
-//TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
-export const leaveGameRoom = async (req, res, next) => {
-  const { roomId, id } = req.body;
-  if (!roomId || !id)
-    return next(new errors.ParameterError(["id", "roomId"], 400));
-  if (typeof roomId !== "string" || typeof id !== "string")
-    return next(new errors.TypeError({ roomId: "string", id: "string" }, 400));
-  const result = await leaveRoom(roomId, id);
-  if (result === null)
-    return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
-  if (!result)
-    return next(new errors.CustomError(`Player is not in room ${roomId}`, 400));
-  return res.json({ message: `Leave room ${roomId} !` });
-};
+// //TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
+// export const leaveGameRoom = async (req, res, next) => {
+//   const { userId } = req.session.user;
+//   const { roomId } = req.body;
+//   if (!roomId) return next(new errors.ParameterError(["id"], 400));
+//   if (typeof roomId !== "string")
+//     return next(new errors.TypeError({ roomId: "string" }, 400));
+//   const result = await leaveRoom(roomId, userId);
+//   if (result === null)
+//     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
+//   if (!result)
+//     return next(new errors.CustomError(`Player is not in room ${roomId}`, 400));
+//   return res.json({ message: `Leave room ${roomId} !` });
+// };
 
 //TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 export const startGameRoom = async (req, res, next) => {
@@ -127,12 +128,12 @@ export const getCurrentQuizz = async (req, res, next) => {
     return next(
       new errors.TypeError({ roomId: "string", currentQuizz: "string" }, 400)
     );
-  // if (redisClient.status === "reconnecting") {
-  //   const data = await getCurrentQuizzFromMongo(roomId, currentQuizz);
-  //   if (!data)
-  //     return next(new errors.CustomError("No this room or no this quizz", 400));
-  //   return res.json({ data });
-  // }
+  if (redisClient.status === "reconnecting") {
+    const data = await getCurrentQuizzFromMongo(roomId, currentQuizz);
+    if (!data)
+      return next(new errors.CustomError("No this room or no this quizz", 400));
+    return res.json({ data });
+  }
   const data = await getCurrentQuizzFromRedis(roomId, currentQuizz);
   if (!data)
     return next(new errors.CustomError("No this room or no this quizz", 400));
@@ -140,14 +141,12 @@ export const getCurrentQuizz = async (req, res, next) => {
 };
 //TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 export const createGameRoomOnRedis = async (req, res, next) => {
-  const { roomId, hostId } = req.body;
-  if (!roomId || !hostId)
-    return next(new errors.ParameterError(["roomId", "hostId"], 400));
-  if (typeof roomId !== "string" || typeof hostId !== "string")
-    return next(
-      new errors.TypeError({ roomId: "string", hostId: "string" }, 400)
-    );
-  const data = await createRoomOnRedis(roomId, hostId);
+  const { userId, name } = req.session.user;
+  const { roomId } = req.body;
+  if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
+  if (typeof roomId !== "string")
+    return next(new errors.TypeError({ roomId: "string" }, 400));
+  const data = await createRoomOnRedis(roomId, userId, name);
   if (data === undefined)
     return next(new errors.CustomError("Quizz list is empty", 400));
   if (data === null)
