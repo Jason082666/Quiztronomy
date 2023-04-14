@@ -1,0 +1,106 @@
+body {
+  background-image: url("https://images.pexels.com/photos/2874066/pexels-photo-2874066.jpeg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  font-size: xx-large;
+}
+
+#player-list {
+  padding: 30px;
+  width: 75vw;
+  margin: 0 auto 0;
+  border-radius: 10px;
+  min-height: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: auto;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* TODO: */
+/* #player-list div {
+  border-radius: 10px;
+  width: 20%;
+  color: #2b4267;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  font-weight: 600;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+#player-list div {
+  border-radius: 20px; /* 增加圓角 */
+  width: 20%; /* 加寬一點 */
+  color: #ffffff; /* 調整文字顏色 */
+  background-color: rgba(0, 0, 0, 0.5); /* 調整背景顏色為半透明黑色 */
+  font-size: 24px; /* 加大字體 */
+  font-weight: 800; /* 增加字體粗細 */
+  height: 80px; /* 加高一點 */
+  display: flex;
+  margin-right: 15px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.5); /* 加入白色陰影效果 */
+  animation: pulse 2s ease-in-out infinite; /* 加入動畫效果 */
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#host {
+  width: 75vw;
+  margin: 0 auto 0;
+  font-size: 20px;
+}
+
+button {
+  background-color: #303030;
+  color: #e5e5e5;
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 35%;
+}
+button:hover {
+  background: linear-gradient(
+    90deg,
+    #cdd2df,
+    #94a0b3,
+    #506990,
+    #2b4267,
+    #182949
+  );
+}
+
+.host-container {
+  display: flex;
+  width: 75vw;
+  margin: 0 auto 0;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}

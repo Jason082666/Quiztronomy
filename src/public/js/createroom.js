@@ -576,12 +576,16 @@ $("body").on("click", ".room-ready-btn", async () => {
   localStorage.setItem("roomId", data.id);
   if (data.error) return console.log(data.error);
   const createRoomObject = { roomId: data.id, hostId: data.founder.id };
-  const createRoomOnRedis = await axios.post(
+  const createRoomOnMongo = await axios.post(
     "/api/1.0/game/create",
     createRoomObject
   );
-  const createResult = createRoomOnRedis.data.data;
+  const createResult = createRoomOnMongo.data.data;
   if (createResult.error) return console.log(data.error);
+  const createRoomOnRedis = await axios.post("/api/1.0/game/roomupdate", {
+    roomId: data.id,
+  });
+  if (createRoomOnRedis.error) return console.log(data.error);
   const quizzes = localStorage.getItem("quizzes");
   const parseQuizz = JSON.parse(quizzes);
   const readyQuizzesArray = [];
@@ -613,6 +617,9 @@ $("body").on("click", ".room-ready-btn", async () => {
   const deletePopObj = { popObj: unusedQuizzesObject };
   await axios.post("/api/1.0/question/update", addPopObj);
   await axios.post("/api/1.0/question/update", deletePopObj);
+  localStorage.removeItem("searcheId");
+  localStorage.removeItem("quizzes");
+  window.location.href = `/game/room/${roomId}`;
 });
 
 function updatePositionLabels() {

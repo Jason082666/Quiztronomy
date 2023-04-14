@@ -27,18 +27,14 @@ export const createRoom = async function (id, name) {
   return dataObj;
 };
 
-export const createRoomOnRedis = async function (roomId, hostId) {
-  const gameRoom = await MyGameRoom.findOne({
-    id: roomId,
-    "founder.id": hostId,
-  });
-  if (!gameRoom.quizz[0]) return undefined;
-  if (!gameRoom) return null;
-  await gameRoom.save();
+export const createRoomOnRedis = async function (roomId, hostId, hostName) {
   if (redisClient.status === "reconnecting") {
     return false;
   }
-  await redisClient.hset(`${roomId}-room`, "host", hostId);
+  const obj = {};
+  obj[hostId] = hostName;
+  const hostObj = JSON.stringify(obj);
+  await redisClient.hset(`${roomId}-room`, "host", hostObj);
   return true;
 };
 
@@ -74,24 +70,28 @@ export const enterRoom = async function (roomId, id, name) {
   return true;
 };
 
-export const leaveRoom = async function (roomId, playerId) {
+export const leaveRoom = async function (roomId, playerId, host = false) {
   if (redisClient.status === "reconnecting") return null;
-  const result = await redisClient.exists(`${roomId}-room`);
-  if (result == 0) return null;
-  const hostId = await redisClient.hget(`${roomId}-room`, "host");
-  if (hostId === playerId) {
+  const roomExist = await redisClient.exists(`${roomId}-room`);
+  if (roomExist == 0) return null;
+  if (host) {
     const result = await redisClient.hdel(`${roomId}-room`, "host");
     if (result == 0) return undefined;
     const space = await redisClient.hlen(`${roomId}-room`);
-    if (space == 1) await redisClient.del(`${roomId}-room`);
-    return true;
-  } else {
-    const result = await redisClient.hdel(`${roomId}-room`, playerId);
-    if (result == 0) return undefined;
-    const space = await redisClient.hlen(`${roomId}-room`);
-    if (space == 1) await redisClient.del(`${roomId}-room`);
+    if (space == 0) {
+      await redisClient.del(`${roomId}-room`);
+      await redisClient.del(roomId);
+    }
     return true;
   }
+  const result = await redisClient.hdel(`${roomId}-room`, playerId);
+  if (result == 0) return undefined;
+  const space = await redisClient.hlen(`${roomId}-room`);
+  if (space == 0) {
+    await redisClient.del(`${roomId}-room`);
+    await redisClient.del(roomId);
+  }
+  return true;
 };
 
 export const startRoom = async function (roomId, founderId) {
@@ -144,20 +144,20 @@ export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
   return data;
 };
 
-// export const getCurrentQuizzFromMongo = async function (roomId, currentQuizz) {
-//   const gameRoom = await MyGameRoom.findOne({
-//     id: roomId,
-//     roomStatus: "ready",
-//   });
-//   if (!gameRoom) return null;
-//   const { quizz } = gameRoom;
-//   const length = quizz.length;
-//   const data = quizz[+currentQuizz - 1];
-//   if (!data) return null;
-//   if (length === +currentQuizz) {
-//     const newData = data.toObject();
-//     newData.lastquizz = true;
-//     return newData;
-//   }
-//   return data;
-// };
+export const getCurrentQuizzFromMongo = async function (roomId, currentQuizz) {
+  const gameRoom = await MyGameRoom.findOne({
+    id: roomId,
+    roomStatus: "started",
+  });
+  if (!gameRoom) return null;
+  const { quizz } = gameRoom;
+  const length = quizz.length;
+  const data = quizz[+currentQuizz - 1];
+  if (!data) return null;
+  if (length === +currentQuizz) {
+    const newData = data.toObject();
+    newData.lastquizz = true;
+    return newData;
+  }
+  return data;
+};
