@@ -16,9 +16,9 @@ let redisStore = new RedisStore({
   prefix: "myapp:",
 });
 app.use(express.json());
-app.use(express.static("src/public/html"));
-app.use("/js", express.static("src/public/js"));
-app.use("/css", express.static("src/public/css"));
+app.use(express.static("backend/public/html"));
+app.use("/js", express.static("backend/public/js"));
+app.use("/css", express.static("backend/public/css"));
 app.use(
   session({
     store: redisStore,
@@ -45,7 +45,7 @@ app.get("/game/room/:roomId", (req, res) => {
   const filePath = path.join(__dirname, "/public/html/game/room.html");
   return res.sendFile(filePath);
 });
-app.use((req, res) => {
+app.use((req, res, next) => {
   return res.status(404).sendFile(__dirname + "/public/html/404.html");
 });
 
