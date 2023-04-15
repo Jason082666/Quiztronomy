@@ -8,12 +8,12 @@ import {
   // leaveGameRoom,
   terminateGameRoom,
   saveQuizzIntoGameRoom,
-  getCurrentQuizz,
+  // getCurrentQuizz,
   startGameRoom,
   createGameRoomOnRedis,
 } from "../controller/game.js";
 
-router.route("/game/currentquizz").get(catchError(getCurrentQuizz));
+// router.route("/game/currentquizz").get(catchError(getCurrentQuizz));
 router
   .route("/game/create")
   .post(catchError(authetication), catchError(createGameRoom));

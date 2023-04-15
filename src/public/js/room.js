@@ -135,7 +135,7 @@ function multipleChoiceOnclick(quizzObj) {
         roomId,
         score: 100,
       });
-      console.log(result.data);
+      console.log(result.data.score);
     }
     $("input[name='answer']").css("opacity", "0.5");
   });
@@ -188,7 +188,7 @@ function countDown(timeLimits) {
   }, 50);
 }
 
-export const calculateScore = (totalTime, remainTime) => {
+const calculateScore = (totalTime, remainTime) => {
   const baseScore = 100;
   const timeBonus = Math.round(500 * Math.pow(remainTime / totalTime, 2));
   const score = baseScore + timeBonus;
