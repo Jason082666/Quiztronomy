@@ -25,20 +25,6 @@ h1 {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* TODO: */
-/* #player-list div {
-  border-radius: 10px;
-  width: 20%;
-  color: #2b4267;
-  background-color: rgba(255, 255, 255, 0.5);
-  font-size: 20px;
-  font-weight: 600;
-  height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
 #player-list div {
   border-radius: 20px; /* 增加圓角 */
   width: 20%; /* 加寬一點 */
@@ -77,7 +63,7 @@ button {
   background-color: #303030;
   color: #e5e5e5;
   font-size: 20px;
-  padding: 10px;
+  padding: 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -87,7 +73,7 @@ button {
 button:hover {
   background: linear-gradient(
     90deg,
-    #cdd2df,
+    #b8c5e5,
     #94a0b3,
     #506990,
     #2b4267,
@@ -209,3 +195,119 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+
+/* TODO: */
+#quiz-container {
+  display: flex;
+  padding: 15px;
+  align-items: stretch;
+  justify-content: space-around;
+}
+#quiz {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  color: #1f253d;
+  border-radius: 20px;
+  padding: 20px;
+  flex-basis: 60%;
+  height: 70vh;
+}
+#count-down-container {
+  height: 70vh;
+  padding-top: 0;
+}
+#quiz-intro {
+  padding-top: 0;
+}
+
+#question {
+  height: 15%;
+  font-size: 36px;
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 0;
+  padding: 10px;
+  height: 65%;
+}
+li {
+  height: 23%;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+label {
+  display: block;
+  height: 23%;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+label:hover {
+  background-color: #f3f3f3;
+}
+
+input[type="radio"]:checked + label {
+  background-color: #d7c8b8;
+  color: #fff;
+}
+
+#scoreboard {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #333;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+#scoreboard h2 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+#scoreboard ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+#scoreboard li {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-right: 20px;
+}
+
+#scoreboard li span {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* #scoreboard li:nth-child(1) {
+  color: #ffd700;
+}
+
+#scoreboard li:nth-child(2) {
+  color: #c0c0c0;
+}
+
+#scoreboard li:nth-child(3) {
+  color: #cd7f32;
+} */

@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { terminateRoom, leaveRoom } from "./server/models/game.js";
+import { terminateRoom, leaveRoom, startRoom } from "./server/models/game.js";
 import { gameHostValidation } from "./server/models/user.js";
 
 export const socketio = async function (server) {
@@ -58,9 +58,12 @@ export const socketio = async function (server) {
         delete io.users[roomId];
       }
     });
-    socket.on("startGame", () => {
+    socket.on("startGame", async () => {
       const roomId = socket.roomId;
-      io.to(roomId).emit("loadFirstQuizz");
+      const hostId = socket.hostId;
+      const firstQuizz = await startRoom(roomId, hostId);
+      firstQuizz.num = 1;
+      io.to(roomId).emit("loadFirstQuizz", firstQuizz);
     });
   });
 };

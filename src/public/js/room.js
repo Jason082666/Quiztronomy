@@ -54,20 +54,26 @@ $(".host-container").on("click", "#start-game-btn", () => {
   socket.emit("startGame");
 });
 
-socket.on("loadFirstQuizz", () => {
+socket.on("loadFirstQuizz", (firstQuizz) => {
+  console.log(firstQuizz);
   let intervalId;
   let count = 5;
   $(".count-down-wrapper").fadeIn();
   $(".overlay").fadeIn();
   $(".count-down-number").html(count);
   $(".overlay").fadeIn();
-  intervalId = setInterval(function () {
+  intervalId = setInterval(async function () {
     count--;
     $(".count-down-number").html(count);
     if (count === 0) {
       clearInterval(intervalId);
       $(".count-down-wrapper").fadeOut();
       $(".overlay").fadeOut();
+      if (!socket.host) {
+        renderQuizzPage(firstQuizz);
+      } else {
+        renderHostQuizzPage(firstQuizz);
+      }
     }
   }, 1000);
 });
@@ -82,3 +88,27 @@ $(".container").after($countdown);
 $(".host-container").on("click", "#leave-btn", async () => {
   window.location.href = "/";
 });
+
+const renderQuizzPage = (quizzObj) => {
+  $(".container").empty();
+  if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
+    const page = `<div id='quiz-container'><div id="count-down-container"><h1 id="quiz-intro">Question ${quizzObj.num}</h1></div><div id='quiz'><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
+  <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
+  <input type='radio' name='answer' value='C' id='C'>
+  <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul><button id="submit">Submit</button></div><div id='scoreboard'><h2>Scoreboard</h2>
+  <ol id='scores'></ol></div></div>`;
+    $(".container").html(page);
+  }
+};
+
+const renderHostQuizzPage = (quizzObj) => {
+  $(".container").empty();
+  if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
+    const page = `<div id='quiz-container'><div id="count-down-container"><h1 id="quiz-intro">Question ${quizzObj.num}</h1></div><div id='quiz'><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
+  <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
+  <input type='radio' name='answer' value='C' id='C'>
+  <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul><button id="next-quizz-btn">Next question</button></div><div id='scoreboard'><h2>Scoreboard</h2>
+  <ol id='scores'></ol></div></div>`;
+    $(".container").html(page);
+  }
+};
