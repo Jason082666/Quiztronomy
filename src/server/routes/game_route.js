@@ -23,7 +23,9 @@ router
 // router
 //   .route("/game/leave")
 //   .post(catchError(authetication), catchError(leaveGameRoom));
-router.route("/game/start").post(catchError(startGameRoom));
+router
+  .route("/game/start")
+  .post(catchError(authetication), catchError(startGameRoom));
 router.route("/game/terminate").post(catchError(terminateGameRoom));
 router.route("/game/savequizz").post(catchError(saveQuizzIntoGameRoom));
 router.route("/game/roomupdate").post(catchError(createGameRoomOnRedis));

@@ -36,6 +36,7 @@ export const generateQuestionByAI = async function (text, type) {
         },
       ],
       max_tokens: 500,
+      temperature: 0.7,
     })
     .then((completion) => {
       const content = completion.data.choices[0].message.content;

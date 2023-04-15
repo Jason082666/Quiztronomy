@@ -61,3 +61,13 @@ export const addToQuequeAndUpdateMongo = async function (roomId) {
   await redisClient.lpush("saveScoreToMongo", uniqueObject);
   return true;
 };
+
+export const calculateScore = (totalTime, usedTime) => {
+  const baseScore = 100;
+  const timeRemaining = totalTime - usedTime;
+  const timeBonus = Math.round(500 * Math.pow(timeRemaining / totalTime, 2));
+  const score = baseScore + timeBonus;
+  return score;
+};
+
+

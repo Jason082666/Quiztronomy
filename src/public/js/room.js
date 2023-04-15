@@ -50,40 +50,34 @@ socket.on("userLeft", (users) => {
   });
 });
 
-$(".container").on("click", "#start-game-btn", () => {
+$(".host-container").on("click", "#start-game-btn", () => {
   socket.emit("startGame");
 });
 
 socket.on("loadFirstQuizz", () => {
-  if (socket.host) {
-    console.log(789);
-  } else {
-    console.log(676);
-    let intervalId;
-    let count = 5;
-    $(".count-down").css("display", "block").html(count);
-    intervalId = setInterval(function () {
-      count--;
-      $(".count-down").html(count);
-      if (count === 0) {
-        clearInterval(intervalId);
-        $(".count-down").css("display", "none");
-      }
-    }, 1000);
-  }
+  let intervalId;
+  let count = 5;
+  $(".count-down-wrapper").fadeIn();
+  $(".overlay").fadeIn();
+  $(".count-down-number").html(count);
+  $(".overlay").fadeIn();
+  intervalId = setInterval(function () {
+    count--;
+    $(".count-down-number").html(count);
+    if (count === 0) {
+      clearInterval(intervalId);
+      $(".count-down-wrapper").fadeOut();
+      $(".overlay").fadeOut();
+    }
+  }, 1000);
 });
 
-const $countdown = $("<div class='count-down'>").css({
-  position: "fixed",
-  top: "20px",
-  right: "20px",
-  backgroundColor: "#fff",
-  padding: "10px",
-  borderRadius: "5px",
-  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-  display: "none",
-});
-$(".container").append($countdown);
+const $countdown = $(
+  `<div class="overlay"></div><div class="count-down-wrapper">
+  <div class="count-down-radar"><div class="count-down-number">5</div></div>
+</div>`
+);
+$(".container").after($countdown);
 
 $(".host-container").on("click", "#leave-btn", async () => {
   window.location.href = "/";

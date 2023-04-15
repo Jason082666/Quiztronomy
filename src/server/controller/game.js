@@ -90,14 +90,15 @@ export const enterGameRoom = async (req, res, next) => {
 
 //TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 export const startGameRoom = async (req, res, next) => {
-  const { roomId, hostId } = req.body;
-  if (!roomId || !hostId)
-    return next(new errors.ParameterError(["roomId", "hostId"], 400));
-  if (typeof roomId !== "string" || typeof hostId !== "string")
+  const { userId } = req.session.user;
+  const { roomId } = req.body;
+  if (!roomId || !userId)
+    return next(new errors.ParameterError(["roomId", "userId"], 400));
+  if (typeof roomId !== "string" || typeof userId !== "string")
     return next(
-      new errors.TypeError({ roomId: "string", hostId: "string" }, 400)
+      new errors.TypeError({ roomId: "string", userId: "string" }, 400)
     );
-  const data = await startRoom(roomId, hostId);
+  const data = await startRoom(roomId, userId);
   if (data === null)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
   if (!data) return next(new errors.CustomError(`Fail to start the game`, 400));
