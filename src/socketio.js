@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import { terminateRoom, leaveRoom, startRoom } from "./server/models/game.js";
 import { gameHostValidation } from "./server/models/user.js";
+import { showRank } from "./server/models/score.js";
 
 export const socketio = async function (server) {
   const io = new Server(server);
@@ -16,6 +17,8 @@ export const socketio = async function (server) {
         socket.hostId = userId;
         io.host = {};
         io.host[roomId] = { userId, userName, roomId };
+        io.score = {};
+        io.score[roomId] = {};
         socket.emit("welcomeMessage");
       } else {
         socket.emit("message", `Welcome to the game room, ${userName} !`);
@@ -41,6 +44,7 @@ export const socketio = async function (server) {
           await terminateRoom(roomId);
           delete io.users[roomId];
         }
+        delete io.score[roomId];
         return;
       }
       if (io.users && io.users[roomId]) {
@@ -56,6 +60,7 @@ export const socketio = async function (server) {
         // terminate the room!(也不用存資料)
         await terminateRoom(roomId);
         delete io.users[roomId];
+        delete io.score[roomId];
       }
     });
     socket.on("startGame", async () => {
@@ -64,6 +69,18 @@ export const socketio = async function (server) {
       const firstQuizz = await startRoom(roomId, hostId);
       firstQuizz.num = 1;
       io.to(roomId).emit("loadFirstQuizz", firstQuizz);
+    });
+    socket.on("getAnswer", (value) => {
+      if (!(value in io.score[socket.roomId])) {
+        io.score[socket.roomId][value] = 1;
+      } else {
+        io.score[socket.roomId][value] += 1;
+      }
+    });
+    socket.on("timeout", async () => {
+      const scoreObj = io.score[socket.roomId];
+      const rankResult = await showRank(socket.roomId, 5);
+      socket.emit("showScoreTable", [scoreObj, rankResult]);
     });
   });
 };

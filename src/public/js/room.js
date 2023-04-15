@@ -79,6 +79,11 @@ socket.on("loadFirstQuizz", (firstQuizz) => {
   }, 1000);
 });
 
+socket.on("showScoreTable", ([scoreObj, rankResult]) => {
+  $(".container").empty();
+  console.log(scoreObj, rankResult);
+});
+
 const $countdown = $(
   `<div class="overlay"></div><div class="count-down-wrapper">
   <div class="count-down-radar"><div class="count-down-number">5</div></div>
@@ -122,14 +127,14 @@ const renderHostQuizzPage = (quizzObj) => {
 function multipleChoiceOnclick(quizzObj) {
   $(".container").on("click", "input[name='answer']", async function () {
     $("input[name='answer']").attr("disabled", true);
-    const selectedInput = $('input[name="answer"]:checked');
-    if (selectedInput.attr("data-state") === "right") {
-      selectedInput.next().addClass("right-answer");
+    const $selectedInput = $('input[name="answer"]:checked');
+    if ($selectedInput.attr("data-state") === "right") {
+      $selectedInput.next().addClass("right-answer");
       const score = calculateScore(quizzObj.timeLimits, remainTime);
       const result = await axios.post("/api/1.0/score/add", { roomId, score });
       console.log(result.data);
     } else {
-      selectedInput.next().addClass("wrong-answer");
+      $selectedInput.next().addClass("wrong-answer");
       $('input[data-state="right"]').next().addClass("correct-answer");
       const result = await axios.post("/api/1.0/score/add", {
         roomId,
@@ -137,7 +142,9 @@ function multipleChoiceOnclick(quizzObj) {
       });
       console.log(result.data.score);
     }
-    $("input[name='answer']").css("opacity", "0.5");
+    if (socket.host) {
+      socket.emit("getAnswer", $selectedInput.val());
+    }
   });
 }
 
@@ -184,6 +191,7 @@ function countDown(timeLimits) {
     remainTime = remainingSeconds;
     if (remainingSeconds < 0) {
       clearInterval(timerId);
+      socket.emit("timeout");
     }
   }, 50);
 }

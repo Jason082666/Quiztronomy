@@ -23,25 +23,13 @@ export const showRank = async function (roomId, ranknum) {
   const newRank = rank.slice(0, +ranknum * 2);
   const result = [];
   for (let i = 0; i < newRank.length; i += 2) {
-    const { id, name } = JSON.parse(newRank[i]);
+    const parseObj = JSON.parse(newRank[i]);
+    const id = Object.keys(parseObj)[0];
+    const name = parseObj[id];
     const score = newRank[i + 1];
     result.push({ id, name, score });
   }
-  let previousScore = null;
-  let currentRank = 0;
-  let previousRank = 1;
-  const rankArray = result.reduce((acc, e) => {
-    currentRank++;
-    if (e.score === previousScore) {
-      e.rank = previousRank;
-    } else {
-      previousScore = e.score;
-      previousRank = currentRank;
-      e.rank = currentRank;
-    }
-    return [...acc, e];
-  }, []);
-  return rankArray;
+  return result;
 };
 
 export const addToQuequeAndUpdateMongo = async function (roomId) {
@@ -61,6 +49,3 @@ export const addToQuequeAndUpdateMongo = async function (roomId) {
   await redisClient.lpush("saveScoreToMongo", uniqueObject);
   return true;
 };
-
-
-
