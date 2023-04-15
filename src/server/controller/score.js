@@ -5,16 +5,20 @@ import {
 } from "../models/score.js";
 import errors from "../models/errorhandler.js";
 export const addPlayerScore = async (req, res, next) => {
-  const { roomId, score, object } = req.body;
-  if (!roomId || !score || !object)
-    return next(new errors.ParameterError(["roomId", "score", "object"], 400));
-  const data = await addScore(roomId, score, object);
-  if (!data)
+  const { roomId, score } = req.body;
+  const { userId, name } = req.session.user;
+  const playerObj = {};
+  playerObj[userId] = name;
+
+  if (!roomId || !score || !playerObj)
     return next(
-      new errors.CustomError(`Add score on player ${object.id} failed`, 400)
+      new errors.ParameterError(["roomId", "score", "playerObj"], 400)
     );
+  const data = await addScore(roomId, score, playerObj);
+  if (!data)
+    return next(new errors.CustomError(`Add score on player failed`, 400));
   return res.json({
-    message: `Add score on player ${object.id} success`,
+    message: `Add score on player success`,
     score: data,
   });
 };

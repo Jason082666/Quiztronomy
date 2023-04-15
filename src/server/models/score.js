@@ -62,12 +62,5 @@ export const addToQuequeAndUpdateMongo = async function (roomId) {
   return true;
 };
 
-export const calculateScore = (totalTime, usedTime) => {
-  const baseScore = 100;
-  const timeRemaining = totalTime - usedTime;
-  const timeBonus = Math.round(500 * Math.pow(timeRemaining / totalTime, 2));
-  const score = baseScore + timeBonus;
-  return score;
-};
 
 

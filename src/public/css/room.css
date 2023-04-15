@@ -213,10 +213,7 @@ button:hover {
   flex-basis: 60%;
   height: 70vh;
 }
-#count-down-container {
-  height: 70vh;
-  padding-top: 0;
-}
+
 #quiz-intro {
   padding-top: 0;
 }
@@ -253,13 +250,42 @@ label {
   transition: background-color 0.3s ease;
 }
 
-label:hover {
+/* label:hover {
   background-color: #f3f3f3;
-}
+} */
 
-input[type="radio"]:checked + label {
+/* input[type="radio"]:checked + label {
   background-color: #d7c8b8;
   color: #fff;
+} */
+
+#count-down-container {
+  height: 70vh;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#timer {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 80%;
+  position: relative;
+  border-radius: 20px;
+  outline: 1px solid whitesmoke;
+}
+
+#timer .bar {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(255, 255, 255, 0.5);
+  position: absolute;
+  bottom: 0;
+  border-radius: 20px;
 }
 
 #scoreboard {
@@ -274,7 +300,15 @@ input[type="radio"]:checked + label {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
-#scoreboard h2 {
+.correct-answer {
+  background-color: rgb(134, 221, 110);
+}
+
+.wrong-answer {
+  background-color: rgb(214, 56, 48);
+}
+
+/* #scoreboard h2 {
   color: #fff;
   font-size: 1.5rem;
   margin: 0;
@@ -293,15 +327,15 @@ input[type="radio"]:checked + label {
   color: #fff;
   font-size: 1.2rem;
   margin-right: 20px;
-}
+} */
 
-#scoreboard li span {
+/* #scoreboard li span {
   font-weight: bold;
   margin-right: 5px;
 }
 
-/* #scoreboard li:nth-child(1) {
-  color: #ffd700;
+#scoreboard li:nth-child(1) {
+  color: #9f890c;
 }
 
 #scoreboard li:nth-child(2) {
