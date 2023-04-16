@@ -55,7 +55,7 @@ $(".host-container").on("click", "#start-game-btn", () => {
   socket.emit("startGame");
 });
 
-socket.on("loadFirstQuizz", ({ firstQuizz, length }) => {
+socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
   console.log(firstQuizz);
   let intervalId;
   socket.score = 0;
@@ -73,16 +73,16 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length }) => {
       $(".count-down-wrapper").fadeOut();
       $(".overlay").fadeOut();
       if (!socket.host) {
-        renderQuizzPage(firstQuizz);
+        renderQuizzPage(firstQuizz, rankResult);
       } else {
-        renderHostQuizzPage(firstQuizz);
+        renderHostQuizzPage(firstQuizz, rankResult);
       }
     }
   }, 1000);
 });
 
 socket.on("showScoreTable", ([scoreObj, rankResult]) => {
-  $(".container").empty();
+  $("#quiz").empty();
   console.log(scoreObj, rankResult);
 });
 
@@ -97,31 +97,33 @@ $(".host-container").on("click", "#leave-btn", async () => {
   window.location.href = "/";
 });
 
-const renderQuizzPage = (quizzObj) => {
+const renderQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
     const page = `<div id='quiz-container'><div id='left-bar'><h2 id="quiz-intro">Question ${quizzObj.num}</h2><div id='quiz-type'>Multiple choice !</div><div id="player-score">0</div><div id='score-chart'><div id='score-bar'></div></div></div><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
   <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
   <input type='radio' name='answer' value='C' id='C'>
   <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul></div><div id='scoreboard'><h2>Scoreboard</h2>
-  <ol id='scores'></ol></div></div>`;
+  <div id='sort-container'></div></div>`;
     $(".container").html(page);
   }
+  countDown(quizzObj.timeLimits);
   mutipleChoiceCheck(quizzObj);
   multipleChoiceOnclick(quizzObj);
-  countDown(quizzObj.timeLimits);
+  sortPlayers(rankResult);
 };
-const renderHostQuizzPage = (quizzObj) => {
+const renderHostQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
     const page = `<div id='quiz-container'><div id='left-bar'><h2 id="quiz-intro">Question ${quizzObj.num}</h2><div id='quiz-type'>Multiple choice !</div></div><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
   <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
   <input type='radio' name='answer' value='C' id='C'>
   <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul><button id="next-quizz-btn">Next question</button></div><div id='scoreboard'><h2>Scoreboard</h2>
-  <ol id='scores'></ol></div></div>`;
+  <div id='sort-container'></div></div>`;
     $(".container").html(page);
   }
   countDown(quizzObj.timeLimits);
+  sortPlayers(rankResult);
 };
 
 function multipleChoiceOnclick(quizzObj) {
@@ -206,4 +208,18 @@ function animateScore($element, initvalue, toValue, duration) {
       },
     }
   );
+}
+
+function sortPlayers(players) {
+  players.forEach((player) => {
+    const $player = $(
+      `<div class='sort-player'>${player.name}<div class='sort-player-score'>${player.score}</div></div>`
+    );
+    $("#sort-container").append($player);
+  });
+  const sortScoreTable = $("#sort-container").isotope({
+    getSortData: {
+      number: ".sort-player-score parseInt",
+    },
+  });
 }

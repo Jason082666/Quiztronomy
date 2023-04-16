@@ -66,7 +66,8 @@ export const socketio = async function (server) {
       const { firstQuizz, length } = await startRoom(roomId, hostId);
       if (!firstQuizz) return;
       firstQuizz.num = 1;
-      io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length });
+      const rankResult = await showRank(roomId, Infinity);
+      io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length, rankResult });
     });
     socket.on("getAnswer", (value) => {
       if (!(value in io.score[socket.roomId])) {
@@ -78,7 +79,7 @@ export const socketio = async function (server) {
     socket.on("timeout", async () => {
       const { roomId } = socket;
       const scoreObj = io.score[roomId];
-      const rankResult = await showRank(roomId, 5);
+      const rankResult = await showRank(roomId, 3);
       io.to(roomId).emit("showScoreTable", [scoreObj, rankResult]);
     });
   });
