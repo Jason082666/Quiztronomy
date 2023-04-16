@@ -3,6 +3,7 @@ const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
 const roomId = localStorage.getItem("roomId");
 let remainTime;
+let $sortScoreTable;
 // Join chatroom
 socket.emit("join", { userName, userId, roomId });
 socket.on("message", (message) => {
@@ -22,10 +23,7 @@ socket.on("showControllerInterface", (host) => {
 });
 
 socket.on("userJoined", ([host, users]) => {
-  console.log(host);
-  console.log(users);
   $("#host").text(`Host: ${host.userName}, roomId: ${host.roomId}`);
-  console.log("Users in room:", users);
   $("#player-list").empty();
   if (!socket.host) {
     const $leaveRoomButton = $(
@@ -42,7 +40,6 @@ socket.on("userJoined", ([host, users]) => {
 });
 
 socket.on("userLeft", (users) => {
-  console.log("Users in room:", users);
   $("#player-list").empty();
   users.forEach((user) => {
     const { userName } = user;
@@ -56,7 +53,6 @@ $(".host-container").on("click", "#start-game-btn", () => {
 });
 
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
-  console.log(firstQuizz);
   let intervalId;
   socket.score = 0;
   socket.fullScore = length * 600;
@@ -81,7 +77,7 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
   }, 1000);
 });
 
-socket.on("showScoreTable", ([scoreObj, rankResult]) => {
+socket.on("showScoreTable", ({ scoreObj, rankResult }) => {
   $("#quiz").empty();
   console.log(scoreObj, rankResult);
 });
@@ -95,6 +91,17 @@ $(".container").after($countdown);
 
 $(".host-container").on("click", "#leave-btn", async () => {
   window.location.href = "/";
+});
+
+socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
+  animateScore(
+    $(`.sort-player-score[data-id=${userId}]`),
+    initvalue,
+    score,
+    1000
+  );
+  $(`.sort-player-score[data-id=${userId}]`).text(score);
+  // $sortScoreTable.isotope({ sortBy: "number" });
 });
 
 const renderQuizzPage = (quizzObj, rankResult) => {
@@ -111,6 +118,7 @@ const renderQuizzPage = (quizzObj, rankResult) => {
   mutipleChoiceCheck(quizzObj);
   multipleChoiceOnclick(quizzObj);
   sortPlayers(rankResult);
+  // $sortScoreTable.isotope({ sortBy: "random" });
 };
 const renderHostQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
@@ -118,12 +126,13 @@ const renderHostQuizzPage = (quizzObj, rankResult) => {
     const page = `<div id='quiz-container'><div id='left-bar'><h2 id="quiz-intro">Question ${quizzObj.num}</h2><div id='quiz-type'>Multiple choice !</div></div><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
   <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
   <input type='radio' name='answer' value='C' id='C'>
-  <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul><button id="next-quizz-btn">Next question</button></div><div id='scoreboard'><h2>Scoreboard</h2>
+  <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul></div><div id='scoreboard'><h2>Scoreboard</h2>
   <div id='sort-container'></div></div>`;
     $(".container").html(page);
   }
   countDown(quizzObj.timeLimits);
   sortPlayers(rankResult);
+  // $sortScoreTable.isotope({ sortBy: "random" });
 };
 
 function multipleChoiceOnclick(quizzObj) {
@@ -139,6 +148,12 @@ function multipleChoiceOnclick(quizzObj) {
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       const percentage = changeSideBar(socket.score);
       socket.scoreBarPercentage = percentage;
+      const chooseOption = $('input[name="answer"]:checked').val();
+      socket.emit("getAnswer", {
+        chooseOption,
+        initvalue,
+        score: socket.score,
+      });
     } else {
       $selectedInput.next().addClass("wrong-answer");
       $('input[data-state="right"]').next().addClass("correct-answer");
@@ -151,8 +166,13 @@ function multipleChoiceOnclick(quizzObj) {
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       const percentage = changeSideBar(socket.score);
       socket.scoreBarPercentage = percentage;
+      const chooseOption = $('input[name="answer"]:checked').val();
+      socket.emit("getAnswer", {
+        chooseOption,
+        initvalue,
+        score: socket.score,
+      });
     }
-    socket.emit("getAnswer", $selectedInput.val());
   });
 }
 
@@ -213,13 +233,13 @@ function animateScore($element, initvalue, toValue, duration) {
 function sortPlayers(players) {
   players.forEach((player) => {
     const $player = $(
-      `<div class='sort-player'>${player.name}<div class='sort-player-score'>${player.score}</div></div>`
+      `<div class='sort-player'>${player.name}<div class='sort-player-score' data-id="${player.id}">${player.score}</div></div>`
     );
     $("#sort-container").append($player);
   });
-  const sortScoreTable = $("#sort-container").isotope({
-    getSortData: {
-      number: ".sort-player-score parseInt",
-    },
-  });
+  // $sortScoreTable = $("#sort-container").isotope({
+  //   getSortData: {
+  //     number: ".sort-player-score parseInt",
+  //   },
+  // });
 }

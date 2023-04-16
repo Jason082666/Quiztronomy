@@ -69,18 +69,22 @@ export const socketio = async function (server) {
       const rankResult = await showRank(roomId, Infinity);
       io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length, rankResult });
     });
-    socket.on("getAnswer", (value) => {
-      if (!(value in io.score[socket.roomId])) {
-        io.score[socket.roomId][value] = 1;
+    socket.on("getAnswer", ({ chooseOption, initvalue, score }) => {
+      console.log(chooseOption);
+      const { roomId, userId } = socket;
+      if (!(chooseOption in io.score[roomId])) {
+        io.score[roomId][chooseOption] = 1;
       } else {
-        io.score[socket.roomId][value] += 1;
+        io.score[roomId][chooseOption] += 1;
       }
+      io.to(roomId).emit("updateRankAndScore", { initvalue, score, userId });
     });
     socket.on("timeout", async () => {
       const { roomId } = socket;
       const scoreObj = io.score[roomId];
+      console.log(scoreObj);
       const rankResult = await showRank(roomId, 3);
-      io.to(roomId).emit("showScoreTable", [scoreObj, rankResult]);
+      io.to(roomId).emit("showScoreTable", { scoreObj, rankResult });
     });
   });
 };
