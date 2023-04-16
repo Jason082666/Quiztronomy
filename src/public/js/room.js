@@ -3,7 +3,6 @@ const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
 const roomId = localStorage.getItem("roomId");
 let remainTime;
-let $sortScoreTable;
 // Join chatroom
 socket.emit("join", { userName, userId, roomId });
 socket.on("message", (message) => {
@@ -101,7 +100,7 @@ socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
     1000
   );
   $(`.sort-player-score[data-id=${userId}]`).text(score);
-  // $sortScoreTable.isotope({ sortBy: "number" });
+  sortScores();
 });
 
 const renderQuizzPage = (quizzObj, rankResult) => {
@@ -118,7 +117,6 @@ const renderQuizzPage = (quizzObj, rankResult) => {
   mutipleChoiceCheck(quizzObj);
   multipleChoiceOnclick(quizzObj);
   sortPlayers(rankResult);
-  // $sortScoreTable.isotope({ sortBy: "random" });
 };
 const renderHostQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
@@ -132,7 +130,6 @@ const renderHostQuizzPage = (quizzObj, rankResult) => {
   }
   countDown(quizzObj.timeLimits);
   sortPlayers(rankResult);
-  // $sortScoreTable.isotope({ sortBy: "random" });
 };
 
 function multipleChoiceOnclick(quizzObj) {
@@ -237,9 +234,30 @@ function sortPlayers(players) {
     );
     $("#sort-container").append($player);
   });
-  // $sortScoreTable = $("#sort-container").isotope({
-  //   getSortData: {
-  //     number: ".sort-player-score parseInt",
-  //   },
-  // });
+}
+
+function sortScores() {
+  var container = $("#sort-container");
+  var items = container.find(".sort-player");
+
+  items.sort(function (a, b) {
+    var scoreA = parseInt($(a).find(".sort-player-score").text());
+    var scoreB = parseInt($(b).find(".sort-player-score").text());
+    return scoreA < scoreB ? 1 : scoreA > scoreB ? -1 : 0;
+  });
+
+  items.each(function (index) {
+    var currentPosition = $(this).position();
+    var newPosition = {
+      top: index * $(this).outerHeight()  + "px",
+    };
+
+    $(this)
+      .css({
+        position: "absolute",
+        left: currentPosition.left,
+        top: currentPosition.top,
+      })
+      .animate(newPosition, 500);
+  });
 }
