@@ -203,15 +203,39 @@ button:hover {
   align-items: stretch;
   justify-content: space-around;
 }
+
 #quiz {
   background-color: #fff;
   display: flex;
+  position: relative;
   flex-direction: column;
   color: #1f253d;
   border-radius: 20px;
   padding: 20px;
   flex-basis: 60%;
   height: 70vh;
+}
+#timer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* height: 80%; */
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  position: absolute;
+  border-radius: 20px;
+  outline: 1px solid rgb(206, 199, 199);
+}
+
+#timer .bar {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(100, 221, 158, 0.5);
+  position: absolute;
+  bottom: 0;
+  border-radius: 20px;
 }
 
 #quiz-intro {
@@ -250,44 +274,6 @@ label {
   transition: background-color 0.3s ease;
 }
 
-/* label:hover {
-  background-color: #f3f3f3;
-} */
-
-/* input[type="radio"]:checked + label {
-  background-color: #d7c8b8;
-  color: #fff;
-} */
-
-#count-down-container {
-  height: 70vh;
-  padding-top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-}
-
-#timer {
-  width: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 80%;
-  position: relative;
-  border-radius: 20px;
-  outline: 1px solid whitesmoke;
-}
-
-#timer .bar {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(255, 255, 255, 0.5);
-  position: absolute;
-  bottom: 0;
-  border-radius: 20px;
-}
-
 #scoreboard {
   display: flex;
   flex-direction: column;
@@ -307,41 +293,3 @@ label {
 .wrong-answer {
   background-color: rgb(214, 56, 48);
 }
-
-/* #scoreboard h2 {
-  color: #fff;
-  font-size: 1.5rem;
-  margin: 0;
-}
-
-#scoreboard ul {
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-
-#scoreboard li {
-  color: #fff;
-  font-size: 1.2rem;
-  margin-right: 20px;
-} */
-
-/* #scoreboard li span {
-  font-weight: bold;
-  margin-right: 5px;
-}
-
-#scoreboard li:nth-child(1) {
-  color: #9f890c;
-}
-
-#scoreboard li:nth-child(2) {
-  color: #c0c0c0;
-}
-
-#scoreboard li:nth-child(3) {
-  color: #cd7f32;
-} */

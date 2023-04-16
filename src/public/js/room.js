@@ -98,7 +98,7 @@ $(".host-container").on("click", "#leave-btn", async () => {
 const renderQuizzPage = (quizzObj) => {
   $(".container").empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
-    const page = `<div id='quiz-container'><div id="count-down-container"><h1 id="quiz-intro">Question ${quizzObj.num}</h1><div id="timer"><div class="bar"></div></div></div><div id='quiz'><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
+    const page = `<div id='quiz-container'><h1 id="quiz-intro">Question ${quizzObj.num}</h1><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
   <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
   <input type='radio' name='answer' value='C' id='C'>
   <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul></div><div id='scoreboard'><h2>Scoreboard</h2>
@@ -113,7 +113,7 @@ const renderQuizzPage = (quizzObj) => {
 const renderHostQuizzPage = (quizzObj) => {
   $(".container").empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
-    const page = `<div id='quiz-container'><div id="count-down-container"><h1 id="quiz-intro">Question ${quizzObj.num}</h1><div id="timer"><div class="bar"></div></div></div><div id='quiz'><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
+    const page = `<div id='quiz-container'><h1 id="quiz-intro">Question ${quizzObj.num}</h1><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
   <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
   <input type='radio' name='answer' value='C' id='C'>
   <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul><button id="next-quizz-btn">Next question</button></div><div id='scoreboard'><h2>Scoreboard</h2>
@@ -148,28 +148,6 @@ function multipleChoiceOnclick(quizzObj) {
   });
 }
 
-// function multipleChoiceOnclick(quizzObj) {
-//   $(".container").on("click", "#submit", async () => {
-//     $("#submit").hide();
-//     const selectedInput = $('input[name="answer"]:checked');
-//     $("input[name='answer']").prop("disabled", true);
-//     if (selectedInput.attr("data-state") === "right") {
-//       selectedInput.next().addClass("correct-answer");
-//       const score = calculateScore(quizzObj.timeLimits, remainTime);
-//       const result = await axios.post("/api/1.0/score/add", { roomId, score });
-//       console.log(result.data.data);
-//     } else {
-//       selectedInput.next().addClass("wrong-answer");
-//       $('input[data-status="right"]').next().addClass("correct-answer");
-//       const result = await axios.post("/api/1.0/score/add", {
-//         roomId,
-//         score: 100,
-//       });
-//       console.log(result.data.data);
-//     }
-//   });
-// }
-
 function mutipleChoiceCheck(quizzObj) {
   const { answer } = quizzObj;
   $(".container")
@@ -186,7 +164,7 @@ function countDown(timeLimits) {
   let remainingSeconds = timeLimits;
   timerId = setInterval(async () => {
     const percentage = (remainingSeconds / timeLimits) * 100;
-    $("#timer .bar").css("height", percentage + "%");
+    $("#timer .bar").css("width", percentage + "%");
     remainingSeconds -= 0.05;
     remainTime = remainingSeconds;
     if (remainingSeconds < 0) {

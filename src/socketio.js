@@ -67,6 +67,7 @@ export const socketio = async function (server) {
       const roomId = socket.roomId;
       const hostId = socket.hostId;
       const firstQuizz = await startRoom(roomId, hostId);
+      if (!firstQuizz) return;
       firstQuizz.num = 1;
       io.to(roomId).emit("loadFirstQuizz", firstQuizz);
     });
