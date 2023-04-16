@@ -212,6 +212,7 @@ button:hover {
   color: #1f253d;
   border-radius: 20px;
   padding: 20px;
+  width: 50%;
   flex-basis: 60%;
   height: 70vh;
 }
@@ -238,14 +239,60 @@ button:hover {
   border-radius: 20px;
 }
 
-#quiz-intro {
-  padding-top: 0;
-}
-
 #question {
   height: 15%;
   font-size: 36px;
   text-align: center;
+}
+
+#left-bar {
+  height: 70vh;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+#quiz-intro {
+  padding-top: 0;
+}
+
+#quiz-type {
+  height: 10%;
+  margin-top: 0;
+  padding-top: 7px;
+  font-size: 24px;
+  text-align: center;
+}
+
+#player-score {
+  margin-top: auto;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  bottom: 70%;
+  padding-bottom: 5px;
+  color: #cbd6d5;
+}
+
+#score-chart {
+  height: 70%;
+  outline: 1px solid whitesmoke;
+  width: 30px;
+  position: absolute;
+  border-radius: 20px;
+  margin-top: auto;
+  bottom: 0;
+}
+
+#score-bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #dae2ed;
+  height: 0;
+  border-radius: 20px;
 }
 
 ul {
@@ -276,6 +323,7 @@ label {
 
 #scoreboard {
   display: flex;
+  width: 20%;
   flex-direction: column;
   height: 70vh;
   justify-content: flex-start;

@@ -119,7 +119,7 @@ export const startRoom = async function (roomId, founderId) {
     await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
   }
   await redisClient.del(`${roomId}-room`);
-  return gameRoom.quizz[0];
+  return { firstQuizz: gameRoom.quizz[0], length: gameRoom.quizz.length };
 };
 
 export const terminateRoom = async function (id) {

@@ -55,21 +55,18 @@ export const socketio = async function (server) {
         io.to(roomId).emit("userLeft", io.users[roomId]);
       }
       if (!io.users || !io.users[roomId]) return;
-
       if (!io.users[roomId][0] && !io.host[roomId]) {
-        // terminate the room!(也不用存資料)
         await terminateRoom(roomId);
         delete io.users[roomId];
         delete io.score[roomId];
       }
     });
     socket.on("startGame", async () => {
-      const roomId = socket.roomId;
-      const hostId = socket.hostId;
-      const firstQuizz = await startRoom(roomId, hostId);
+      const { roomId, hostId } = socket;
+      const { firstQuizz, length } = await startRoom(roomId, hostId);
       if (!firstQuizz) return;
       firstQuizz.num = 1;
-      io.to(roomId).emit("loadFirstQuizz", firstQuizz);
+      io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length });
     });
     socket.on("getAnswer", (value) => {
       if (!(value in io.score[socket.roomId])) {
@@ -79,9 +76,10 @@ export const socketio = async function (server) {
       }
     });
     socket.on("timeout", async () => {
-      const scoreObj = io.score[socket.roomId];
-      const rankResult = await showRank(socket.roomId, 5);
-      socket.emit("showScoreTable", [scoreObj, rankResult]);
+      const { roomId } = socket;
+      const scoreObj = io.score[roomId];
+      const rankResult = await showRank(roomId, 5);
+      io.to(roomId).emit("showScoreTable", [scoreObj, rankResult]);
     });
   });
 };
