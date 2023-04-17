@@ -4,11 +4,17 @@ import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 import Redis from "ioredis";
+const tlsOptions = process.env.MY_REDIS_TLS
+  ? JSON.parse(process.env.MY_REDIS_TLS)
+  : {};
+
+console.log(tlsOptions);
 export const redisClient = new Redis({
   host: process.env.MY_REDIS_HOST,
   port: parseInt(process.env.MY_REDIS_PORT),
   username: process.env.MY_REDIS_USERNAME,
   password: process.env.MY_REDIS_PASSWORD,
+  tls: tlsOptions,
   retryStrategy: function (times) {
     if (times >= 5) {
       return 5000;
