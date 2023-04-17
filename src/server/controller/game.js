@@ -6,10 +6,8 @@ import {
   terminateRoom,
   saveQuizzIntoRoom,
   startRoom,
-  getCurrentQuizzFromMongo,
-  getCurrentQuizzFromRedis,
 } from "../models/game.js";
-import { redisClient } from "../models/redis.js";
+
 import errors from "../models/errorhandler.js";
 
 export const createGameRoom = async (req, res) => {

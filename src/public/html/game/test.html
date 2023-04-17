@@ -1,0 +1,43 @@
+  <body>
+    <div class="container">
+      <div id="quiz-container">
+        <div id="left-bar">
+          <h2 id="quiz-intro"></h2>
+          <div id="quiz-type"></div>
+          <div id="player-score">0</div>
+          <div id="score-chart"><div id="score-bar"></div></div>
+        </div>
+        <!--  -->
+        <div id="scoreboard">
+          <h2>Scoreboard</h2>
+          <div id="sort-container"></div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/room.js" type="module"></script>
+  </body>
+
+
+  const sortTable = $("#sort-container").isotope({
+  getSortData: {
+    score: ".score",
+  },
+});
+
+
+
+const renderQuizzPage = (quizzObj) => {
+  $("#quiz").empty();
+  if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
+    const $page = `<div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
+  <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
+  <input type='radio' name='answer' value='C' id='C'>
+  <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul></div>`;
+    $page.insertAfter($("#left-bar"));
+    $("#quiz-intro").text(`Question ${quizzObj.num}`);
+    $("#quiz-type").text("Multiple choice !");
+  }
+  countDown(quizzObj.timeLimits);
+  mutipleChoiceCheck(quizzObj);
+  multipleChoiceOnclick(quizzObj);
+};
