@@ -1,7 +1,13 @@
 import { Client } from "@elastic/elasticsearch";
+import dotenv from "dotenv";
+import path from "path";
+import * as url from "url";
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
+
 import { chstopWordsAarray, enstopWordsAarray } from "../../util/stopwords.js";
 export const client = new Client({
-  node: "http://localhost:9200",
+  node: process.env.MY_ELASTICSEARCH_IP,
 });
 
 const createQuestionText = async function () {
