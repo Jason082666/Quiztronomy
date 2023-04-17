@@ -71,14 +71,30 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
         renderQuizzPage(firstQuizz, rankResult);
       } else {
         renderHostQuizzPage(firstQuizz, rankResult);
+        socket.quiz = 2;
+        // 進到第二題
       }
     }
   }, 1000);
 });
 
+socket.on("showQuiz", (quiz) => {
+  quizShow(quiz);
+  socket.quiz += 1;
+});
+
 socket.on("showScoreTable", ({ scoreObj, rankResult }) => {
   $("#quiz").empty();
   console.log(scoreObj, rankResult);
+  if (socket.host) {
+    const $nextGameButton = $('<button id="next-game-btn">Next quiz</button>');
+    $("#quiz").append($nextGameButton);
+  }
+});
+
+$(".container").on("click", "#next-game-btn", () => {
+  const quizNum = socket.quiz;
+  socket.emit("nextQuiz", quizNum);
 });
 
 const $countdown = $(
@@ -102,6 +118,20 @@ socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
   $(`.sort-player-score[data-id=${userId}]`).text(score);
   sortScores();
 });
+
+const quizShow = (quizzObj) => {
+  $("#quiz").empty();
+  if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
+    const page =
+      $(`<div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2><ul><li><input type="radio" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label></li><li>
+  <input type="radio" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label></li><li><input type="radio" name="answer" value="C" id="C" /><label for="C">${quizzObj.options["C"]}</label></li><li>
+  <input type="radio" name="answer" value="D" id="D" /><label for="D">${quizzObj.options["D"]}</label></li></ul>`);
+    $("#quiz").html(page);
+  }
+  countDown(quizzObj.timeLimits);
+  mutipleChoiceCheck(quizzObj);
+  multipleChoiceOnclick(quizzObj);
+};
 
 const renderQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
@@ -249,7 +279,7 @@ function sortScores() {
   items.each(function (index) {
     var currentPosition = $(this).position();
     var newPosition = {
-      top: index * $(this).outerHeight()  + "px",
+      top: index * $(this).outerHeight() + "px",
     };
 
     $(this)

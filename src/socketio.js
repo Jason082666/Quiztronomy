@@ -1,5 +1,11 @@
 import { Server } from "socket.io";
-import { terminateRoom, leaveRoom, startRoom } from "./server/models/game.js";
+import {
+  terminateRoom,
+  leaveRoom,
+  startRoom,
+  getCurrentQuizzFromMongo,
+  getCurrentQuizzFromRedis,
+} from "./server/models/game.js";
 import { gameHostValidation } from "./server/models/user.js";
 import { showRank } from "./server/models/score.js";
 
@@ -69,6 +75,20 @@ export const socketio = async function (server) {
       const rankResult = await showRank(roomId, Infinity);
       io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length, rankResult });
     });
+
+    socket.on("nextQuiz", async (quizNum) => {
+      const { roomId } = socket;
+      delete io.score[roomId];
+      io.score[roomId] = {};
+      const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
+      if (quiz) {
+        io.to(roomId).emit("showQuiz", quiz);
+      } else {
+        const quiz = await getCurrentQuizzFromMongo(roomId, quizNum);
+        io.to(roomId).emit("showQuiz", quiz);
+      }
+    });
+
     socket.on("getAnswer", ({ chooseOption, initvalue, score }) => {
       console.log(chooseOption);
       const { roomId, userId } = socket;
