@@ -5,9 +5,8 @@ import session from "express-session";
 import RedisStore from "connect-redis";
 import { socketio } from "./socketio.js";
 import { redisClient } from "./server/models/redis.js";
-// import * as url from "url";
-// const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
-const __dirname = path.resolve();
+import * as url from "url";
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
@@ -17,13 +16,10 @@ let redisStore = new RedisStore({
   prefix: "myapp:",
 });
 app.use(express.json());
-app.use(express.static(__dirname + "/src/public/html"));
-app.use("/js", express.static(__dirname + "/src/public/js"));
-app.use("/css", express.static(__dirname + "/src/public/css"));
+app.use(express.static(path.join(__dirname, ".", "public", "html")));
+app.use("/js", express.static(path.join(__dirname, ".", "public", "js")));
+app.use("/css", express.static(path.join(__dirname, ".", "public", "css")));
 
-// app.use(express.static("src/public/html"));
-// app.use("/js", express.static("src/public/js"));
-// app.use("/css", express.static("src/public/css"));
 
 app.use(
   session({
@@ -49,10 +45,14 @@ app.use("/api/" + APIVERSION, [
 app.get("/game/room/:roomId", (req, res) => {
   // 這邊到時候要做cookie裡面username,userid的驗證，其實就是再去fetch enterroom的api
   // const filePath = path.join(__dirname, "src/public/html/game/room.html");
-  return res.sendFile(__dirname + "/src/public/html/game/room.html");
+  return res.sendFile(
+    path.join(__dirname, ".", "public", "html", "game", "room.html")
+  );
 });
 app.use((req, res) => {
-  return res.status(404).sendFile(__dirname + "/src/public/html/404.html");
+  return res
+    .status(404)
+    .sendFile(path.join(__dirname, ".", "public", "html", "404.html"));
 });
 
 app.use((err, req, res, next) => {
