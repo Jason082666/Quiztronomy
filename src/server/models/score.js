@@ -7,7 +7,13 @@ export const addScore = async function (roomId, score, object) {
   if (!roomExist) return false;
   const playerExist = await redisClient.zscore(`${roomId} -score`, data);
   if (!playerExist) return false;
-  await redisClient.zadd(`${roomId} -score`, +score, data);
+  const result = await redisClient.zadd(
+    `${roomId} -score`,
+    "INCR",
+    +score,
+    data
+  );
+  console.log(result);
   const finalscore = await redisClient.zscore(`${roomId} -score`, data);
   return finalscore;
 };
