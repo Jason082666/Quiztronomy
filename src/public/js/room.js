@@ -2,7 +2,6 @@ const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
 const roomId = localStorage.getItem("roomId");
-let remainTime;
 // Join chatroom
 socket.emit("join", { userName, userId, roomId });
 socket.on("message", (message) => {
@@ -54,7 +53,7 @@ $(".host-container").on("click", "#start-game-btn", () => {
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
   let intervalId;
   socket.score = 0;
-  socket.fullScore = length * 600;
+  socket.fullScore = length * 500;
   let count = 5;
   $(".count-down-wrapper").fadeIn();
   $(".overlay").fadeIn();
@@ -80,6 +79,7 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
 
 socket.on("showQuiz", (quiz) => {
   quizShow(quiz);
+  $("#question").text(socket.num);
   socket.quiz += 1;
 });
 
@@ -170,7 +170,7 @@ function multipleChoiceOnclick(quizzObj, $element) {
     const $selectedInput = $('input[name="answer"]:checked');
     if ($selectedInput.attr("data-state") === "right") {
       $('input[data-state="right"]').next().addClass("correct-answer");
-      const score = calculateScore(quizzObj.timeLimits, remainTime);
+      const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
       const result = await axios.post("/api/1.0/score/add", { roomId, score });
       console.log(result);
       const initvalue = socket.score;
@@ -221,7 +221,7 @@ function countDown(timeLimits) {
     const percentage = (remainingSeconds / timeLimits) * 100;
     $("#timer .bar").css("width", percentage + "%");
     remainingSeconds -= 0.05;
-    remainTime = remainingSeconds;
+    socket.remainTime = remainingSeconds;
     if (remainingSeconds < 0) {
       clearInterval(timerId);
       if (socket.host) {
@@ -247,7 +247,7 @@ function changeSideBar(score) {
 
 function animateScore($element, initvalue, toValue, duration) {
   $({ value: initvalue }).animate(
-    { value: toValue },
+    { value: toValue + 1 },
     {
       duration: duration,
       step: function () {
@@ -279,9 +279,8 @@ function sortScores() {
   items.each(function (index) {
     var currentPosition = $(this).position();
     var newPosition = {
-      top: index * $(this).outerHeight() + "px",
+      top: index * ($(this).outerHeight() + 10) + "px",
     };
-
     $(this)
       .css({
         position: "absolute",
