@@ -158,7 +158,25 @@ const quizShow = (quizzObj) => {
     trueFalseOnClick(quizzObj, $("#quiz"));
     return;
   }
+  if (["MCS-EN", "MCS-CH"].includes(quizzObj.type)) {
+    const page =
+      $(` <div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
+    <ul><li><input type="checkbox" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label>
+    </li><li><input type="checkbox" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label>
+    </li><li><input type="checkbox" name="answer" value="C" id="C" /><label for="C">${quizzObj.options["C"]}</label>
+    </li><li><input type="checkbox" name="answer" value="D" id="D" /><label for="D">${quizzObj.options["D"]}</label>
+    </li></ul><div class="submit-mcs-answer">Submit</div>`);
+    $("#quiz").html(page);
+    countDown(quizzObj.timeLimits);
+    mutipleChoiceCheck(quizzObj, $("#quiz"));
+    multipleChoicesOnclick(quizzObj, $("#quiz"));
+    return;
+  }
 };
+
+$(".container").on("click", 'input[type="checkbox"]:checked', function () {
+  $(this).addClass("mcs-checked");
+});
 
 const renderQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
@@ -192,6 +210,25 @@ const renderQuizzPage = (quizzObj, rankResult) => {
     sortPlayers(rankResult);
     return;
   }
+  if (["MCS-EN", "MCS-CH"].includes(quizzObj.type)) {
+    const page = `<div id="quiz-container"><div id="left-bar"><h2 id="quiz-intro">Question ${quizzObj.num}</h2>
+    <div id="quiz-type">Multiple Choice</div><div id="player-score">0</div>
+    <div id="score-chart"><div id="score-bar"></div></div></div><div id="quiz">
+    <div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
+    <ul><li><input type="checkbox" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label>
+    </li><li><input type="checkbox" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label>
+    </li><li><input type="checkbox" name="answer" value="C" id="C" /><label for="C">${quizzObj.options["C"]}</label>
+    </li><li><input type="checkbox" name="answer" value="D" id="D" /><label for="D">${quizzObj.options["D"]}</label>
+    </li></ul><div class="submit-mcs-answer">Submit</div><div id="scoreboard">
+    <h2>Scoreboard</h2><div id="sort-container"></div></div></div>`;
+    $(".container").html(page);
+    $quiz = $(".container").find("#quiz");
+    countDown(quizzObj.timeLimits);
+    mutipleChoiceCheck(quizzObj, $quiz);
+    multipleChoicesOnclick(quizzObj, $quiz);
+    sortPlayers(rankResult);
+    return;
+  }
 };
 
 const renderHostQuizzPage = (quizzObj, rankResult) => {
@@ -209,6 +246,18 @@ const renderHostQuizzPage = (quizzObj, rankResult) => {
     <div id="quiz-type">True or False</div></div><div id="quiz"><div id="timer"><div class="bar"></div></div>
     <h2 id="question">${quizzObj.question}</h2><div class="t-f-container" data><div class="t-f" data-value="true"><h2>True</h2></div><div class="t-f" data-value="false"><h2>False</h2></div></div></div>
     <div id="scoreboard"><h2>Scoreboard</h2><div id="sort-container"></div></div></div>`;
+    $(".container").html(page);
+  }
+  if (["MCS-EN", "MCS-CH"].includes(quizzObj.type)) {
+    const page = `<div id="quiz-container"><div id="left-bar"><h2 id="quiz-intro">Question ${quizzObj.num}</h2>
+    <div id="quiz-type">Multiple Choice</div><div id="player-score">0</div>
+    <div id="score-chart"><div id="score-bar"></div></div></div><div id="quiz">
+    <div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
+    <ul><li><input type="checkbox" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label>
+    </li><li><input type="checkbox" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label>
+    </li><li><input type="checkbox" name="answer" value="C" id="C" /><label for="C">${quizzObj.options["C"]}</label>
+    </li><li><input type="checkbox" name="answer" value="D" id="D" /><label for="D">${quizzObj.options["D"]}</label>
+    </li></ul><div id="scoreboard"><h2>Scoreboard</h2><div id="sort-container"></div></div></div>`;
     $(".container").html(page);
   }
   countDown(quizzObj.timeLimits);
@@ -251,6 +300,37 @@ function trueFalseOnClick(quizzObj, $element) {
   });
 }
 
+function multipleChoicesOnclick(quizzObj, $element) {
+  $("input[type='checkbox']").removeClass("mcs-checked");
+  $element.on("click", ".submit-mcs-answer", async function () {
+    const $selectedInput = $('input[name="answer"]:checked');
+    let rightoptions = 0;
+    let finalScore = 100;
+    $selectedInput.each(async function () {
+      if ($(this).attr("data-state") === "right") {
+        $(this).next().addClass("correct-answer");
+        rightoptions += 1;
+      } else {
+        $(this).next().addClass("wrong-answer");
+        rightoptions -= 1;
+      }
+    });
+    const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
+    if (rightoptions > 0) finalScore = (rightoptions / 4) * 1.2 * score;
+    await axios.post("/api/1.0/score/add", { roomId, finalScore });
+    const initvalue = socket.score;
+    socket.score += finalScore;
+    animateScore($("#player-score"), initvalue, socket.score, 1000);
+    changeSideBar(socket.score);
+    const chooseOption = $('input[name="answer"]:checked').val();
+    socket.emit("getAnswer", {
+      chooseOption,
+      initvalue,
+      score: socket.score,
+    });
+  });
+}
+
 function multipleChoiceOnclick(quizzObj, $element) {
   $element.on("click", "input[name='answer']", async function () {
     $("input[name='answer']").attr("disabled", true);
@@ -271,7 +351,6 @@ function multipleChoiceOnclick(quizzObj, $element) {
       });
     } else {
       $selectedInput.next().addClass("wrong-answer");
-      $('input[data-state="right"]').next().addClass("correct-answer");
       await axios.post("/api/1.0/score/add", {
         roomId,
         score: 100,
