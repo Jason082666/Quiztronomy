@@ -99,11 +99,12 @@ export const socketio = async function (server) {
       }
       io.to(roomId).emit("updateRankAndScore", { initvalue, score, userId });
     });
-    socket.on("timeout", async () => {
+    socket.on("timeout", async (lastquiz) => {
       const { roomId } = socket;
-      const scoreObj = io.score[roomId];
-      console.log(scoreObj);
       const rankResult = await showRank(roomId, 3);
+      if (lastquiz) return io.to(roomId).emit("showFinalScore", rankResult);
+      const scoreObj = io.score[roomId];
+
       io.to(roomId).emit("showScoreTable", { scoreObj, rankResult });
     });
   });

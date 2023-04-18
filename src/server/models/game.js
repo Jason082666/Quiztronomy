@@ -130,7 +130,7 @@ export const terminateRoom = async function (id) {
   return true;
 };
 
-export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
+export const  getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
   if (redisClient.status === "reconnecting") {
     return undefined;
   }

@@ -209,6 +209,7 @@ button:hover {
   display: flex;
   position: relative;
   flex-direction: column;
+  align-items: center;
   color: #f7f7f8;
   border-radius: 20px;
   padding: 20px;
@@ -241,6 +242,33 @@ button:hover {
   height: 15%;
   font-size: 36px;
   text-align: center;
+}
+
+.t-f-container {
+  margin-top: 10%;
+  color: #e5e5e5;
+  height: 40%;
+  width: 80%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.t-f {
+  width: 40%;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  outline: 1px solid whitesmoke;
+  background-color: transparent;
+}
+
+.t-f:hover {
+  cursor: pointer;
+  box-shadow: 0 0 5px #ccc;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #303030;
 }
 
 #left-bar {
@@ -370,4 +398,35 @@ label {
 
 .wrong-answer {
   background-color: rgb(214, 56, 48);
+}
+
+/* TODO: */
+
+.rankings {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.ranking {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 16%;
+  padding: 10px;
+  background-color: transparent;
+  border-radius: 10px;
+}
+
+.player-name {
+  flex: 1;
+}
+
+.player-score {
+  margin-left: 20px;
+  font-weight: bold;
 }
