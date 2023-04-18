@@ -272,7 +272,14 @@ button:hover {
 }
 
 .mcs-checked {
-  background-color: #eee8d6;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.submit-mcs-answer {
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 20px;
+  outline: 1px solid whitesmoke;
 }
 
 #left-bar {
@@ -331,6 +338,8 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  width: 100%;
+  align-items: stretch;
   margin: 0;
   padding: 10px;
   height: 65%;
@@ -339,7 +348,8 @@ li {
   height: 23%;
 }
 
-input[type="radio"] {
+input[type="radio"],
+input[type="checkbox"] {
   display: none;
 }
 

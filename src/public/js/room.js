@@ -53,7 +53,7 @@ $(".host-container").on("click", "#start-game-btn", () => {
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
   let intervalId;
   socket.score = 0;
-  socket.fullScore = length * 500;
+  socket.fullScore = length * 400;
   let count = 5;
   $(".count-down-wrapper").fadeIn();
   $(".overlay").fadeIn();
@@ -89,6 +89,8 @@ socket.on("showFinalScore", (rank) => {
 });
 socket.on("showScoreTable", ({ scoreObj, rankResult }) => {
   $("#quiz").empty();
+  // const parseScoreObj = JSON.parse(scoreObj);
+  // const parseRankResult = JSON.parse(rankResult);
   console.log(scoreObj, rankResult);
   if (socket.host) {
     const $nextGameButton = $('<button id="next-game-btn">Next quiz</button>');
@@ -160,7 +162,7 @@ const quizShow = (quizzObj) => {
   }
   if (["MCS-EN", "MCS-CH"].includes(quizzObj.type)) {
     const page =
-      $(` <div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
+      $(`<div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
     <ul><li><input type="checkbox" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label>
     </li><li><input type="checkbox" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label>
     </li><li><input type="checkbox" name="answer" value="C" id="C" /><label for="C">${quizzObj.options["C"]}</label>
@@ -173,10 +175,6 @@ const quizShow = (quizzObj) => {
     return;
   }
 };
-
-$(".container").on("click", 'input[type="checkbox"]:checked', function () {
-  $(this).addClass("mcs-checked");
-});
 
 const renderQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
@@ -219,8 +217,8 @@ const renderQuizzPage = (quizzObj, rankResult) => {
     </li><li><input type="checkbox" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label>
     </li><li><input type="checkbox" name="answer" value="C" id="C" /><label for="C">${quizzObj.options["C"]}</label>
     </li><li><input type="checkbox" name="answer" value="D" id="D" /><label for="D">${quizzObj.options["D"]}</label>
-    </li></ul><div class="submit-mcs-answer">Submit</div><div id="scoreboard">
-    <h2>Scoreboard</h2><div id="sort-container"></div></div></div>`;
+    </li></ul><div class="submit-mcs-answer">Submit</div></div><div id="scoreboard"><h2>Scoreboard</h2>
+    <div id="sort-container"></div></div></div>`;
     $(".container").html(page);
     $quiz = $(".container").find("#quiz");
     countDown(quizzObj.timeLimits);
@@ -257,7 +255,7 @@ const renderHostQuizzPage = (quizzObj, rankResult) => {
     </li><li><input type="checkbox" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label>
     </li><li><input type="checkbox" name="answer" value="C" id="C" /><label for="C">${quizzObj.options["C"]}</label>
     </li><li><input type="checkbox" name="answer" value="D" id="D" /><label for="D">${quizzObj.options["D"]}</label>
-    </li></ul><div id="scoreboard"><h2>Scoreboard</h2><div id="sort-container"></div></div></div>`;
+    </li></ul></div><div id="scoreboard"><h2>Scoreboard</h2><div id="sort-container"></div></div></div>`;
     $(".container").html(page);
   }
   countDown(quizzObj.timeLimits);
@@ -268,7 +266,10 @@ function trueFalseOnClick(quizzObj, $element) {
   $element.on("click", ".t-f", async function () {
     $(".t-f").prop("disabled", true);
     const chooseOption = $(this).data("value");
-    if (stringToBoolean(chooseOption) === quizzObj.answer[0]) {
+    console.log("chooseoption", chooseOption);
+    console.log("typeof chooseoption", typeof chooseOption);
+    console.log("quizobj.answer", quizzObj.answer);
+    if (chooseOption === quizzObj.answer[0]) {
       $(this).addClass("correct-answer");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
       await axios.post("/api/1.0/score/add", { roomId, score });
@@ -277,7 +278,7 @@ function trueFalseOnClick(quizzObj, $element) {
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
       socket.emit("getAnswer", {
-        chooseOption,
+        chooseOption: [chooseOption],
         initvalue,
         score: socket.score,
       });
@@ -292,7 +293,7 @@ function trueFalseOnClick(quizzObj, $element) {
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
       socket.emit("getAnswer", {
-        chooseOption,
+        chooseOption: [chooseOption],
         initvalue,
         score: socket.score,
       });
@@ -301,28 +302,45 @@ function trueFalseOnClick(quizzObj, $element) {
 }
 
 function multipleChoicesOnclick(quizzObj, $element) {
-  $("input[type='checkbox']").removeClass("mcs-checked");
+  $element.on("click", 'input[type="checkbox"]', function () {
+    $(this).next().toggleClass("mcs-checked");
+  });
   $element.on("click", ".submit-mcs-answer", async function () {
-    const $selectedInput = $('input[name="answer"]:checked');
+    $("input[type='checkbox']").prop("disabled", true);
+    $(this).prop("disabled", true);
     let rightoptions = 0;
     let finalScore = 100;
-    $selectedInput.each(async function () {
-      if ($(this).attr("data-state") === "right") {
+    $("input[type='checkbox']").each(async function () {
+      if (
+        $(this).attr("data-state") === "right" &&
+        $(this).next().hasClass("mcs-checked")
+      ) {
         $(this).next().addClass("correct-answer");
         rightoptions += 1;
-      } else {
+      }
+      if (
+        $(this).attr("data-state") === "right" &&
+        !$(this).next().hasClass("mcs-checked")
+      ) {
+        $(this).next().addClass("wrong-answer");
+        rightoptions -= 1;
+      }
+      if (
+        $(this).next().hasClass("mcs-checked") &&
+        !$(this).attr("data-state")
+      ) {
         $(this).next().addClass("wrong-answer");
         rightoptions -= 1;
       }
     });
     const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
     if (rightoptions > 0) finalScore = (rightoptions / 4) * 1.2 * score;
-    await axios.post("/api/1.0/score/add", { roomId, finalScore });
+    await axios.post("/api/1.0/score/add", { roomId, score: finalScore });
     const initvalue = socket.score;
     socket.score += finalScore;
     animateScore($("#player-score"), initvalue, socket.score, 1000);
     changeSideBar(socket.score);
-    const chooseOption = $('input[name="answer"]:checked').val();
+    const chooseOption = $(".msc-checked").prev().val();
     socket.emit("getAnswer", {
       chooseOption,
       initvalue,
@@ -335,6 +353,7 @@ function multipleChoiceOnclick(quizzObj, $element) {
   $element.on("click", "input[name='answer']", async function () {
     $("input[name='answer']").attr("disabled", true);
     const $selectedInput = $('input[name="answer"]:checked');
+    const chooseOption = $('input[name="answer"]:checked').val();
     if ($selectedInput.attr("data-state") === "right") {
       $('input[data-state="right"]').next().addClass("correct-answer");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
@@ -343,9 +362,8 @@ function multipleChoiceOnclick(quizzObj, $element) {
       socket.score += score;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
-      const chooseOption = $('input[name="answer"]:checked').val();
       socket.emit("getAnswer", {
-        chooseOption,
+        chooseOption: [chooseOption],
         initvalue,
         score: socket.score,
       });
@@ -359,9 +377,8 @@ function multipleChoiceOnclick(quizzObj, $element) {
       socket.score += 100;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
-      const chooseOption = $('input[name="answer"]:checked').val();
       socket.emit("getAnswer", {
-        chooseOption,
+        chooseOption: [chooseOption],
         initvalue,
         score: socket.score,
       });
@@ -454,9 +471,4 @@ function sortScores() {
       })
       .animate(newPosition, 500);
   });
-}
-
-function stringToBoolean(value) {
-  if (value === "true") return true;
-  return false;
 }
