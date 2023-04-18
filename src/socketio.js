@@ -102,6 +102,7 @@ export const socketio = async function (server) {
       if (!io.score[roomId][index]) io.score[roomId][index] = {};
       if (!io.data[roomId][index]) io.data[roomId][index] = {};
       // 最後用來留紀錄給mongo db 的，用來存歷史資料
+      console.log("chooseoption", chooseOption);
       io.score[roomId][index][userId] = chooseOption;
       chooseOption.forEach((option) => {
         if (!io.data[roomId][index][option]) {

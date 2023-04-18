@@ -53,7 +53,7 @@ $(".host-container").on("click", "#start-game-btn", () => {
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
   let intervalId;
   socket.score = 0;
-  socket.fullScore = length * 400;
+  socket.fullScore = length * 500;
   let count = 5;
   $(".count-down-wrapper").fadeIn();
   $(".overlay").fadeIn();
@@ -311,6 +311,7 @@ function multipleChoicesOnclick(quizzObj, $element) {
     let rightoptions = 0;
     let finalScore = 100;
     $("input[type='checkbox']").each(async function () {
+      // FIXME: 這邊的ui要再想想
       if (
         $(this).attr("data-state") === "right" &&
         $(this).next().hasClass("mcs-checked")
@@ -340,9 +341,14 @@ function multipleChoicesOnclick(quizzObj, $element) {
     socket.score += finalScore;
     animateScore($("#player-score"), initvalue, socket.score, 1000);
     changeSideBar(socket.score);
-    const chooseOption = $(".msc-checked").prev().val();
+    const optionArray = [];
+    $(".mcs-checked")
+      .prev()
+      .each(function () {
+        optionArray.push($(this).val());
+      });
     socket.emit("getAnswer", {
-      chooseOption,
+      chooseOption: optionArray,
       initvalue,
       score: socket.score,
     });
