@@ -73,7 +73,15 @@ button {
 button:hover {
   background-color: rgba(255, 255, 255, 0.5);
 }
-
+#next-game-btn,
+#show-final-score {
+  position: absolute;
+  height: 10%;
+  width: 15%;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+}
 .host-container {
   display: flex;
   width: 75vw;

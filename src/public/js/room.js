@@ -2,6 +2,21 @@ const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
 const roomId = localStorage.getItem("roomId");
+Highcharts.setOptions({
+  colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
+    return {
+      radialGradient: {
+        cx: 0.5,
+        cy: 0.3,
+        r: 0.7,
+      },
+      stops: [
+        [0, color],
+        [1, Highcharts.color(color).brighten(-0.3).get("rgb")], // darken
+      ],
+    };
+  }),
+});
 // Join chatroom
 socket.emit("join", { userName, userId, roomId });
 socket.on("message", (message) => {
@@ -56,6 +71,7 @@ $(".host-container").on("click", "#start-game-btn", () => {
 });
 
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
+  localStorage.setItem("quizzDetail", JSON.stringify(firstQuizz));
   let intervalId;
   socket.score = 0;
   socket.fullScore = length * 500;
@@ -83,6 +99,7 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
 });
 
 socket.on("showQuiz", (quiz) => {
+  localStorage.setItem("quizzDetail", JSON.stringify(quiz));
   if (quiz.lastquizz) socket.lastquizz = true;
   quizShow(quiz);
   $("#quiz-intro").text(`Question${socket.quiz}`);
@@ -95,7 +112,15 @@ socket.on("showFinalScore", (rank) => {
 
 socket.on("showQuizExplain", ({ lastquiz, scoreObj }) => {
   $("#quiz").empty();
-  console.log(scoreObj);
+  const parseQuizzObject = JSON.parse(localStorage.getItem("quizzDetail"));
+  const correctAnswer = parseQuizzObject.answer.join(" ");
+  const explain = parseQuizzObject.explain;
+  const $correctAnswer = $(`<h2>Correct Answer:  ${correctAnswer}</h2>`);
+  const $explain = $(`<h3>Explaination: <p>${explain}</p></h3>`);
+  $("#quiz").append($correctAnswer);
+  $("#quiz").append($explain);
+  generateChart(scoreObj);
+  localStorage.removeItem("quizzDetail");
   if (socket.host) {
     if (lastquiz) {
       const $showFinalScore = $(
@@ -495,5 +520,58 @@ function sortScores() {
         top: currentPosition.top,
       })
       .animate(newPosition, 500);
+  });
+}
+
+function generateChart(object) {
+  const $chartContainer = $(
+    '<div id="chart" style="width: 60%; height: 60%"></div>'
+  );
+  $("#quiz").append($chartContainer);
+  const dataArray = [];
+  for (let i in object) {
+    dataArray.push({ name: i, y: object[i] });
+  }
+  console.log(dataArray);
+  Highcharts.chart("chart", {
+    chart: {
+      backgroundColor: "transparent",
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: "pie",
+    },
+    title: {
+      text: "Answer Analysis",
+      style: {
+        color: "white",
+        fontWeight: "bold",
+      },
+    },
+    tooltip: {
+      pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",
+    },
+    accessibility: {
+      point: {
+        valueSuffix: "%",
+      },
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: "pointer",
+        dataLabels: {
+          enabled: true,
+          format: "<b>{point.name}</b>: {point.y}",
+          connectorColor: "silver",
+        },
+      },
+    },
+    series: [
+      {
+        name: "Share",
+        data: dataArray,
+      },
+    ],
   });
 }
