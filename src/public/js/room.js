@@ -1,3 +1,4 @@
+$(".popup-container").hide();
 const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
@@ -17,6 +18,7 @@ Highcharts.setOptions({
     };
   }),
 });
+
 // Join chatroom
 socket.emit("join", { userName, userId, roomId });
 socket.on("message", (message) => {
@@ -136,6 +138,17 @@ socket.on("showQuizExplain", ({ lastquiz, scoreObj }) => {
   }
 });
 
+$(".leave-game-btn").on("click", () => {
+  $(".popup-container").show();
+});
+
+$(".pop-yes-button").on("click", () => {
+  window.location.href = "/";
+});
+$(".pop-no-button").on("click", () => {
+  $(".popup-container").hide();
+});
+
 $(".container").on("click", "#next-game-btn", () => {
   const quizNum = socket.quiz;
   socket.emit("nextQuiz", quizNum);
@@ -169,14 +182,19 @@ socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
 
 function showRank(players) {
   $("#quiz").off().empty();
+  const $ranking = $("<h1>RANKING</h1>");
+  $("#quiz").append($ranking);
   const $rankings = $(".rankings");
+  let rankNum = 1;
   players.forEach((player) => {
     const $player = $(`<div class="ranking">
+      <div class="player-rank">${rankNum}</div>
       <div class="player-name">${player.name}</div>
       <div class="player-score">${player.score}</div>
     </div>`);
     $rankings.append($player);
     $("#quiz").append($player);
+    rankNum++;
   });
 }
 
