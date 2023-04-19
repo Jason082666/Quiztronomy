@@ -1,5 +1,6 @@
 import { createUser, validationUser } from "../models/user.js";
 import errors from "../models/errorhandler.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const userLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -12,6 +13,14 @@ export const userLogin = async (req, res) => {
   const user = { userId, name };
   req.session.user = user;
   return res.json({ data: pass });
+};
+
+export const visiterLogin = async (req, res) => {
+  const { name } = req.body;
+  const userId = uuidv4();
+  const user = { userId, name, visitor: true };
+  req.session.user = user;
+  return res.json({ data: user });
 };
 
 export const userSignup = async (req, res) => {
@@ -35,7 +44,8 @@ export const userLogout = async (req, res) => {
 };
 
 export const userLoginStatus = async (req, res) => {
-  if (!req.session.user) return res.json({ data: { error: "log in fail" } });
+  if (!req.session.user || req.session.user.visitor)
+    return res.json({ data: { error: "log in fail" } });
   const { userId, name } = req.session.user;
   return res.json({ data: { userId, name } });
 };

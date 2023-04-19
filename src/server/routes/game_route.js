@@ -1,7 +1,10 @@
 import { Router } from "express";
 const router = Router();
 import { catchError } from "../../util/catcherror.js";
-import { authetication } from "../middleware/authentication.js";
+import {
+  authetication,
+  autheticationForPlaying,
+} from "../middleware/authentication.js";
 import {
   createGameRoom,
   enterGameRoom,
@@ -19,7 +22,7 @@ router
   .post(catchError(authetication), catchError(createGameRoom));
 router
   .route("/game/enter")
-  .post(catchError(authetication), catchError(enterGameRoom));
+  .post(catchError(autheticationForPlaying), catchError(enterGameRoom));
 // router
 //   .route("/game/leave")
 //   .post(catchError(authetication), catchError(leaveGameRoom));

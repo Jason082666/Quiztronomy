@@ -23,7 +23,8 @@
     "mongoose": "^7.0.3",
     "nodemon": "^2.0.22",
     "openai": "^3.2.1",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "eslint": "^8.38.0"

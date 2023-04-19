@@ -288,3 +288,16 @@ $(".container").on("click", "#join", async (e) => {
   localStorage.setItem("roomId", roomId);
   window.location.href = `/game/room/${roomId}`;
 });
+
+$(".enter-btn").on("click", async () => {
+  const roomId = $("#room-name").val();
+  const name = $("#user-name").val();
+  const result = await axios.post("/api/1.0/visitor/login", { name });
+  if (result.error) return;
+  const enterResult = await axios.post("/api/1.0/game/enter", { roomId });
+  const { data } = enterResult.data;
+  localStorage.setItem("userName", data.userName);
+  localStorage.setItem("userId", data.userId);
+  localStorage.setItem("roomId", roomId);
+  window.location.href = `/game/room/${roomId}`;
+});

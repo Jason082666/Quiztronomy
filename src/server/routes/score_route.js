@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { authetication } from "../middleware/authentication.js";
+import {
+  authetication,
+  autheticationForPlaying,
+} from "../middleware/authentication.js";
 const router = Router();
 import { catchError } from "../../util/catcherror.js";
 import {
@@ -10,7 +13,7 @@ import {
 
 router
   .route("/score/add")
-  .post(catchError(authetication), catchError(addPlayerScore));
+  .post(catchError(autheticationForPlaying), catchError(addPlayerScore));
 router.route("/score/search").get(catchError(showPlayerRank));
 router.route("/score/queque").post(catchError(addSaveScoreTaskToQueque));
 
