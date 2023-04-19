@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Game Room</title>
+    <link rel="stylesheet" href="/css/room.css" />
+    <link rel="stylesheet" href="/css/load.css" />
     <script
       src="https://cdn.socket.io/4.6.0/socket.io.min.js"
       integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
@@ -19,16 +21,22 @@
       integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
       crossorigin="anonymous"
     ></script>
-    <!-- <script
-      src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-      integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
-      crossorigin="anonymous"
-    ></script> -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <!-- <script src="https://code.highcharts.com/highcharts-3d.js"></script> -->
-    <link rel="stylesheet" href="/css/room.css" />
   </head>
   <body>
+    <div class="load-main" id="enter-room-loading" style="display: block">
+      <div class="load">
+        <div class="load-container">
+          <h2>Entering room....</h2>
+          <div class="loadingio-spinner-eclipse-orhupmrtp1">
+            <div class="ldio-yua2kv3p2hn">
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="block"></div>
     <div class="container">
       <h1></h1>
       <div class="host-container"><div id="host"></div></div>

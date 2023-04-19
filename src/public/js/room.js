@@ -1,7 +1,15 @@
+/* eslint-disable no-undef */
 const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
 const roomId = localStorage.getItem("roomId");
+$(window).on("load", function () {
+  $(".block").hide();
+  $("#enter-room-loading").hide();
+  $(".container").show();
+  $(".footer-container").show();
+});
+
 Highcharts.setOptions({
   colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
     return {

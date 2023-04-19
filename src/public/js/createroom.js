@@ -2,7 +2,8 @@
 import { MultiChoice, TrueFalse } from "./question_module.js";
 localStorage.setItem("searchedId", "[]");
 localStorage.setItem("quizzes", "{}");
-
+const CancelToken = axios.CancelToken;
+let source;
 $("#create-by-system").on("change", function () {
   if ($(this).is(":checked")) {
     $("#search-result").show();
@@ -189,6 +190,7 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
   $("#fetch-ai-loading").show();
   const data = await searchByAI();
   console.log("data", data);
+  if (!data) return;
   if (["TF-CH", "TF-EN"].includes(data.type)) {
     const quizz = new TrueFalse(
       data.question,
@@ -350,15 +352,34 @@ const search = async () => {
   return data;
 };
 
+$(".cancel-fetch-ai").on("click", () => {
+  cancelFetchOpenAI();
+  $(".load-main").hide();
+});
+
 const searchByAI = async () => {
   const language = $("#search-language").val();
   const create = $("input[name='question-type']:checked").val();
   const type = `${create}-${language}`;
   const q = $("#search-input").val();
   const obj = { q, type, mode: "AI" };
-  const result = await axios.post("/api/1.0/question/create", obj);
-  const { data } = result.data;
-  return data;
+  source = CancelToken.source();
+  try {
+    const result = await axios.post("/api/1.0/question/create", obj, {
+      cancelToken: source.token,
+    });
+    const { data } = result.data;
+    return data;
+  } catch (e) {
+    if (axios.isCancel()) {
+      return false;
+    }
+  }
+};
+const cancelFetchOpenAI = () => {
+  if (source) {
+    source.cancel();
+  }
 };
 
 const transToBoolean = (answer) => {
@@ -583,7 +604,6 @@ $("body").on("click", ".room-ready-btn", async () => {
   await axios.post("/api/1.0/question/update", deletePopObj);
   localStorage.removeItem("searcheId");
   localStorage.removeItem("quizzes");
-  $("");
   window.location.href = `/game/room/${roomId}`;
 });
 
