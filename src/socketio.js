@@ -78,7 +78,7 @@ export const socketio = async function (server) {
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
-      if (!firstQuizz) return;
+      if (!firstQuizz || !length) return;
       firstQuizz.num = 1;
       const rankResult = await showRank(roomId, Infinity);
       io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length, rankResult });
@@ -113,17 +113,20 @@ export const socketio = async function (server) {
       });
       io.to(roomId).emit("updateRankAndScore", { initvalue, score, userId });
     });
-
+    // 只有host會接到timeout
     socket.on("timeout", async (lastquiz) => {
       const { roomId } = socket;
       const index = io.quizNum[roomId] - 1;
-      const rankResult = await showRank(roomId, 3);
-      if (lastquiz) return io.to(roomId).emit("showFinalScore", rankResult);
       const scoreObj = io.data[roomId][index];
-      io.to(roomId).emit("showScoreTable", {
-        scoreObj,
-        rankResult,
-      });
+      io.to(roomId).emit("showQuizExplain", scoreObj);
+      if (lastquiz) {
+        socket.emit("showTotalScoreButton");
+      }
+    });
+    socket.on("showFinal", async () => {
+      const { roomId } = socket;
+      const rankResult = await showRank(roomId, 5);
+      io.to(roomId).emit("showFinalScore", rankResult);
     });
   });
 };

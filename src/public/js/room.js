@@ -47,6 +47,11 @@ socket.on("userLeft", (users) => {
 });
 
 $(".host-container").on("click", "#start-game-btn", () => {
+  if ($("#player-list").children().length == 0) {
+    //TODO: 這裡要放顯示"等待其他玩家加入的字樣"
+    console.log("no-player!");
+    return;
+  }
   socket.emit("startGame");
 });
 
@@ -87,20 +92,31 @@ socket.on("showQuiz", (quiz) => {
 socket.on("showFinalScore", (rank) => {
   showRank(rank);
 });
-socket.on("showScoreTable", ({ scoreObj, rankResult }) => {
+
+socket.on("showQuizExplain", (scoreObj) => {
   $("#quiz").empty();
-  // const parseScoreObj = JSON.parse(scoreObj);
-  // const parseRankResult = JSON.parse(rankResult);
-  console.log(scoreObj, rankResult);
+  console.log(scoreObj);
   if (socket.host) {
     const $nextGameButton = $('<button id="next-game-btn">Next quiz</button>');
     $("#quiz").append($nextGameButton);
   }
 });
+// 一定是host才會接到
+socket.on("showTotalScoreButton", () => {
+  $("#quiz").fid("next-game-btn").remove();
+  const $showFinalScore = $(
+    '<button id="show-final-score">Show final result</button>'
+  );
+  $("#quiz").append($showFinalScore);
+});
 
 $(".container").on("click", "#next-game-btn", () => {
   const quizNum = socket.quiz;
   socket.emit("nextQuiz", quizNum);
+});
+
+$(".container").on("click", "#show-final-score", () => {
+  socket.emit("showFinal");
 });
 
 const $countdown = $(
@@ -161,6 +177,8 @@ const quizShow = (quizzObj) => {
     return;
   }
   if (["MCS-EN", "MCS-CH"].includes(quizzObj.type)) {
+    // TODO:
+    console.log(quizzObj);
     const page =
       $(`<div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
     <ul><li><input type="checkbox" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label>
@@ -266,11 +284,9 @@ function trueFalseOnClick(quizzObj, $element) {
   $element.on("click", ".t-f", async function () {
     $(".t-f").prop("disabled", true);
     const chooseOption = $(this).data("value");
-    console.log("chooseoption", chooseOption);
-    console.log("typeof chooseoption", typeof chooseOption);
-    console.log("quizobj.answer", quizzObj.answer);
     if (chooseOption === quizzObj.answer[0]) {
       $(this).addClass("correct-answer");
+      $(".t-f").addClass("tf-no-hover");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
       await axios.post("/api/1.0/score/add", { roomId, score });
       const initvalue = socket.score;
@@ -284,6 +300,7 @@ function trueFalseOnClick(quizzObj, $element) {
       });
     } else {
       $(this).addClass("wrong-answer");
+      $(".t-f").addClass("tf-no-hover");
       await axios.post("/api/1.0/score/add", {
         roomId,
         score: 100,
@@ -335,7 +352,8 @@ function multipleChoicesOnclick(quizzObj, $element) {
       }
     });
     const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
-    if (rightoptions > 0) finalScore = (rightoptions / 4) * 1.2 * score;
+    if (rightoptions > 0)
+      finalScore = Math.floor((rightoptions / 4) * 1.2 * score);
     await axios.post("/api/1.0/score/add", { roomId, score: finalScore });
     const initvalue = socket.score;
     socket.score += finalScore;

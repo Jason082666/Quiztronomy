@@ -100,15 +100,15 @@ export const startRoom = async function (roomId, founderId) {
     roomStatus: "preparing",
     "founder.id": founderId,
   });
-  if (!gameRoom) return null;
+  if (!gameRoom) return {};
   gameRoom.roomStatus = "started";
   await gameRoom.save();
   if (redisClient.status === "reconnecting") {
-    return false;
+    return {};
   }
   const players = await redisClient.hgetall(`${roomId}-room`);
   delete players.host;
-  console.log(players);
+  if (Object.keys(players).length == 0) return {};
   gameRoom.players = players;
   await gameRoom.save();
   for (let player in players) {
@@ -130,7 +130,7 @@ export const terminateRoom = async function (id) {
   return true;
 };
 
-export const  getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
+export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
   if (redisClient.status === "reconnecting") {
     return undefined;
   }

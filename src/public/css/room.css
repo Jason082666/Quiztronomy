@@ -71,14 +71,7 @@ button {
   width: 35%;
 }
 button:hover {
-  background: linear-gradient(
-    90deg,
-    #b8c5e5,
-    #94a0b3,
-    #506990,
-    #2b4267,
-    #182949
-  );
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .host-container {
@@ -271,6 +264,20 @@ button:hover {
   color: #303030;
 }
 
+.t-f:hover:not(.tf-no-hover) {
+  cursor: pointer;
+  box-shadow: 0 0 5px #ccc;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #303030;
+}
+
+.tf-no-hover {
+  cursor: auto;
+  box-shadow: none;
+  background-color: transparent;
+  color: inherit;
+}
+
 .mcs-checked {
   background-color: rgba(255, 255, 255, 0.5);
 }
@@ -367,7 +374,7 @@ label {
   width: 15%;
   flex-direction: column;
   height: 70vh;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
   padding: 20px;
   border-radius: 10px;
@@ -382,21 +389,29 @@ label {
   align-items: center;
   position: relative;
   width: 100%;
-  height: 80%;
-  overflow: hidden;
+  height: 75%;
+  overflow: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
+#sort-container::-webkit-scrollbar {
+  /* 隱藏 Webkit 樣式的滾動條圖示 */
+  display: none;
+}
+
 .sort-player {
-  height: 20%;
+  height: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  margin-bottom: 10px;
+  margin-top: 10px;
   width: 80%;
   position: relative;
   font-size: 20px;
   font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.5);
+  outline: 1px solid whitesmoke;
 }
 .sort-player-score {
   position: absolute;
@@ -407,11 +422,11 @@ label {
   text-align: center;
 }
 .correct-answer {
-  background-color: rgb(134, 221, 110);
+  background-color: rgb(134, 221, 110) !important;
 }
 
 .wrong-answer {
-  background-color: rgb(214, 56, 48);
+  background-color: rgb(214, 56, 48) !important;
 }
 
 /* TODO: */
