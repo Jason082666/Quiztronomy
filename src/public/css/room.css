@@ -516,6 +516,10 @@ label {
 
 /* popout container */
 
+.popup-none {
+  display: none;
+}
+
 .popup-container {
   position: fixed;
   top: 0;
@@ -535,6 +539,9 @@ label {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   width: 400px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .popout-text {

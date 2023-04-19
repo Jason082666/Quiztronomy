@@ -275,13 +275,6 @@ $(".container").on("click", ".signup", async function (e) {
 
 $(".container").on("click", "#create", async (e) => {
   e.preventDefault();
-  // const result = await axios.post("/api/1.0/game/create");
-  // const { data } = result;
-  // if (data.error) return console.log(data.error);
-  // const roomId = data.data.id;
-  // localStorage.setItem("roomId", roomId);
-  // localStorage.setItem("hostname", data.data.founder.name);
-  // localStorage.setItem("hostId", data.data.founder.id);
   window.location.href = "/game/createroom.html";
 });
 

@@ -186,6 +186,7 @@ $(".create-container").on("keydown", "#search-input", async function (e) {
 });
 
 $(".create-container").on("click", "#search-submit-by-ai", async function () {
+  $("#fetch-ai-loading").show();
   const data = await searchByAI();
   console.log("data", data);
   if (["TF-CH", "TF-EN"].includes(data.type)) {
@@ -209,6 +210,7 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
     const html = quizz.html;
     $("#search-result").append(html);
   }
+  $("#fetch-ai-loading").hide();
   saveQuizzItemToLocal(data);
 });
 
@@ -581,6 +583,7 @@ $("body").on("click", ".room-ready-btn", async () => {
   await axios.post("/api/1.0/question/update", deletePopObj);
   localStorage.removeItem("searcheId");
   localStorage.removeItem("quizzes");
+  $("");
   window.location.href = `/game/room/${roomId}`;
 });
 

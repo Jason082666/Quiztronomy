@@ -1,4 +1,3 @@
-$(".popup-container").hide();
 const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
@@ -139,14 +138,14 @@ socket.on("showQuizExplain", ({ lastquiz, scoreObj }) => {
 });
 
 $(".leave-game-btn").on("click", () => {
-  $(".popup-container").show();
+  $(".popup-none").show();
 });
 
 $(".pop-yes-button").on("click", () => {
   window.location.href = "/";
 });
 $(".pop-no-button").on("click", () => {
-  $(".popup-container").hide();
+  $(".popup-none").hide();
 });
 
 $(".container").on("click", "#next-game-btn", () => {
