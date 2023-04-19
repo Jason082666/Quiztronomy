@@ -88,6 +88,8 @@ export const socketio = async function (server) {
       const { roomId } = socket;
       io.quizNum[roomId] += 1;
       const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
+      console.log(io.quizNum[roomId]);
+      console.log(quiz);
       if (quiz) {
         io.to(roomId).emit("showQuiz", quiz);
       } else {
@@ -118,10 +120,7 @@ export const socketio = async function (server) {
       const { roomId } = socket;
       const index = io.quizNum[roomId] - 1;
       const scoreObj = io.data[roomId][index];
-      io.to(roomId).emit("showQuizExplain", scoreObj);
-      if (lastquiz) {
-        socket.emit("showTotalScoreButton");
-      }
+      io.to(roomId).emit("showQuizExplain", { lastquiz, scoreObj });
     });
     socket.on("showFinal", async () => {
       const { roomId } = socket;

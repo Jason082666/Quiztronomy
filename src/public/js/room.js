@@ -93,21 +93,22 @@ socket.on("showFinalScore", (rank) => {
   showRank(rank);
 });
 
-socket.on("showQuizExplain", (scoreObj) => {
+socket.on("showQuizExplain", ({ lastquiz, scoreObj }) => {
   $("#quiz").empty();
   console.log(scoreObj);
   if (socket.host) {
-    const $nextGameButton = $('<button id="next-game-btn">Next quiz</button>');
-    $("#quiz").append($nextGameButton);
+    if (lastquiz) {
+      const $showFinalScore = $(
+        '<button id="show-final-score">Show final result</button>'
+      );
+      $("#quiz").append($showFinalScore);
+    } else {
+      const $nextGameButton = $(
+        '<button id="next-game-btn">Next quiz</button>'
+      );
+      $("#quiz").append($nextGameButton);
+    }
   }
-});
-// 一定是host才會接到
-socket.on("showTotalScoreButton", () => {
-  $("#quiz").fid("next-game-btn").remove();
-  const $showFinalScore = $(
-    '<button id="show-final-score">Show final result</button>'
-  );
-  $("#quiz").append($showFinalScore);
 });
 
 $(".container").on("click", "#next-game-btn", () => {
