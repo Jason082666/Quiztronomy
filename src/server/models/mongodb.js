@@ -34,13 +34,14 @@ const MyGameRoomSchema = new mongoose.Schema({
   roomStatus: { type: String, default: "preparing", required: true },
   date: { type: Date, default: Date.now },
   quizz: [
-    // {
-    //   question: { type: String },
-    //   answer: [],
-    //   explain: { type: String },
-    //   type: { type: String },
-    //   id: { type: String },
-    // },
+    {
+      question: { type: String },
+      answer: [],
+      options: {},
+      explain: { type: String },
+      type: { type: String },
+      id: { type: String },
+    },
   ],
   score: [
     {
@@ -50,6 +51,7 @@ const MyGameRoomSchema = new mongoose.Schema({
       rank: { type: Number },
     },
   ],
+  history: { type: Array, default: [] },
 });
 
 const MyUserSchema = new mongoose.Schema({

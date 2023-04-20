@@ -556,7 +556,6 @@ $("body").on("click", ".room-ready-cancell-btn", () => {
 
 $("body").on("click", ".room-ready-btn", async () => {
   const gameRoomName = $("#create-room-name").val();
-  console.log(gameRoomName);
   const createRoomOnMongo = await axios.post("/api/1.0/game/create", {
     gameRoomName,
   });
@@ -580,9 +579,9 @@ $("body").on("click", ".room-ready-btn", async () => {
     quizzObject.timeLimits = timeLimits;
     readyQuizzesArray.push(quizzObject);
   });
+
   const founderId = localStorage.getItem("userId");
   const roomId = localStorage.getItem("roomId");
-  console.log(readyQuizzesArray, roomId, founderId);
   await axios.post("/api/1.0/game/savequizz", {
     array: readyQuizzesArray,
     roomId,

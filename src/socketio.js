@@ -7,7 +7,11 @@ import {
   getCurrentQuizzFromRedis,
 } from "./server/models/game.js";
 import { gameHostValidation } from "./server/models/user.js";
-import { showRank, addToQuequeAndUpdateMongo } from "./server/models/score.js";
+import {
+  showRank,
+  addToQuequeAndUpdateMongo,
+  addGameHistory,
+} from "./server/models/score.js";
 import { deleteKey } from "./server/models/redis.js";
 export const socketio = async function (server) {
   const io = new Server(server);
@@ -61,6 +65,7 @@ export const socketio = async function (server) {
         delete io.score[roomId];
         delete io.data[roomId];
         delete io.quizNum[roomId];
+        delete io.gameName[roomId];
         io.to(roomId).emit("hostLeave");
         return;
       }
@@ -75,6 +80,8 @@ export const socketio = async function (server) {
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
+      // TODO:
+      console.log(firstQuizz);
       if (!firstQuizz || !length) return;
       firstQuizz.num = 1;
       const rankResult = await showRank(roomId, Infinity);
@@ -129,6 +136,9 @@ export const socketio = async function (server) {
     socket.on("showFinal", async () => {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
+      // TODO:
+      console.log(io.score[roomId]);
+      await addGameHistory(roomId, io.score[roomId]);
       await addToQuequeAndUpdateMongo(roomId);
       io.to(roomId).emit("showFinalScore", rankResult);
     });

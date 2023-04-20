@@ -1,6 +1,6 @@
 import { MyGameRoom } from "../src/server/models/mongodb.js";
 import { redisClient } from "../src/server/models/redis.js";
-
+import {} from "../"
 redisClient.on("connect", () => {
   console.log("Connected to Redis");
 });
@@ -28,22 +28,8 @@ const funct = async () => {
           const score = rank[i + 1];
           result.push({ id, name, score });
         }
-        let previousScore = null;
-        let currentRank = 0;
-        let previousRank = 1;
-        const rankArray = result.reduce((acc, e) => {
-          currentRank++;
-          if (e.score === previousScore) {
-            e.rank = previousRank;
-          } else {
-            previousScore = e.score;
-            previousRank = currentRank;
-            e.rank = currentRank;
-          }
-          return [...acc, e];
-        }, []);
         const gameRoom = await MyGameRoom.findOne({ _id: uniqueId });
-        gameRoom.score = rankArray;
+        gameRoom.score = result;
         await gameRoom.save();
         await redisClient.zremrangebyrank(`${roomId} -score`, 0, -1);
         return true;

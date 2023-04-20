@@ -1,6 +1,6 @@
 import { MyGameRoom } from "../src/server/models/mongodb.js";
 import { redisClient } from "../src/server/models/redis.js";
-
+import { addGameHistoryToPlayer } from "../src/server/models/score.js";
 redisClient.on("connect", () => {
   console.log("Connected to Redis");
 });
@@ -28,6 +28,11 @@ const funct = async () => {
           const id = Object.keys(playerInfo)[0];
           const name = Object.values(playerInfo)[0];
           const score = rank[i + 1];
+          // TODO:
+          console.log("userid", id);
+          console.log("name", name);
+          console.log("id-length", id.length);
+          if (id.length !== 36) await addGameHistoryToPlayer(id, uniqueId);
           result.push({ id, name, score });
         }
         const gameRoom = await MyGameRoom.findOne({ _id: uniqueId });

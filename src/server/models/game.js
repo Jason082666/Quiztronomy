@@ -120,11 +120,16 @@ export const startRoom = async function (roomId, founderId) {
     await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
   }
   await redisClient.del(`${roomId}-room`);
-  return { firstQuizz: gameRoom.quizz[0], length: gameRoom.quizz.length };
+  const firstQuizz = await redisClient.lindex(roomId, 0);
+  const parseFirstQuizz = JSON.parse(firstQuizz);
+  return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
 };
 
 export const terminateRoom = async function (id) {
-  const result = await MyGameRoom.deleteOne({ id, roomStatus: "preparing" });
+  const result = await MyGameRoom.deleteOne({
+    id,
+    roomStatus: { $ne: "closed" },
+  });
   if (result.deletedCount === 0) {
     return false;
   }

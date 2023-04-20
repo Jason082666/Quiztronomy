@@ -216,6 +216,7 @@ function showRank(players) {
 }
 
 const quizShow = (quizzObj) => {
+  console.log(quizzObj);
   $("#quiz").off().empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
     const page =
@@ -256,6 +257,7 @@ const quizShow = (quizzObj) => {
 };
 
 const renderQuizzPage = (quizzObj, rankResult) => {
+  console.log(quizzObj);
   $(".container").empty();
   let $quiz;
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
@@ -309,6 +311,7 @@ const renderQuizzPage = (quizzObj, rankResult) => {
 };
 
 const renderHostQuizzPage = (quizzObj, rankResult) => {
+  console.log(quizzObj);
   $(".container").empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
     const page = `<div id='quiz-container'><div id='left-bar'><h2 id="quiz-intro">Question ${quizzObj.num}</h2><div id='quiz-type'>Multiple choice</div><button id="show-answer">Show answer</button></div><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
@@ -484,7 +487,6 @@ function countDown(timeLimits) {
   let timerId;
   let remainingSeconds = timeLimits;
   timerId = setInterval(async () => {
-    console.log(timerId);
     let percentage = (remainingSeconds / timeLimits) * 100;
     $("#timer .bar").css("width", percentage + "%");
     remainingSeconds -= 0.05;
@@ -500,9 +502,7 @@ function countDown(timeLimits) {
   timeIdArray.push(timerId);
 }
 function clearCountDown(timeIdArray) {
-  console.log("clearCountDown", timeIdArray.length);
   timeIdArray.forEach((timeId) => {
-    console.log("clearTimer", timeId);
     clearInterval(timeId);
     timeIdArray.pop();
   });
@@ -577,7 +577,6 @@ function generateChart(object) {
   for (let i in object) {
     dataArray.push({ name: i, y: object[i] });
   }
-  console.log(dataArray);
   Highcharts.chart("chart", {
     chart: {
       backgroundColor: "transparent",
