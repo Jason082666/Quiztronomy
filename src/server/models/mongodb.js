@@ -22,6 +22,7 @@ await mongoose
 
 const MyGameRoomSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
+  name: { type: String },
   founder: {
     id: { type: String, required: true },
     name: { type: String, required: true },

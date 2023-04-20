@@ -555,22 +555,19 @@ $("body").on("click", ".room-ready-cancell-btn", () => {
 });
 
 $("body").on("click", ".room-ready-btn", async () => {
-  const createRoom = await axios.post("/api/1.0/game/create");
-  const { data } = createRoom.data;
-  // TODO:這邊要做＂請重新登錄的處理＂
-  localStorage.setItem("roomId", data.id);
-  if (data.error) return console.log(data.error);
-  const createRoomObject = { roomId: data.id, hostId: data.founder.id };
-  const createRoomOnMongo = await axios.post(
-    "/api/1.0/game/create",
-    createRoomObject
-  );
-  const createResult = createRoomOnMongo.data.data;
-  if (createResult.error) return console.log(data.error);
-  const createRoomOnRedis = await axios.post("/api/1.0/game/roomupdate", {
-    roomId: data.id,
+  const gameRoomName = $("#create-room-name").val();
+  console.log(gameRoomName);
+  const createRoomOnMongo = await axios.post("/api/1.0/game/create", {
+    gameRoomName,
   });
-  if (createRoomOnRedis.error) return console.log(data.error);
+  const createResult = createRoomOnMongo.data.data;
+  if (createResult.error) return console.log(createResult.error);
+  localStorage.setItem("roomId", createResult.id);
+  const createRoomOnRedis = await axios.post("/api/1.0/game/roomupdate", {
+    roomId: createResult.id,
+  });
+  if (createRoomOnRedis.error) return console.log(createRoomOnRedis.error);
+  localStorage.setItem("gameName", createResult.name);
   const quizzes = localStorage.getItem("quizzes");
   const parseQuizz = JSON.parse(quizzes);
   const readyQuizzesArray = [];
@@ -585,6 +582,7 @@ $("body").on("click", ".room-ready-btn", async () => {
   });
   const founderId = localStorage.getItem("userId");
   const roomId = localStorage.getItem("roomId");
+  console.log(readyQuizzesArray, roomId, founderId);
   await axios.post("/api/1.0/game/savequizz", {
     array: readyQuizzesArray,
     roomId,

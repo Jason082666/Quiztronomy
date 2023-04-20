@@ -14,7 +14,7 @@ export const socketio = async function (server) {
   io.on("connection", (socket) => {
     console.log("A user connected");
     socket.on("join", async (object) => {
-      const { userId, userName, roomId } = object;
+      const { userId, userName, roomId, gameName } = object;
       const validationUser = await gameHostValidation(userId, userName, roomId);
       socket.join(roomId);
       socket.roomId = roomId;
@@ -24,6 +24,8 @@ export const socketio = async function (server) {
         // 檢查io是否有host,score,data(是否現在線上都不存在房間)
         if (!io.host) io.host = {};
         io.host[roomId] = { userId, userName, roomId };
+        if (!io.gameName) io.gameName = {};
+        io.gameName[roomId] = gameName;
         if (!io.users) io.users = {};
         io.users[roomId] = [];
         if (!io.score) io.score = {};
@@ -35,7 +37,11 @@ export const socketio = async function (server) {
         io.quizNum[roomId] = 1;
         socket.emit("welcomeMessage");
       } else {
-        socket.emit("message", `Welcome to the game room, ${userName} !`);
+        const welcomeString = `Welcome to the game room, ${userName} !`;
+        socket.emit("message", {
+          welcomeString,
+          gameName: io.gameName[roomId],
+        });
         socket.userId = userId;
         const user = { userId, userName };
         io.users[roomId].push(user);
@@ -54,6 +60,7 @@ export const socketio = async function (server) {
         delete io.users[roomId];
         delete io.score[roomId];
         delete io.data[roomId];
+        delete io.quizNum[roomId];
         io.to(roomId).emit("hostLeave");
         return;
       }

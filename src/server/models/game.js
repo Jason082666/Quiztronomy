@@ -11,13 +11,14 @@ export const gameRoomExistence = async function (id) {
 };
 
 // 當一場遊戲結束後founder的頁面會出現back to room 或是leave的按鈕，若是按下back to room其實就是再創一個新的房間號碼。(同一個api再發一次)(id,name,limitPlayers都應該在local storage中，其中預設的limitplayer可在個人設定中更改)
-export const createRoom = async function (id, name) {
+export const createRoom = async function (id, name, gameRoomName) {
   let roomId;
   do {
     roomId = Math.floor(Math.random() * 100000000).toString();
   } while (await gameRoomExistence(roomId));
   const game = new MyGameRoom({
     id: roomId,
+    name: gameRoomName,
     founder: { id, name },
   });
   const result = await game.save();

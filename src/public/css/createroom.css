@@ -81,8 +81,11 @@ textarea {
   flex-direction: row;
   outline: 5px solid wheat;
 }
-.container-left {
+.select-quiz-container {
   width: 75vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   outline: 5px solid white;
 }
 .container-right {
@@ -189,7 +192,8 @@ input[type="number"] {
 #search-result,
 .language-container,
 .generate-container,
-.create-container {
+.create-container,
+.for-room-name {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
@@ -274,7 +278,14 @@ header {
   cursor: pointer;
   font-size: 16px;
 }
-
+.for-room-name {
+  display: flex;
+  align-items: center;
+}
+#create-room-name {
+  width: 70%;
+  margin-left: 10px;
+}
 /* 彈出視窗 */
 
 .popup-container {

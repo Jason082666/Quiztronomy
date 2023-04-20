@@ -46,61 +46,71 @@
   <body>
     <div id="container">
       <div class="container-left">
-        <div class="language-container">
-          <label for="search-language">選擇語言：</label>
-          <select id="search-language">
-            <option value="EN">英文</option>
-            <option value="CH">中文</option>
-          </select>
-        </div>
-        <div class="generate-container">
-          <label for="handy-or-system" class="label-for-question"
-            >生成方式 :
-          </label>
-          <input
-            type="radio"
-            name="handy-or-system"
-            id="create-by-hand"
-            checked
-          />
-          <label for="create-by-hand" class="label-for-question"
-            >手動輸入</label
-          >
-          <input type="radio" id="create-by-system" name="handy-or-system" />
-          <label for="create-by-hand" class="label-for-question"
-            >系統題庫</label
-          >
-        </div>
-        <div class="create-container">
-          <label for="question-type">選擇題型：</label>
-          <input
-            type="radio"
-            name="question-type"
-            class="MC-handy"
-            id="single-choice"
-            value="MC"
-          />
-          <label class="label-for-question" for="single-choice"
-            >單一選擇題</label
-          >
-          <input
-            type="radio"
-            id="true-false"
-            class="TF-handy"
-            name="question-type"
-            value="TF"
-          />
-          <label class="label-for-question" for="true-false">是非題</label>
-          <input
-            type="radio"
-            id="multiple-choice"
-            class="MCS-handy"
-            name="question-type"
-            value="MCS"
-          />
-          <label class="label-for-question" for="multiple-choice">多選題</label>
-          <br />
-          <div class="quizz-handy-container"></div>
+        <div class="select-quiz-container">
+          <div class="for-room-name">
+            <label for="create-room-name">Room name :</label>
+            <input type="text" id="create-room-name" />
+          </div>
+          <div class="language-container">
+            <label for="search-language">Select language :</label>
+            <select id="search-language">
+              <option value="EN">English</option>
+              <option value="CH">中文</option>
+            </select>
+          </div>
+          <div class="generate-container">
+            <label for="handy-or-system" class="label-for-question"
+              >Generate by :
+            </label>
+            <input
+              type="radio"
+              name="handy-or-system"
+              id="create-by-hand"
+              checked
+            />
+            <label for="create-by-hand" class="label-for-question"
+              >Manually</label
+            >
+            <input type="radio" id="create-by-system" name="handy-or-system" />
+            <label for="create-by-hand" class="label-for-question"
+              >Quiztronomy pool</label
+            >
+          </div>
+          <div class="create-container">
+            <label for="question-type">Quiz type :</label>
+            <input
+              type="radio"
+              name="question-type"
+              class="MC-handy"
+              id="single-choice"
+              value="MC"
+            />
+            <label class="label-for-question" for="single-choice"
+              >Mutiple choice (One answer)</label
+            >
+            <input
+              type="radio"
+              id="true-false"
+              class="TF-handy"
+              name="question-type"
+              value="TF"
+            />
+            <label class="label-for-question" for="true-false"
+              >True or False</label
+            >
+            <input
+              type="radio"
+              id="multiple-choice"
+              class="MCS-handy"
+              name="question-type"
+              value="MCS"
+            />
+            <label class="label-for-question" for="multiple-choice"
+              >Multiple choice (several answers)</label
+            >
+            <br />
+            <div class="quizz-handy-container"></div>
+          </div>
         </div>
         <div id="search-result"></div>
       </div>

@@ -3,6 +3,7 @@ const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
 const roomId = localStorage.getItem("roomId");
+const gameName = localStorage.getItem("gameName");
 $(window).on("load", function () {
   $(".block").hide();
   $("#enter-room-loading").hide();
@@ -26,14 +27,14 @@ Highcharts.setOptions({
 });
 
 // Join chatroom
-socket.emit("join", { userName, userId, roomId });
-socket.on("message", (message) => {
-  $("h1").empty();
-  $("h1").text(message);
+socket.emit("join", { userName, userId, roomId, gameName });
+socket.on("message", ({ welcomeString, gameName }) => {
+  $("h2").text(welcomeString);
+  $("h1").text(gameName);
 });
 socket.on("welcomeMessage", () => {
-  $("h1").empty();
-  $("h1").text("Waiting for more players.");
+  $("h2").text("Waiting for more players.");
+  $("h1").text(gameName);
 });
 
 socket.on("showControllerInterface", (host) => {

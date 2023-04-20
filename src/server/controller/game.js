@@ -10,15 +10,24 @@ import {
 
 import errors from "../models/errorhandler.js";
 
-export const createGameRoom = async (req, res) => {
+export const createGameRoom = async (req, res, next) => {
   const { userId, name } = req.session.user;
-  const data = await createRoom(userId, name);
+  const { gameRoomName } = req.body;
+  console.log("userid", userId);
+  console.log("name", name);
+  console.log("gameroomname", gameRoomName);
+  if (!userId || !name || !gameRoomName)
+    return next(
+      new errors.ParameterError(["userId", "name", "gameRoomName"], 400)
+    );
+  const data = await createRoom(userId, name, gameRoomName);
   res.json({ data });
 };
 
 // TODO: 這個前面要身分驗證
 export const saveQuizzIntoGameRoom = async (req, res, next) => {
   const { array, roomId, founderId } = req.body;
+  console.log(array, roomId, founderId);
   if (!array || !roomId || !founderId)
     return next(
       new errors.ParameterError(["Array", "roomId", "founderId"], 400)

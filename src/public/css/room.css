@@ -600,3 +600,7 @@ label {
   background-color: #f44336;
   color: rgb(244, 217, 217);
 }
+
+h2 {
+  text-align: center;
+}
