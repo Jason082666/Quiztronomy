@@ -30,3 +30,8 @@ redisClient.on("connect", () => {
 redisClient.on("error", (error) => {
   console.error("Error connecting to Redis", error);
 });
+
+export const deleteKey = async (key) => {
+  const result = redisClient.del(key);
+  return result;
+};

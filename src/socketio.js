@@ -7,8 +7,8 @@ import {
   getCurrentQuizzFromRedis,
 } from "./server/models/game.js";
 import { gameHostValidation } from "./server/models/user.js";
-import { showRank } from "./server/models/score.js";
-
+import { showRank, addToQuequeAndUpdateMongo } from "./server/models/score.js";
+import { deleteKey } from "./server/models/redis.js";
 export const socketio = async function (server) {
   const io = new Server(server);
   io.on("connection", (socket) => {
@@ -24,6 +24,9 @@ export const socketio = async function (server) {
         // 檢查io是否有host,score,data(是否現在線上都不存在房間)
         if (!io.host) io.host = {};
         io.host[roomId] = { userId, userName, roomId };
+        if (!io.users) io.users = {};
+        io.users[roomId] = [];
+        if (!io.score) io.score = {};
         if (!io.score) io.score = {};
         io.score[roomId] = [];
         if (!io.data) io.data = {};
@@ -35,10 +38,6 @@ export const socketio = async function (server) {
         socket.emit("message", `Welcome to the game room, ${userName} !`);
         socket.userId = userId;
         const user = { userId, userName };
-        if (!io.users) {
-          io.users = {};
-        }
-        if (!io.users[roomId]) io.users[roomId] = [];
         io.users[roomId].push(user);
         io.to(roomId).emit("userJoined", [io.host[roomId], io.users[roomId]]);
       }
@@ -47,17 +46,16 @@ export const socketio = async function (server) {
       console.log("A user disconnected");
       const roomId = socket.roomId;
       if (socket.hostId) {
+        await deleteKey(`${roomId}-room`);
+        await deleteKey(`${roomId} -score`);
+        await deleteKey(`${roomId}`);
+        await terminateRoom(roomId);
         delete io.host[roomId];
-        await leaveRoom(roomId, socket.hostId, true);
-        // FIXME: 下面這段(正式環境下)感覺不會發生?
-        if (!io.users || !io.users[roomId]) return;
-        if (!io.users[roomId][0] && !io.host[roomId]) {
-          await terminateRoom(roomId);
-          delete io.users[roomId];
-          delete io.score[roomId];
-          delete io.data[roomId];
-        }
-        // FIXME: 這邊應該要emit一個訊息，broadcast到所有player，請他們回到首頁。
+        delete io.users[roomId];
+        delete io.score[roomId];
+        delete io.data[roomId];
+        io.to(roomId).emit("hostLeave");
+        return;
       }
       if (io.users && io.users[roomId]) {
         io.users[roomId] = io.users[roomId].filter(
@@ -65,14 +63,6 @@ export const socketio = async function (server) {
         );
         await leaveRoom(roomId, socket.userId);
         io.to(roomId).emit("userLeft", io.users[roomId]);
-      }
-      // FIXME: 下面這段(正式環境下)感覺不會發生?
-      if (!io.users || !io.users[roomId]) return;
-      if (!io.users[roomId][0] && !io.host[roomId]) {
-        await terminateRoom(roomId);
-        delete io.users[roomId];
-        delete io.score[roomId];
-        delete io.data[roomId];
       }
     });
     socket.on("startGame", async () => {
@@ -116,15 +106,23 @@ export const socketio = async function (server) {
       io.to(roomId).emit("updateRankAndScore", { initvalue, score, userId });
     });
     // 只有host會接到timeout
-    socket.on("timeout", async (lastquiz) => {
+    socket.on("timeout", async () => {
       const { roomId } = socket;
       const index = io.quizNum[roomId] - 1;
       const scoreObj = io.data[roomId][index];
-      io.to(roomId).emit("showQuizExplain", { lastquiz, scoreObj });
+      io.to(roomId).emit("showQuizExplain", scoreObj);
+    });
+    socket.on("earlyTimeout", async () => {
+      const { roomId } = socket;
+      const index = io.quizNum[roomId] - 1;
+      const scoreObj = io.data[roomId][index];
+      io.to(roomId).emit("clearCountdown");
+      io.to(roomId).emit("showQuizExplain", scoreObj);
     });
     socket.on("showFinal", async () => {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
+      await addToQuequeAndUpdateMongo(roomId);
       io.to(roomId).emit("showFinalScore", rankResult);
     });
   });

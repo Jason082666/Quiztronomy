@@ -15,6 +15,7 @@ body {
 
 #controller {
   display: none;
+  height: 90vh;
 }
 .block {
   position: fixed;
@@ -355,6 +356,11 @@ button:hover {
   margin-top: auto;
   bottom: 0;
 }
+#show-answer {
+  background-color: transparent;
+  width: 80%;
+  outline: 1px solid whitesmoke;
+}
 
 #score-bar {
   position: absolute;
@@ -570,22 +576,27 @@ label {
 }
 
 .pop-yes-button,
-.pop-no-button {
+.pop-no-button,
+.back-to-main-btn {
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 18px;
   margin: 0 10px;
   cursor: pointer;
+  border: none;
 }
 
 .pop-yes-button {
   background-color: #4caf50;
   color: rgb(221, 244, 220);
-  border: none;
+}
+.back-to-main-btn {
+  background-color: #4c68af;
+  color: rgb(193, 211, 245);
+  width: 70%;
 }
 
 .pop-no-button {
   background-color: #f44336;
   color: rgb(244, 217, 217);
-  border: none;
 }

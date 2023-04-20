@@ -8,7 +8,7 @@ $(window).on("load", function () {
   $("#enter-room-loading").hide();
   $("#controller").show();
 });
-
+const timeIdArray = [];
 Highcharts.setOptions({
   colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
     return {
@@ -46,13 +46,6 @@ socket.on("showControllerInterface", (host) => {
 socket.on("userJoined", ([host, users]) => {
   $("#host").text(`Host: ${host.userName}, roomId: ${host.roomId}`);
   $("#player-list").empty();
-  if (!socket.host) {
-    const $leaveRoomButton = $(
-      '<button id="leave-btn">Leave the room</button>'
-    );
-    $(".host-container").find("#leave-btn").remove();
-    $leaveRoomButton.appendTo($(".host-container"));
-  }
   users.forEach((user) => {
     const { userName } = user;
     const $userDiv = $(`<div>${userName}</div>`);
@@ -110,6 +103,7 @@ socket.on("showQuiz", (quiz) => {
   localStorage.setItem("quizzDetail", JSON.stringify(quiz));
   if (quiz.lastquizz) socket.lastquizz = true;
   quizShow(quiz);
+  $("#show-answer").show();
   $("#quiz-intro").text(`Question${socket.quiz}`);
   socket.quiz += 1;
 });
@@ -118,7 +112,13 @@ socket.on("showFinalScore", (rank) => {
   showRank(rank);
 });
 
-socket.on("showQuizExplain", ({ lastquiz, scoreObj }) => {
+socket.on("hostLeave", () => {
+  if (!socket.host) {
+    $("#host-leave-room-popup").show();
+  }
+});
+
+socket.on("showQuizExplain", (scoreObj) => {
   $("#quiz").empty();
   const parseQuizzObject = JSON.parse(localStorage.getItem("quizzDetail"));
   const correctAnswer = parseQuizzObject.answer.join(" ");
@@ -130,7 +130,8 @@ socket.on("showQuizExplain", ({ lastquiz, scoreObj }) => {
   generateChart(scoreObj);
   localStorage.removeItem("quizzDetail");
   if (socket.host) {
-    if (lastquiz) {
+    $("#show-answer").hide();
+    if (socket.lastquizz) {
       const $showFinalScore = $(
         '<button id="show-final-score">Show final result</button>'
       );
@@ -144,20 +145,33 @@ socket.on("showQuizExplain", ({ lastquiz, scoreObj }) => {
   }
 });
 
+socket.on("clearCountdown", () => {
+  clearCountDown(timeIdArray);
+});
+
+$(".back-to-main-btn").on("click", () => {
+  window.location.href = "/";
+});
+
 $(".leave-game-btn").on("click", () => {
-  $(".popup-none").show();
+  $("#leave-room-popup").show();
 });
 
 $(".pop-yes-button").on("click", () => {
   window.location.href = "/";
 });
 $(".pop-no-button").on("click", () => {
-  $(".popup-none").hide();
+  $("#leave-room-popup").hide();
 });
 
 $(".container").on("click", "#next-game-btn", () => {
   const quizNum = socket.quiz;
   socket.emit("nextQuiz", quizNum);
+});
+
+$(".container").on("click", "#show-answer", () => {
+  $("#show-answer").hide();
+  socket.emit("earlyTimeout");
 });
 
 $(".container").on("click", "#show-final-score", () => {
@@ -170,10 +184,6 @@ const $countdown = $(
 </div>`
 );
 $(".container").after($countdown);
-
-$(".host-container").on("click", "#leave-btn", async () => {
-  window.location.href = "/";
-});
 
 socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
   animateScore(
@@ -300,7 +310,7 @@ const renderQuizzPage = (quizzObj, rankResult) => {
 const renderHostQuizzPage = (quizzObj, rankResult) => {
   $(".container").empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
-    const page = `<div id='quiz-container'><div id='left-bar'><h2 id="quiz-intro">Question ${quizzObj.num}</h2><div id='quiz-type'>Multiple choice</div></div><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
+    const page = `<div id='quiz-container'><div id='left-bar'><h2 id="quiz-intro">Question ${quizzObj.num}</h2><div id='quiz-type'>Multiple choice</div><button id="show-answer">Show answer</button></div><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
   <li><input type='radio' name='answer' value='B' id='B'><label for='B'>${quizzObj.options["B"]}</label></li><li>
   <input type='radio' name='answer' value='C' id='C'>
   <label for='C'>${quizzObj.options["C"]}</label></li><li><input type='radio' name='answer' value='D' id='D'><label for='D'>${quizzObj.options["D"]}</label></li></ul></div><div id='scoreboard'><h2>Scoreboard</h2>
@@ -473,18 +483,28 @@ function countDown(timeLimits) {
   let timerId;
   let remainingSeconds = timeLimits;
   timerId = setInterval(async () => {
-    const percentage = (remainingSeconds / timeLimits) * 100;
+    console.log(timerId);
+    let percentage = (remainingSeconds / timeLimits) * 100;
     $("#timer .bar").css("width", percentage + "%");
     remainingSeconds -= 0.05;
     socket.remainTime = remainingSeconds;
     if (remainingSeconds < 0) {
       clearInterval(timerId);
+      timeIdArray.pop();
       if (socket.host) {
-        const lastquiz = socket.lastquizz;
-        socket.emit("timeout", lastquiz);
+        socket.emit("timeout");
       }
     }
   }, 50);
+  timeIdArray.push(timerId);
+}
+function clearCountDown(timeIdArray) {
+  console.log("clearCountDown", timeIdArray.length);
+  timeIdArray.forEach((timeId) => {
+    console.log("clearTimer", timeId);
+    clearInterval(timeId);
+    timeIdArray.pop();
+  });
 }
 
 const calculateScore = (totalTime, remainTime) => {
