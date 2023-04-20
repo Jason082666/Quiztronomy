@@ -12,6 +12,10 @@ body {
   height: 100vh;
   width: 100vw;
 }
+
+#controller {
+  display: none;
+}
 .block {
   position: fixed;
   width: 100%;
@@ -20,10 +24,6 @@ body {
   left: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 3;
-}
-.container,
-.footer-container {
-  display: none;
 }
 h1 {
   text-align: center;
@@ -552,6 +552,7 @@ label {
   width: 400px;
   text-align: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }

@@ -6,8 +6,7 @@ const roomId = localStorage.getItem("roomId");
 $(window).on("load", function () {
   $(".block").hide();
   $("#enter-room-loading").hide();
-  $(".container").show();
-  $(".footer-container").show();
+  $("#controller").show();
 });
 
 Highcharts.setOptions({
