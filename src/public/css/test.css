@@ -1,0 +1,15 @@
+.char-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#pie-char,
+#bar-char {
+  width: 40%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
