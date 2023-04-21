@@ -27,10 +27,6 @@ const MyGameRoomSchema = new mongoose.Schema({
     id: { type: String, required: true },
     name: { type: String, required: true },
   },
-  players: {
-    id: { type: String },
-  },
-
   roomStatus: { type: String, default: "preparing", required: true },
   date: { type: Date, default: Date.now },
   quizz: [

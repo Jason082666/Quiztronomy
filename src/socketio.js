@@ -8,7 +8,10 @@ import {
 } from "./server/models/game.js";
 import { gameHostValidation } from "./server/models/user.js";
 import { showRank, addToQuequeAndUpdateMongo } from "./server/models/score.js";
-import { addGameHistory } from "./server/models/historydata.js";
+import {
+  addGameHistory,
+  addGameHistoryToPlayer,
+} from "./server/models/historydata.js";
 import { deleteKey } from "./server/models/redis.js";
 export const socketio = async function (server) {
   const io = new Server(server);
@@ -135,7 +138,16 @@ export const socketio = async function (server) {
       const rankResult = await showRank(roomId, 5);
       // TODO:
       console.log(io.score[roomId]);
-      await addGameHistory(roomId, io.score[roomId]);
+      const gameRoom = await addGameHistory(roomId, io.score[roomId]);
+      await addGameHistoryToPlayer(
+        gameRoom.founder.id,
+        gameRoom._id,
+        gameRoom.name,
+        gameRoom.date,
+        gameRoom.founder.name,
+        "null",
+        "null"
+      );
       await addToQuequeAndUpdateMongo(roomId);
       io.to(roomId).emit("showFinalScore", rankResult);
     });

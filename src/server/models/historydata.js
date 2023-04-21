@@ -51,7 +51,7 @@ export const addGameHistory = async function (roomId, historyArray) {
   if (!gameRoom) return null;
   gameRoom.history = historyArray;
   await gameRoom.save();
-  return;
+  return gameRoom;
 };
 
 export const addGameHistoryToPlayer = async function (
