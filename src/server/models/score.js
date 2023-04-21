@@ -1,5 +1,5 @@
 import { redisClient } from "../models/redis.js";
-import { MyGameRoom, MyUser } from "../models/mongodb.js";
+import { MyGameRoom } from "../models/mongodb.js";
 export const addScore = async function (roomId, score, object) {
   if (redisClient.status === "reconnecting") return false;
   const data = JSON.stringify(object);
@@ -54,25 +54,4 @@ export const addToQuequeAndUpdateMongo = async function (roomId) {
   const uniqueObject = JSON.stringify({ uniqueId, roomId });
   await redisClient.lpush("saveScoreToMongo", uniqueObject);
   return true;
-};
-
-export const addGameHistory = async function (roomId, historyArray) {
-  const gameRoom = await MyGameRoom.findOne({
-    id: roomId,
-    roomStatus: "started",
-  });
-  if (!gameRoom) return null;
-  gameRoom.history = historyArray;
-  await gameRoom.save();
-  return;
-};
-
-export const addGameHistoryToPlayer = async function (id, roomId) {
-  const myUser = await MyUser.findOne({ _id: id });
-  if (!myUser) return null;
-  console.log("userhistory1", myUser.history);
-  myUser.history.unshift(roomId);
-  console.log("userhistory2", myUser.history);
-  await myUser.save();
-  return;
 };

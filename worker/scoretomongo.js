@@ -1,6 +1,10 @@
 import { MyGameRoom } from "../src/server/models/mongodb.js";
 import { redisClient } from "../src/server/models/redis.js";
-import { addGameHistoryToPlayer } from "../src/server/models/score.js";
+import {
+  pushUserHistoryOnRedis,
+  addGameHistoryToPlayer,
+  addGameInfoToRedis,
+} from "../src/server/models/historydata.js";
 redisClient.on("connect", () => {
   console.log("Connected to Redis");
 });
@@ -22,22 +26,33 @@ const funct = async () => {
           -1,
           "WITHSCORES"
         );
+        const gameRoom = await MyGameRoom.findOne({ _id: uniqueId });
+        const gameName = gameRoom.name;
+        const date = gameRoom.date;
+        const host = gameRoom.founder.name;
         const result = [];
         for (let i = 0; i < rank.length; i += 2) {
           const playerInfo = JSON.parse(rank[i]);
           const id = Object.keys(playerInfo)[0];
           const name = Object.values(playerInfo)[0];
           const score = rank[i + 1];
-          // TODO:
-          console.log("userid", id);
-          console.log("name", name);
-          console.log("id-length", id.length);
-          if (id.length !== 36) await addGameHistoryToPlayer(id, uniqueId);
-          result.push({ id, name, score });
+          if (id.length !== 36) {
+            const historyData = await addGameHistoryToPlayer(
+              id,
+              uniqueId,
+              gameName,
+              date,
+              host
+            );
+            await pushUserHistoryOnRedis(historyData, id);
+            result.push({ id, name, score });
+          }
         }
-        const gameRoom = await MyGameRoom.findOne({ _id: uniqueId });
+        // TODO:
+        console.log(result);
         gameRoom.score = result;
-        await gameRoom.save();
+        const gameRoomData = await gameRoom.save();
+        await addGameInfoToRedis(uniqueId, gameRoomData);
         await redisClient.zremrangebyrank(`${roomId} -score`, 0, -1);
         return true;
       } catch (e) {

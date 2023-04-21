@@ -20,7 +20,6 @@ app.use(express.static(path.join(__dirname, ".", "public", "html")));
 app.use("/js", express.static(path.join(__dirname, ".", "public", "js")));
 app.use("/css", express.static(path.join(__dirname, ".", "public", "css")));
 
-
 app.use(
   session({
     store: redisStore,
@@ -35,11 +34,13 @@ import questionRoute from "./server/routes/question_route.js";
 import gameRoute from "./server/routes/game_route.js";
 import scoreRoute from "./server/routes/score_route.js";
 import userRoute from "./server/routes/user_route.js";
+import historyRoute from "./server/routes/historydata.js";
 app.use("/api/" + APIVERSION, [
   questionRoute,
   gameRoute,
   scoreRoute,
   userRoute,
+  historyRoute,
 ]);
 
 app.get("/game/room/:roomId", (req, res) => {
