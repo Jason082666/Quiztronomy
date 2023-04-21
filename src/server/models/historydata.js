@@ -59,11 +59,13 @@ export const addGameHistoryToPlayer = async function (
   roomId,
   roomName,
   date,
-  host
+  host,
+  rank,
+  score
 ) {
   const myUser = await MyUser.findOne({ _id: id });
   if (!myUser) return null;
-  myUser.history.unshift({ roomId, roomName, date, host });
+  myUser.history.unshift({ roomId, roomName, date, host, rank, score });
   await myUser.save();
   return myUser.history;
 };

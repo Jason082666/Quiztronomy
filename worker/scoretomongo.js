@@ -31,19 +31,25 @@ const funct = async () => {
         const date = gameRoom.date;
         const host = gameRoom.founder.name;
         const result = [];
+        console.log("rank", rank);
         for (let i = 0; i < rank.length; i += 2) {
           const playerInfo = JSON.parse(rank[i]);
           const id = Object.keys(playerInfo)[0];
           const name = Object.values(playerInfo)[0];
           const score = rank[i + 1];
+          const rank = i + 1;
+          console.log("alldata", id, name, score, rank);
           if (id.length !== 36) {
             const historyData = await addGameHistoryToPlayer(
               id,
               uniqueId,
               gameName,
               date,
-              host
+              host,
+              rank,
+              score
             );
+            console.log("historyData", historyData);
             await pushUserHistoryOnRedis(historyData, id);
             result.push({ id, name, score });
           }
