@@ -1,46 +1,20 @@
 import { MyUser, MyGameRoom } from "../models/mongodb.js";
 import { redisClient } from "../models/redis.js";
 
-export const userHistory = async function (userId) {
-  if (redisClient.status === "reconnecting") {
-    const user = await MyUser.findOne({ _id: userId });
-    if (!user) return false;
-    return user.history;
-  }
-  const listData = await redisClient.get(`${userId}-history`);
-  // 如果no cache hit，則從資料庫拿，且把資料放到cache去，ttl設為一天
-  console.log(listData);
-  if (!listData) {
-    const user = await MyUser.findOne({ _id: userId });
-    if (!user) return false;
-    await redisClient.set(`${userId}-history`, JSON.stringify(user.history));
-    await redisClient.expire(`${userId}-history`, 86400);
-    return user.history;
-  }
-  const parseListData = JSON.parse(listData);
-  console.log(parseListData);
-  await redisClient.expire(`${userId}-history`, 86400);
-  return parseListData;
+export const userHistory = async function (userId, page) {
+  const user = await MyUser.findOne({ _id: userId });
+  if (!user) return false;
+  const size = 6;
+  const startIdx = +page * size;
+  const endIdx = startIdx + size;
+  const history = user.history.slice(startIdx, endIdx);
+  return history;
 };
 
-export const pushUserHistoryOnRedis = async function (userHistory, userId) {
-  if (redisClient.status === "reconnecting") return false;
-  const exists = await redisClient.exists(`${userId}-history`);
-  if (exists) {
-    // 如果redis中已經存在這個key，則直接push新的遊戲歷史紀錄
-    const historyData = await redisClient.get(`${userId}-history`);
-    const parseHistoryData = JSON.parse(historyData);
-    parseHistoryData.unshift(JSON.stringify(userHistory));
-    await redisClient.set(
-      `${userId}-history`,
-      JSON.stringify(parseHistoryData)
-    );
-  } else {
-    // 如果redis中沒有這個key，則直接從mongo db把資料傳到redis
-    await redisClient.set(`${userId}-history`, JSON.stringify(userHistory));
-  }
-  // 刷新ttl為一天
-  await redisClient.expire(`${userId}-history`, 86400);
+export const countUserHistory = async function (userId) {
+  const user = await MyUser.findOne({ _id: userId });
+  if (!user) return false;
+  return user.history.length;
 };
 
 export const addGameHistory = async function (roomId, historyArray) {

@@ -1,7 +1,6 @@
 import { MyGameRoom } from "../src/server/models/mongodb.js";
 import { redisClient } from "../src/server/models/redis.js";
 import {
-  pushUserHistoryOnRedis,
   addGameHistoryToPlayer,
   addGameInfoToRedis,
 } from "../src/server/models/historydata.js";
@@ -38,7 +37,7 @@ const funct = async () => {
           const score = rank[i + 1];
           const ranking = i + 1;
           if (id.length !== 36) {
-            const historyData = await addGameHistoryToPlayer(
+            await addGameHistoryToPlayer(
               id,
               uniqueId,
               gameName,
@@ -47,7 +46,6 @@ const funct = async () => {
               ranking,
               score
             );
-            await pushUserHistoryOnRedis(historyData, id);
             result.push({ id, name, score });
           }
         }
