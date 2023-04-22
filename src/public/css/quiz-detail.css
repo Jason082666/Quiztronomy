@@ -1,0 +1,44 @@
+@import "https://code.highcharts.com/css/highcharts.css";
+.chart-container {
+  width: 40%;
+  height: 300px;
+}
+.body {
+  font-size: 30px;
+}
+
+.quiz-big-container {
+  display: flex;
+  justify-content: space-around;
+}
+.quiz-big-container {
+  height: 600px;
+}
+
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+
+  width: 40%;
+}
+
+.game-intro-container {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-around;
+  height: 30vh;
+}
+
+.game-intro-left,
+.game-intro-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+}
+.rank-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}

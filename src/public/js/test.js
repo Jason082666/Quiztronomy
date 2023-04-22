@@ -50,7 +50,9 @@ const renderQuiz = (data) => {
         </p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary">
+            <button type="button" class="btn btn-sm btn-outline-secondary view-player" data-id="${
+              data.roomId
+            }">
               View
             </button>
           </div>
@@ -91,7 +93,9 @@ const renderHostQuiz = (data) => {
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary">
+            <button type="button" class="btn btn-sm btn-outline-secondary view-host" data-id="${
+              data.roomId
+            }">
               View
             </button>
           </div>
