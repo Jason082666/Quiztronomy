@@ -359,3 +359,15 @@ Highcharts.chart("bar-char", {
     },
   ],
 });
+
+$(".view-player").on("click", function () {
+  localStorage.setItem("dataId", $(this).attr("data-id"));
+  window.location.href = "/game/quiz-detail.html";
+});
+
+$(".container").on("click", ".view-host", function () {
+  console.log(123123);
+  localStorage.setItem("dataId", $(this).attr("data-id"));
+  localStorage.setItem("host", true);
+  window.location.href = "/game/quiz-detail.html";
+});

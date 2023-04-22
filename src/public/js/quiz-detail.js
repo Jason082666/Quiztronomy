@@ -1,5 +1,7 @@
 const userId = localStorage.getItem("userId");
-const roomId = "6442412d2bf2156a86cebde7";
+const roomId = localStorage.getItem("dataId");
+const isHost = localStorage.getItem("host");
+
 const result = await axios.get(`/api/1.0/game/history?uniqueRoomId=${roomId}`);
 const { data } = result.data;
 const length = data.history.length;
@@ -26,10 +28,10 @@ rankArray.forEach((ranking, index) => {
   }</div>`;
 });
 $(".rank-container").html(rank);
-
-quizArrray.forEach((quiz, index) => {
-  if (["MC-EN", "MC-CH", "MCS-EN", "MCS-CH"].includes(quiz.type)) {
-    container += `<div class="quiz-big-container">
+if (!isHost) {
+  quizArrray.forEach((quiz, index) => {
+    if (["MC-EN", "MC-CH", "MCS-EN", "MCS-CH"].includes(quiz.type)) {
+      container += `<div class="quiz-big-container">
       <div class="quiz-container">
       <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
         <div class="quiz-text">${quiz.question}</div>
@@ -48,8 +50,8 @@ quizArrray.forEach((quiz, index) => {
       </div><div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
         </div></div>`;
-  } else {
-    container += `<div class="quiz-big-container">
+    } else {
+      container += `<div class="quiz-big-container">
       <div class="quiz-container">
       <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
         <div class="quiz-text">${quiz.question}</div>
@@ -62,8 +64,39 @@ quizArrray.forEach((quiz, index) => {
       </div>  <div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
         </div></div>`;
-  }
-});
+    }
+  });
+} else {
+  quizArrray.forEach((quiz, index) => {
+    if (["MC-EN", "MC-CH", "MCS-EN", "MCS-CH"].includes(quiz.type)) {
+      container += `<div class="quiz-big-container">
+      <div class="quiz-container">
+      <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
+        <div class="quiz-text">${quiz.question}</div>
+        <div class="option-container">
+          <div class="option">A:  ${quiz.options["A"]}</div>
+          <div class="option">B:  ${quiz.options["B"]}</div>
+          <div class="option">C:  ${quiz.options["C"]}</div>
+          <div class="option">D:  ${quiz.options["D"]}</div>
+        </div>
+        <div class="correct-answer">Answer:  ${quiz.answer.join(" ")}</div>
+        <div class="explaination">Explain:   ${quiz.explain}</div>
+      </div><div class="chart-container">
+          <div id="chart-${index + 1}" class="chart-item"></div>
+        </div></div>`;
+    } else {
+      container += `<div class="quiz-big-container">
+      <div class="quiz-container">
+      <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
+        <div class="quiz-text">${quiz.question}</div>
+        <div class="correct-answer">Answer:  ${quiz.answer[0]}</div>
+        <div class="explaination">Explain:   ${quiz.explain}</div>
+      </div>  <div class="chart-container">
+          <div id="chart-${index + 1}" class="chart-item"></div>
+        </div></div>`;
+    }
+  });
+}
 
 $(".scrollspy-example").html(container);
 
