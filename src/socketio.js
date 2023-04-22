@@ -10,7 +10,7 @@ import { gameHostValidation } from "./server/models/user.js";
 import { showRank, addToQuequeAndUpdateMongo } from "./server/models/score.js";
 import {
   addGameHistory,
-  addGameHistoryToPlayer,
+  addGameHistoryToHost,
 } from "./server/models/historydata.js";
 import { deleteKey } from "./server/models/redis.js";
 export const socketio = async function (server) {
@@ -139,14 +139,11 @@ export const socketio = async function (server) {
       // TODO:
       console.log(io.score[roomId]);
       const gameRoom = await addGameHistory(roomId, io.score[roomId]);
-      await addGameHistoryToPlayer(
+      await addGameHistoryToHost(
         gameRoom.founder.id,
         gameRoom._id,
         gameRoom.name,
-        gameRoom.date,
-        gameRoom.founder.name,
-        "null",
-        "null"
+        gameRoom.date
       );
       await addToQuequeAndUpdateMongo(roomId);
       io.to(roomId).emit("showFinalScore", rankResult);

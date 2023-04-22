@@ -11,10 +11,26 @@ export const userHistory = async function (userId, page) {
   return history;
 };
 
+export const hostHistory = async function (userId, page) {
+  const user = await MyUser.findOne({ _id: userId });
+  if (!user) return false;
+  const size = 6;
+  const startIdx = +page * size;
+  const endIdx = startIdx + size;
+  const hostHistory = user.hostHistory.slice(startIdx, endIdx);
+  return hostHistory;
+};
+
 export const countUserHistory = async function (userId) {
   const user = await MyUser.findOne({ _id: userId });
   if (!user) return false;
   return user.history.length;
+};
+
+export const countHostHistory = async function (userId) {
+  const user = await MyUser.findOne({ _id: userId });
+  if (!user) return false;
+  return user.hostHistory.length;
 };
 
 export const addGameHistory = async function (roomId, historyArray) {
@@ -39,9 +55,35 @@ export const addGameHistoryToPlayer = async function (
 ) {
   const myUser = await MyUser.findOne({ _id: id });
   if (!myUser) return null;
+  myUser.totalScore += +score;
+  myUser.totalGame += 1;
   myUser.history.unshift({ roomId, roomName, date, host, rank, score });
   await myUser.save();
   return myUser.history;
+};
+
+export const addGameHistoryToHost = async function (
+  id,
+  roomId,
+  roomName,
+  date
+) {
+  const myUser = await MyUser.findOne({ _id: id });
+  console.log(myUser);
+  myUser.totalGame += 1;
+  if (!myUser) return null;
+  myUser.hostHistory.unshift({ roomId, roomName, date });
+  await myUser.save();
+  return myUser.hostHistory;
+};
+
+export const findTotalScoreAndGame = async function (userId) {
+  const myUser = await MyUser.findOne({ _id: userId });
+  if (!myUser) return null;
+  console.log(myUser);
+  const score = myUser.totalScore;
+  const game = myUser.totalGame;
+  return { score, game };
 };
 
 export const addGameInfoToRedis = async function (
