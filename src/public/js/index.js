@@ -65,6 +65,7 @@ if (userName && userId) {
           y + pt2.y * r
         );
       });
+      ctx.fillStyle = "#E5F6EB";
       drawCircle(pt.x, pt.y, pt.r);
     }
 
@@ -114,7 +115,9 @@ if (userName && userId) {
   requestAnimationFrame(function anim(t) {
     if (w !== window.innerWidth) w = canvas.width = window.innerWidth;
     if (h !== window.innerHeight) h = canvas.height = window.innerHeight;
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = "rgba(14, 26, 60, 0.3)";
+    // ctx.fillStyle = "#081625";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawCircle(0, 0, w * 10);
     ctx.fillStyle = ctx.strokeStyle = "#fff";
     t /= 1000;

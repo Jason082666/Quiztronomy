@@ -10,12 +10,12 @@ body {
 
 .header {
   display: flex;
-  height: 3vh;
+  height: 2vh;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: rgba(55, 55, 55, 0.5);
-  color: #fff;
+  background-color: #787c96;
+  color: #e5f6eb;
 }
 
 .nav ul {
@@ -130,9 +130,9 @@ input[type="text"] {
   border-radius: 5px;
   font-size: 18px;
   color: #ffffff;
-  background-color: #50818f;
+  background-color: #5edabd;
   cursor: pointer;
-  box-shadow: 0px 0px 10px 0px #ffffff;
+  box-shadow: 0px 0px 5px 0px #ffffff;
 }
 
 canvas {
@@ -196,6 +196,7 @@ form {
 
 .enter-btn:hover {
   background-color: #e5dbe7;
+  color: #1d405b;
 }
 
 /* h1 {

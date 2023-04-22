@@ -1,0 +1,118 @@
+.sign-container {
+  display: flex;
+  color: whitesmoke;
+  position: relative;
+  justify-content: space-around;
+  width: 800px;
+  margin: 100px auto 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+}
+#move-component-login {
+  display: none;
+}
+.sign-container-left,
+.sign-container-right {
+  height: 350px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container,
+.signup-container {
+  height: 100%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.move-component {
+  position: absolute;
+  box-shadow: 2px 2px 5px rgb(11, 41, 70);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+  left: 40px;
+  bottom: -25px;
+  top: -25px;
+  height: 400px;
+  width: 400px;
+  z-index: 2;
+  background-color: #ffffff;
+}
+
+input {
+  border: none;
+  border-bottom: 1px solid #143665;
+  background-color: #ffffff;
+  padding: 10px;
+  box-sizing: border-box;
+  height: 25%;
+}
+
+.log-in-text,
+.sign-up-text {
+  color: #5edabd;
+  height: 10%;
+  font-weight: bold;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  width: 80%;
+}
+.sign-up-text-container,
+.log-in-text-container {
+  display: flex;
+  width: 80%;
+}
+.login-form,
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 80%;
+}
+.login-form {
+  margin-left: 50px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 20%;
+  width: 80%;
+}
+.log-in-btn,
+.sign-up-btn {
+  border: none;
+  width: 80px;
+  padding: 10px;
+  border-radius: 20px;
+  outline: 1px solid whitesmoke;
+  background-color: #5edabd;
+  font-weight: 700;
+  color: #ffffff;
+}
+.sign-up,
+.log-in {
+  border: none;
+  background-color: transparent;
+  padding: 10px;
+  outline: 1px solid whitesmoke;
+  border-radius: 20px;
+  color: #ffffff;
+}
