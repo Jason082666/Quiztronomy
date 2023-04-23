@@ -516,21 +516,11 @@ $(document).ready(function () {
 });
 
 $(".exit-btn").on("click", () => {
-  const $popOut = $(`<div class="popup-container">
-  <div class="popup">
-    <p class="popup-text">是否要保存遊戲模板?</p>
-    <div class="popup-buttons">
-      <button class="save-and-exit-btn">保存並離開</button>
-      <button class="no-save-btn">不保存</button>
-      <button class="back-to-game-btn">回到遊戲房間</button>
-    </div>
-  </div>
-</div>`);
-  $("body").append($popOut);
+  $("#pop-for-leave").show();
 });
 
 $("body").on("click", ".back-to-game-btn", () => {
-  $(".popup-container").remove();
+  $("#pop-for-leave").hide();
 });
 
 $("body").on("click", ".no-save-btn", () => {
@@ -538,20 +528,11 @@ $("body").on("click", ".no-save-btn", () => {
 });
 
 $("#finish-button").on("click", () => {
-  const $popOut = $(`<div class="popup-container">
-  <div class="popup">
-    <p class="popup-text">確認創建?</p>
-    <div class="popup-buttons">
-      <button class="room-ready-btn">確認</button>
-      <button class="room-ready-cancell-btn">取消</button>
-    </div>
-  </div>
-</div>`);
-  $("body").append($popOut);
+  $("#pop-for-create").show();
 });
 
 $("body").on("click", ".room-ready-cancell-btn", () => {
-  $(".popup-container").remove();
+  $("#pop-for-create").hide();
 });
 
 $("body").on("click", ".room-ready-btn", async () => {

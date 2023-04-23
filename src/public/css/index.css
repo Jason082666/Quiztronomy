@@ -414,6 +414,11 @@ h2 {
   font-size: 45px;
   color: #0e1a3c;
 }
+#roomId::placeholder {
+  font-size: 30px;
+  color: #777889;
+  text-align: center;
+}
 
 .join-room-component {
   display: flex;

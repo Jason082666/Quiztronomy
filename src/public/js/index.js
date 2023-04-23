@@ -99,7 +99,7 @@ if (userName && userId) {
     };
   }
 
-  const spiders = many(2, spawn);
+  const spiders = many(1, spawn);
 
   $(window).on("pointermove", (e) => {
     spiders.forEach((spider) => {
