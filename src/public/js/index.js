@@ -12,8 +12,7 @@ const userName = localStorage.getItem("userName");
 if (userName && userId) {
   $("canvas").hide();
   $(".enter-container").hide();
-  $(".signup-btn").hide();
-  $(".login-btn").hide();
+  $(".signup-login").hide();
   $(".container").html(` <h1>Welcome back ${userName} ! </h1>
   <div class="button-container">
     <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
@@ -165,53 +164,20 @@ if (userName && userId) {
   }
 }
 
-$(".login-btn").on("click", () => {
-  $(".login-container").hide();
-  $(".signup-container").hide();
-  $(".container").html(
-    `<div class="login-container">
-      <form>
-        <label for="email">Email:</label>
-        <input class="email-input" type="text" id="email" name="email" />
-        <label for="password">Password:</label>
-        <input
-          class="password-input"
-          type="password"
-          id="password"
-          name="password"
-        />
-        <button class="login">Log in</button>
-      </form>
-    </div>`
-  );
+$(".signup-login").on("click", () => {
+  $(".container").hide();
+  $(".sign-component").show();
+  $(".signup-login").hide();
+  $(".back-to-main").show();
 });
 
-$(".signup-btn").on("click", () => {
-  $(".enter-container").hide();
-  $(".login-container").hide();
-  $(".container").html(
-    `<div class="signup-container">
-  <form>
-    <label for="name">Name:</label>
-    <input class="name-input" type="text" id="name" name="name" />
-    <label for="email">Email:</label>
-    <input class="email-input" type="text" id="email" name="email" />
-    <label for="password">Password:</label>
-    <input
-      class="password-input"
-      type="password"
-      id="password"
-      name="password"
-    />
-    <button class="signup">
-      Sign up
-    </button>
-  </form>
-</div>;`
-  );
+$(".back-to-main").on("click", () => {
+  $(".container").show();
+  $(".sign-component").hide();
+  $(".signup-login").show();
+  $(".back-to-main").hide();
 });
 
-// TODO:
 $(".logout-btn").on("click", async (e) => {
   e.preventDefault();
   localStorage.clear();
@@ -223,10 +189,10 @@ $(".home-page").on("click", () => {
   window.location.href = "/";
 });
 
-$(".container").on("click", ".login", async function (e) {
+$(".log-in-btn").on("click", async function (e) {
   e.preventDefault();
-  const email = $(".email-input").val();
-  const password = $(".password-input").val();
+  const email = $("#email").val();
+  const password = $("#password").val();
   const userdata = { email, password };
   const result = await axios.post("/api/1.0/user/login", userdata);
   if (result.error) return;
@@ -236,9 +202,9 @@ $(".container").on("click", ".login", async function (e) {
   localStorage.setItem("userId", userId);
   $("canvas").hide();
   $(".enter-container").hide();
-  $(".signup-btn").hide();
-  $(".login-btn").hide();
+  $(".sign-component").hide();
   $(".logout-btn").show();
+  $(".back-to-main").hide();
   $(".container").html(`<h1>Welcome back ${userName} ! </h1>
   <div class="button-container">
     <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
@@ -248,11 +214,11 @@ $(".container").on("click", ".login", async function (e) {
   </div>`);
 });
 
-$(".container").on("click", ".signup", async function (e) {
+$(".sign-up-btn").on("click", async function (e) {
   e.preventDefault();
-  const name = $(".name-input").val();
-  const email = $(".email-input").val();
-  const password = $(".password-input").val();
+  const name = $("#name").val();
+  const email = $("#email").val();
+  const password = $("#password").val();
   const userdata = { name, email, password };
   const result = await axios.post("/api/1.0/user/signup", userdata);
   if (result.error) return;
@@ -262,11 +228,9 @@ $(".container").on("click", ".signup", async function (e) {
   localStorage.setItem("userId", userId);
   $("canvas").hide();
   $(".enter-container").hide();
-  $("canvas").hide();
-  $(".enter-container").hide();
-  $(".signup-btn").hide();
-  $(".login-btn").hide();
+  $(".sign-component").hide();
   $(".logout-btn").show();
+  $(".back-to-main").hide();
   $(".container").html(`<h1>Welcome back ${userName} ! </h1>
   <div class="button-container">
     <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
@@ -274,6 +238,28 @@ $(".container").on("click", ".signup", async function (e) {
     <button id="join">Join Room</button>
     <button id="create">Create Room</button>
   </div>`);
+});
+
+$(".sign-up").on("click", function () {
+  $(".move-component").animate(
+    {
+      left: "40px",
+    },
+    500
+  );
+  $("#move-component-login").hide();
+  $("#move-component-signup").show();
+});
+
+$(".log-in").on("click", function () {
+  $(".move-component").animate(
+    {
+      left: "350px",
+    },
+    500
+  );
+  $("#move-component-signup").hide();
+  $("#move-component-login").show();
 });
 
 $(".container").on("click", "#create", async (e) => {

@@ -24,15 +24,16 @@
         </ul>
       </div>
       <div class="account">
-        <button class="login-btn">log in</button>
-        <button class="signup-btn">sign up</button>
-        <button class="logout-btn">log out</button>
+        <button class="signup-login">Sign up/Log in</button>
+        <button class="back-to-main">Back to main</button>
+        <button class="logout-btn">Log out</button>
       </div>
     </header>
-    <h1>Quiztronomy</h1>
-    <!-- <h2>Infinitize your knowledge!</h2> -->
+
     <canvas id="canvas"> </canvas>
     <div class="container">
+      <h1>Quiztronomy</h1>
+      <!-- <h2>Infinitize your knowledge!</h2> -->
       <div class="enter-container">
         <label for="room-name">Room number :</label>
         <input type="text" id="room-name" name="room-name" />
@@ -41,6 +42,84 @@
         <button class="enter-btn">Enter</button>
       </div>
     </div>
+    <div class="sign-component">
+      <div class="sign-container">
+        <div class="sign-container-left">
+          <div class="signup-container">
+            <h2>Don't have an account ?</h2>
+            <p>Join Quizword now and explore your knowledg!</p>
+            <button class="sign-up">Sign up</button>
+          </div>
+        </div>
+        <div class="sign-container-right">
+          <div class="login-container">
+            <h2>Have an account ?</h2>
+            <p>Click the button to start today's journey!</p>
+            <button class="log-in">Log in</button>
+          </div>
+        </div>
+        <div class="move-component" id="move-component-login">
+          <div class="login-form">
+            <div class="log-in-text-container">
+              <h2 class="log-in-text">Log in</h2>
+            </div>
+            <div class="input-container">
+              <input
+                type="email"
+                id="email"
+                class="input"
+                name="email"
+                placeholder="Email"
+              />
+              <input
+                type="password"
+                id="password"
+                class="input"
+                name="password"
+                placeholder="Password"
+              />
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="log-in-btn">Log in</button>
+          </div>
+        </div>
+        <div class="move-component" id="move-component-signup">
+          <div class="signup-form">
+            <div class="sign-up-text-container">
+              <h2 class="sign-up-text">Sign up</h2>
+            </div>
+            <div class="input-container">
+              <input
+                type="text"
+                id="name"
+                class="input"
+                name="name"
+                placeholder="Name"
+              />
+              <input
+                type="email"
+                id="email"
+                class="input"
+                name="email"
+                placeholder="Email"
+              />
+              <input
+                type="password"
+                id="password"
+                class="input"
+                name="password"
+                placeholder="Password"
+              />
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="sign-up-btn">Sign up</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="/js/index.js" type="module"></script>
   </body>
 </html>
