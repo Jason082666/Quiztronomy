@@ -14,13 +14,8 @@ if (userName && userId) {
   $("canvas").hide();
   $(".middle-container").hide();
   $(".signup-login").hide();
-  $(".container").html(` <h1>Welcome back ${userName} ! </h1>
-  <div class="button-container">
-    <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
-    <input class="input-for-roomId" type="text" id="roomId">
-    <button id="join">Join Room</button>
-    <button id="create">Create Room</button>
-  </div>`);
+  $(".user-info-container").show();
+  $("#welcome-message").text(`Welcome back ${userName} !`);
 } else {
   $(".logout-btn").hide();
   let w, h;
@@ -206,13 +201,8 @@ $(".log-in-btn").on("click", async function (e) {
   $(".sign-component").hide();
   $(".logout-btn").show();
   $(".back-to-main").hide();
-  $(".container").html(`<h1>Welcome back ${userName} ! </h1>
-  <div class="button-container">
-    <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
-    <input class="input-for-roomId" type="text" id="roomId">
-    <button id="join">Join Room</button>
-    <button id="create">Create Room</button>
-  </div>`);
+  $(".user-info-container").show();
+  $("#welcome-message").text(`Welcome back ${userName} !`);
 });
 
 $(".sign-up-btn").on("click", async function (e) {
@@ -232,13 +222,8 @@ $(".sign-up-btn").on("click", async function (e) {
   $(".sign-component").hide();
   $(".logout-btn").show();
   $(".back-to-main").hide();
-  $(".container").html(`<h1>Welcome back ${userName} ! </h1>
-  <div class="button-container">
-    <label class="label-for-roomId" for="roomId">Enter a Room ID:</label>
-    <input class="input-for-roomId" type="text" id="roomId">
-    <button id="join">Join Room</button>
-    <button id="create">Create Room</button>
-  </div>`);
+  $(".user-info-container").show();
+  $("#welcome-message").text(`Welcome back ${userName} !`);
 });
 
 $(".sign-up").on("click", function () {
@@ -263,12 +248,12 @@ $(".log-in").on("click", function () {
   $("#move-component-login").show();
 });
 
-$(".container").on("click", "#create", async (e) => {
+$("#create").on("click", async (e) => {
   e.preventDefault();
   window.location.href = "/game/createroom.html";
 });
 
-$(".container").on("click", "#join", async (e) => {
+$("#join").on("click", async (e) => {
   e.preventDefault();
   const roomId = $("#roomId").val();
   const enterResult = await axios.post("/api/1.0/game/enter", { roomId });

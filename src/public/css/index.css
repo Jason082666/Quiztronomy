@@ -1,5 +1,5 @@
 body {
-  overflow: hidden;
+  overflow: auto;
   height: 100vh;
   width: 100vw;
   margin: 0;
@@ -29,7 +29,7 @@ button,
 
 .header {
   display: flex;
-  height: 30px;
+  height: 9vh;
   align-items: center;
   justify-content: space-around;
   padding: 10px;
@@ -67,7 +67,7 @@ ul a {
 
 .nav-right-container {
   width: 30%;
-  height: 100%;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -99,9 +99,16 @@ img {
   width: 250px;
   height: 250px;
 }
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 h1 {
   font-size: 50px;
   color: #5edabd;
+  /* line-height: 172px;
+  vertical-align: middle; */
 }
 h2 {
   color: white;
@@ -139,6 +146,9 @@ h3 {
   margin-top: 50px;
   width: 100%;
   height: 100%;
+}
+.enter-container input {
+  width: 60%;
 }
 
 .enter-btn {
@@ -336,4 +346,120 @@ h2 {
   outline: 1px solid whitesmoke;
   border-radius: 20px;
   color: #ffffff;
+}
+
+/* 登入後頁面 */
+.user-info-container {
+  display: none;
+  margin-bottom: 30px;
+}
+.welcome-container {
+  display: flex;
+  width: 100%;
+  height: 20%;
+  justify-content: center;
+}
+
+.user-info-component {
+  margin-top: 50px;
+  height: 80vh;
+  width: 100vw;
+}
+
+.corousel-container {
+  width: 50%;
+  height: 90%;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#carouselExampleCaptions {
+  height: 100%;
+}
+.user-info-middle-component {
+  display: flex;
+  width: 90%;
+  height: 80vh;
+}
+
+.user-info-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+
+.user-info-options-container {
+  width: 50%;
+  margin-left: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.enter-room-container {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+  justify-content: center;
+}
+#roomId {
+  width: 80%;
+  height: 60px;
+  border-radius: 20px;
+  font-size: 45px;
+  color: #0e1a3c;
+}
+
+.join-room-component {
+  display: flex;
+  /* justify-content: space-around; */
+}
+#join {
+  width: 15%;
+  margin-left: 10px;
+  font-family: "KiriFontNormal";
+  padding: 5px 5px;
+  border: none;
+  color: #5edabd;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #0e1a3c;
+  background-color: #5edabd;
+  cursor: pointer;
+}
+#join:hover {
+  background-color: white;
+  color: #5edabd;
+  box-shadow: 0px 0px 5px 0px #777889;
+}
+.input-for-roomId {
+  border: none;
+  box-shadow: 2px 2px #5edabd;
+}
+.create-room-container,
+.user-dashboard-container {
+  width: 80%;
+  margin-top: 10vh;
+}
+#create,
+#user-dashboard {
+  width: 100%;
+  height: 60px;
+  border-radius: 20px;
+  font-size: 20px;
+  background-color: #5edabd;
+  color: #0e1a3c;
+  align-items: center;
+  box-shadow: 3px 3px #ffffff;
+  text-align: center;
+  padding-top: 20px;
+}
+
+#create:hover,
+#user-dashboard:hover {
+  background-color: white;
+  color: #5edabd;
+  cursor: pointer;
 }
