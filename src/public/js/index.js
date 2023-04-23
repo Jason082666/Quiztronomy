@@ -9,9 +9,10 @@ localStorage.removeItem("quizzes");
 localStorage.removeItem("roomId");
 const userId = localStorage.getItem("userId");
 const userName = localStorage.getItem("userName");
+
 if (userName && userId) {
   $("canvas").hide();
-  $(".enter-container").hide();
+  $(".middle-container").hide();
   $(".signup-login").hide();
   $(".container").html(` <h1>Welcome back ${userName} ! </h1>
   <div class="button-container">
@@ -165,14 +166,14 @@ if (userName && userId) {
 }
 
 $(".signup-login").on("click", () => {
-  $(".container").hide();
+  $(".middle-container").hide();
   $(".sign-component").show();
   $(".signup-login").hide();
   $(".back-to-main").show();
 });
 
 $(".back-to-main").on("click", () => {
-  $(".container").show();
+  $(".middle-container").show();
   $(".sign-component").hide();
   $(".signup-login").show();
   $(".back-to-main").hide();
@@ -201,7 +202,7 @@ $(".log-in-btn").on("click", async function (e) {
   localStorage.setItem("userName", userName);
   localStorage.setItem("userId", userId);
   $("canvas").hide();
-  $(".enter-container").hide();
+  $(".middle-enter-container").hide();
   $(".sign-component").hide();
   $(".logout-btn").show();
   $(".back-to-main").hide();

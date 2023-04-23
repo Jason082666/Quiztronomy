@@ -27,31 +27,41 @@
     <link rel="stylesheet" href="/css/index.css" />
   </head>
   <body>
-    <header class="header">
-      <div class="nav">
-        <ul>
-          <li><a class="home-page" href="/">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Contact Us</a></li>
-        </ul>
+    <div class="nav-bar">
+      <div class="header-container">
+        <div class="header">
+          <div class="nav-left-container">
+            <ul>
+              <li><a class="home-page" href="/">Home</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="nav-right-container">
+            <button class="signup-login">Get start !</button>
+            <button class="back-to-main">Back to main</button>
+            <button class="logout-btn">Log out</button>
+          </div>
+        </div>
       </div>
-      <div class="account">
-        <button class="signup-login">Sign up/Log in</button>
-        <button class="back-to-main">Back to main</button>
-        <button class="logout-btn">Log out</button>
-      </div>
-    </header>
-
+    </div>
     <canvas id="canvas"> </canvas>
-    <div class="container">
-      <h1>Quiztronomy</h1>
-      <!-- <h2>Infinitize your knowledge!</h2> -->
-      <div class="enter-container">
-        <label for="room-name">Room number :</label>
-        <input type="text" id="room-name" name="room-name" />
-        <label for="user-name">Your name :</label>
-        <input type="text" id="user-name" name="user-name" />
-        <button class="enter-btn">Enter</button>
+    <div class="middle-container">
+      <div class="logo-container">
+        <img src="/img/astronaut.png" alt="" />
+        <h1>Quiztronomy</h1>
+        <h3>Infinitize your knowledge.</h3>
+      </div>
+      <div class="container">
+        <h2>Quick enter</h2>
+        <!-- <h2>Infinitize your knowledge!</h2> -->
+        <div class="enter-container">
+          <label for="room-name">Room number :</label>
+          <input type="text" id="room-name" name="room-name" />
+          <label for="user-name">Your name :</label>
+          <input type="text" id="user-name" name="user-name" />
+          <button class="enter-btn">Enter</button>
+        </div>
       </div>
     </div>
     <div class="sign-component">

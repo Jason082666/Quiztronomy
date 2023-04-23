@@ -1,5 +1,7 @@
 body {
   overflow: hidden;
+  height: 100vh;
+  width: 100vw;
   margin: 0;
   background-color: #0e1a3c;
   background-repeat: no-repeat;
@@ -13,52 +15,117 @@ body {
 .enter-btn {
   font-family: "KiriFontNormal";
 }
-header,
+.header,
 button,
 .sign-container {
   font-family: "Barlow", sans-serif;
 }
 
+/* nav設計 */
+.nav-bar {
+  width: 100vw;
+  height: 30px;
+}
+
 .header {
   display: flex;
-  height: 2vh;
+  height: 30px;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  background-color: #787c96;
+  justify-content: space-around;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
   color: #e5f6eb;
 }
 
-.nav ul {
+.nav-left-container ul {
   display: flex;
+  width: 50%;
+  height: 100%;
+  justify-content: space-around;
   list-style: none;
   margin: 0;
   padding: 0;
+  font-weight: bold;
 }
 
-.nav li {
+ul li {
   margin: 0 10px;
+  font-size: 20px;
 }
 
-.nav a {
+ul a {
   color: #fff;
   text-decoration: none;
 }
 
-.account {
+.nav-left-container {
+  width: 50%;
+  height: 100%;
   display: flex;
   align-items: center;
 }
+
+.nav-right-container {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-right-container button {
+  border: none;
+  padding: 5px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 20px;
+  color: #ffffff;
+  background-color: #5edabd;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px #ffffff;
+}
+
+.nav-right-container button:hover {
+  background-color: #fff;
+  color: #0e1a3c;
+}
+
 .back-to-main {
   display: none;
 }
 
+/* 中間區塊 */
+img {
+  width: 250px;
+  height: 250px;
+}
 h1 {
+  font-size: 50px;
+  color: #5edabd;
+}
+h2 {
   color: white;
 }
-.container {
-  display: flex;
+h3 {
+  color: white;
+}
+.middle-container {
   width: 100vw;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logo-container {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.container {
+  margin-top: 50px;
+  display: flex;
+  width: 50%;
   height: 80vh;
   display: flex;
   flex-direction: column;
@@ -69,7 +136,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  margin-top: 30px;
+  margin-top: 50px;
   width: 100%;
   height: 100%;
 }
@@ -149,7 +216,7 @@ canvas {
 
 label {
   display: block;
-  font-size: 30px;
+  font-size: 20px;
   color: #ffffff;
   margin-bottom: 10px;
 }
