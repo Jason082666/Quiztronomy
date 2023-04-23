@@ -68,8 +68,8 @@
           </div>
           <div class="generate-container">
             <label for="handy-or-system" class="label-for-question"
-              >Generate by :
-            </label>
+              >Generate by:</label
+            >
             <input
               type="radio"
               name="handy-or-system"
@@ -94,7 +94,7 @@
               value="MC"
             />
             <label class="label-for-question" for="single-choice"
-              >Mutiple choice (One answer)</label
+              >MCQ (One answer)</label
             >
             <input
               type="radio"
@@ -103,9 +103,7 @@
               name="question-type"
               value="TF"
             />
-            <label class="label-for-question" for="true-false"
-              >True or False</label
-            >
+            <label class="label-for-question" for="true-false">TFQ</label>
             <input
               type="radio"
               id="multiple-choice"
@@ -114,10 +112,28 @@
               value="MCS"
             />
             <label class="label-for-question" for="multiple-choice"
-              >Multiple choice (several answers)</label
+              >MCQ (several answers)</label
             >
             <br />
             <div class="quizz-handy-container"></div>
+            <div class="quizz">
+              <label for="search-input">Search quiz :</label>
+              <div class="search-container">
+                <input
+                  type="text"
+                  id="search-input"
+                  placeholder="Search quiz from Quiztronomy system pool"
+                />
+                <div id="search-submit"></div>
+              </div>
+              <div class="search-container">
+                <div class="ai-container">
+                  <div id="search-submit-by-ai-pic"></div>
+                  <button id="search-submit-by-ai">AI Generator</button>
+                </div>
+              </div>
+              <div class="content"></div>
+            </div>
           </div>
         </div>
         <div id="search-result"></div>

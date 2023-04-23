@@ -7,114 +7,113 @@ let source;
 $("#create-by-system").on("change", function () {
   if ($(this).is(":checked")) {
     $("#search-result").show();
-    $(".create-container").empty();
-    $(".create-container").html(`
-  <label class="label-for-question" for="question-type">選擇題型：</label>
-  <input type="radio" name="question-type" id="single-choice" value="MC" checked>
-  <label class="label-for-question" for="single-choice">單一選擇題</label>
-  <input type="radio" id="true-false" name="question-type" value="TF">
-  <label class="label-for-question" for="true-false">是非題</label>
-  <input type="radio" id="multiple-choice" name="question-type" value="MCS">
-  <label class="label-for-question" for="multiple-choice">多選題</label>
-  <div class="quizz">
-    <label for="search-input">請搜尋題目：</label>
-    <div class="search-container">
-      <input type="text" id="search-input">
-      <div id="search-submit"></div>
-    </div>
-    <div class="search-container">
-      <div id="search-submit-by-ai-pic"></div>
-      <button id="search-submit-by-ai"> AI 生成 </button>
-    </div>
-    <div class="content"></div>
-  </div>`);
+    $(".quizz-handy-container").hide();
+    $(".quizz").show();
   }
 });
 
 $("#create-by-hand").on("change", function () {
   if ($(this).is(":checked")) {
     $("#search-result").hide();
-    $(".create-container").empty();
-    $(".create-container").html(`
-      <label for="question-type">選擇題型：</label>
-      <input type="radio" name="question-type" class="MC-handy" id="single-choice" value="MC" />
-      <label class="label-for-question" for="single-choice">單一選擇題</label>
-      <input type="radio" id="true-false" class="TF-handy" name="question-type" value="TF" />
-      <label class="label-for-question" for="true-false">是非題</label>
-      <input
-        type="radio" 
-        id="multiple-choice"
-        class="MCS-handy"
-        name="question-type"
-        value="MCS"
-      />
-      <label class="label-for-question" for="multiple-choice">多選題</label>
-      <br />
-        <div class="quizz-handy-container">
-        </div>
-      `);
+    $(".quizz-handy-container").show();
+    $(".quizz").hide();
   }
 });
 
 $(".create-container").on("click", ".MC-handy", function () {
   $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="mcs-options">
-  <label>輸入題目:</label>
+  <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
+  <div class="options-container">
+  <div class="option-a">
   <label>A</label>
   <input type="radio" id="radioA" name="answer" value="A">
   <input type="text" id="optionA" name="optionA">
+  </div>
+  <div class="option-b">
   <label>B</label>
   <input type="radio" id="radioB" name="answer" value="B">
   <input type="text" id="optionB" name="optionB">
+  </div>
+    <div class="option-c">
   <label>C</label>
   <input type="radio" id="radioC" name="answer" value="C">
   <input type="text" id="optionC" name="optionC">
+  </div>
+    <div class="option-d">
   <label>D</label>
   <input type="radio" id="radioD" name="answer" value="D">
   <input type="text" id="optionD" name="optionD">
-  <label>答案解釋:</label>
-  <textarea class= "explain-text"></textarea>
-  <button type="submit" class="create-quizz-btn">確認送出</button>
-</div>`);
+  </div>
+  <div class="explain-container">
+    <label>Answer Explaination :</label>
+    <textarea class= "explain-text"></textarea>
+    <div class="submit-btn-container">
+    <button type="submit" class="create-quizz-btn">Confirm</button>
+    </div>
+  </div>
+  </div>
+`);
 });
 
 $(".create-container").on("click", ".MCS-handy", function () {
   $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="mcs-options">
-  <label>輸入題目:</label>
+  <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
+  <div class="options-container">
+  <div class="option-a">
   <label>A</label>
   <input type="checkbox" id="checkA" name="answer" value="A">
   <input type="text" id="optionA" name="optionA">
+  </div>
+  <div class="option-b"> 
   <label>B</label>
   <input type="checkbox" id="checkB" name="answer" value="B">
   <input type="text" id="optionB" name="optionB">
+  </div>
+  <div class="option-c"> 
   <label>C</label>
   <input type="checkbox" id="checkC" name="answer" value="C">
   <input type="text" id="optionC" name="optionC">
+  </div>
+  <div class="option-d"> 
   <label>D</label>
   <input type="checkbox" id="checkD" name="answer" value="D">
   <input type="text" id="optionD" name="optionD">
-  <label>答案解釋:</label>
+  </div>
+  <div class="explain-container">
+  <label>Answer Explaination :</label>
   <textarea class= "explain-text"></textarea>
-  <button type="submit" class="create-quizz-btn">確認送出</button>
+  <div class="submit-btn-container">
+  <button type="submit" class="create-quizz-btn">Confrim</button>
+  </div>
+  </div>
 </div>`);
 });
 
 $(".create-container").on("click", ".TF-handy", function () {
   $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="tf-options">
-  <label>輸入題目:</label>
+  <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
+  <div class="options-container">
+  <div class="tf-container">
   <label>True</label>
-  <input type="radio" name="answer" value="true">
+  <input type="radio" name="answer" value="true" class="tf-option">
   <label>False</label>
-  <input type="radio" name="answer" value="false">
+  <input type="radio" name="answer" value="false" class="tf-option">
+  </div>
+  </div>
   <br>
-  <label>答案解釋:</label>
+    <div class="explain-container">
+  <label>Answer Explaination :</label>
   <textarea class= "explain-text"></textarea>
-  <button type="submit" class="create-quizz-btn">確認送出</button>
+  <div class="submit-btn-container">
+  <button type="submit" class="create-quizz-btn">Confirm</button>
+  </div>
+  </div>
 </div>`);
 });
 
@@ -465,7 +464,7 @@ $(document).ready(function () {
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
       <span class="position-label"></span>
-      <input type="number" min="0" max="60" placeholder="選擇秒數">
+      <input type="number" min="0" max="60" placeholder="Select countdown time">
     </div>`);
       droppedQuizCard.prepend(controls);
     }
@@ -487,7 +486,7 @@ $(document).ready(function () {
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
       <span class="position-label">1</span>
-      <input type="number" min="0" max="60" placeholder="選擇秒數">
+      <input type="number" min="0" max="60" placeholder="Select countdown time">
     </div>`);
       draggedElement.prepend(controls);
     }
