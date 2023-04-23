@@ -29,7 +29,7 @@ button,
 
 .header {
   display: flex;
-  height: 9vh;
+  height: 10vh;
   align-items: center;
   justify-content: space-around;
   padding: 10px;
@@ -51,6 +51,8 @@ button,
 ul li {
   margin: 0 10px;
   font-size: 20px;
+  display: flex;
+  align-items: center;
 }
 
 ul a {
@@ -113,8 +115,9 @@ h1 {
 h2 {
   color: white;
 }
-h3 {
+h4 {
   color: white;
+  margin-top: 10px;
 }
 .middle-container {
   width: 100vw;
@@ -462,4 +465,16 @@ h2 {
   background-color: white;
   color: #5edabd;
   cursor: pointer;
+}
+
+/* decoration */
+.star-container {
+  position: fixed;
+  bottom: 5vh;
+  right: 5vh;
+}
+
+.star-container img {
+  width: 100px;
+  height: 100px;
 }
