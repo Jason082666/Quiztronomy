@@ -276,3 +276,7 @@ $(".enter-btn").on("click", async () => {
   localStorage.setItem("roomId", roomId);
   window.location.href = `/game/room/${roomId}`;
 });
+
+$("#user-dashboard").on("click", () => {
+  window.location.href = "/game/history.html";
+});

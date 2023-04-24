@@ -371,3 +371,10 @@ $(".container").on("click", ".view-host", function () {
   localStorage.setItem("host", true);
   window.location.href = "/game/quiz-detail.html";
 });
+
+$(".logout-btn").on("click", async (e) => {
+  e.preventDefault();
+  localStorage.clear();
+  await axios.post("/api/1.0/user/logout");
+  window.location.href = "/";
+});
