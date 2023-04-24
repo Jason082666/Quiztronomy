@@ -25,10 +25,12 @@ const funct = async () => {
           -1,
           "WITHSCORES"
         );
+        console.log("rank", rank);
         const gameRoom = await MyGameRoom.findOne({ _id: uniqueId });
         const gameName = gameRoom.name;
         const date = gameRoom.date;
         const host = gameRoom.founder.name;
+        console.log(gameName, date, host);
         const result = [];
         for (let i = 0; i < rank.length; i += 2) {
           const playerInfo = JSON.parse(rank[i]);
@@ -49,6 +51,7 @@ const funct = async () => {
             result.push({ id, name, score });
           }
         }
+        console.log("result", result);
         gameRoom.score = result;
         const gameRoomData = await gameRoom.save();
         await addGameInfoToRedis(uniqueId, gameRoomData);

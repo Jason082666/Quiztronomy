@@ -69,7 +69,6 @@ export const addGameHistoryToHost = async function (
   date
 ) {
   const myUser = await MyUser.findOne({ _id: id });
-  console.log(myUser);
   myUser.totalGame += 1;
   if (!myUser) return null;
   myUser.hostHistory.unshift({ roomId, roomName, date });
@@ -80,7 +79,6 @@ export const addGameHistoryToHost = async function (
 export const findTotalScoreAndGame = async function (userId) {
   const myUser = await MyUser.findOne({ _id: userId });
   if (!myUser) return null;
-  console.log(myUser);
   const score = myUser.totalScore;
   const game = myUser.totalGame;
   return { score, game };
