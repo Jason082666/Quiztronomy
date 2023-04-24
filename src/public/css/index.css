@@ -176,6 +176,7 @@ canvas {
 
 .sign-component {
   display: none;
+  margin-top: 10%;
 }
 .sign-container {
   display: flex;
