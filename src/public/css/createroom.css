@@ -137,6 +137,8 @@ p {
 }
 
 .container-right {
+  border-radius: 20px;
+  outline: 2px solid #0e1a3c;
   width: 25%;
   height: 100%;
   position: relative; /* 設定相對位置 */
@@ -187,10 +189,16 @@ p {
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 20px;
-  margin-right: 20px;
   cursor: pointer;
   transition: box-shadow 0.2s ease;
 }
+
+.container-right-text {
+  margin-top: 20px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
 .container-right .quiz-card {
   width: 80%;
   background-color: #5edabd;
@@ -230,6 +238,7 @@ p {
 
 #search-result .quiz-card {
   font-size: 18px;
+  margin-right: 20px;
 }
 
 #search-result .quiz-card .question-container {
@@ -258,7 +267,7 @@ input[type="number"] {
   border-radius: 10px;
 }
 input[type="number"]::placeholder {
-  color:#afaaaa
+  color: #afaaaa;
 }
 
 .quiz-card-resize {
@@ -671,4 +680,3 @@ textarea {
   background-color: #e5f6eb;
   color: #5edabd;
 }
-
