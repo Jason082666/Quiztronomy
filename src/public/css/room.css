@@ -34,7 +34,7 @@ h1 {
   width: 75vw;
   margin: 0 auto 0;
   border-radius: 10px;
-  min-height: 150px;
+  min-height: 350px;
   display: flex;
   flex-wrap: wrap;
   overflow: auto;
