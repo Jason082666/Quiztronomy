@@ -3,8 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <title>Game Room</title>
-    <link rel="stylesheet" href="/css/room.css" />
-    <link rel="stylesheet" href="/css/load.css" />
     <script
       src="https://cdn.socket.io/4.6.0/socket.io.min.js"
       integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
@@ -22,15 +20,35 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="https://fontlibrary.org//face/kirifont"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="/css/room.css" />
   </head>
-  <div class="load-main" id="enter-room-loading" style="display: block">
+  <div class="load-main" id="fetch-ai-loading">
     <div class="load">
       <div class="load-container">
-        <h2>Entering room....</h2>
-        <div class="loadingio-spinner-eclipse-orhupmrtp1">
-          <div class="ldio-yua2kv3p2hn">
-            <div></div>
+        <div class="load-component">
+          <h3>Entering room ....</h3>
+          <div class="loadingio-spinner-ellipsis-gu8eyywcq5n">
+            <div class="ldio-7tmnvxp6os">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
           </div>
+          <button class="cancel-fetch-ai">cancel</button>
         </div>
       </div>
     </div>
@@ -50,7 +68,8 @@
       <div class="popup-none" id="leave-room-popup">
         <div class="popup-container">
           <div class="popup">
-            <h2 class="popout-text">Are you sure to leave the room?</h2>
+            <div class="popup-decro"></div>
+            <h3 class="popout-text">Leave room now ?</h3>
             <div class="popout-button-container">
               <button class="pop-yes-button">Yes</button>
               <button class="pop-no-button">No</button>
@@ -61,9 +80,8 @@
       <div class="popup-none" id="host-leave-room-popup">
         <div class="popup-container">
           <div class="popup">
-            <h2 class="popout-text">
-              Game host has left the game, the room is shutting down ...
-            </h2>
+            <div class="popup-decro"></div>
+            <h3 class="popout-text">Host has left the game ...</h3>
             <div class="popout-button-container">
               <button class="back-to-main-btn">Back to main</button>
             </div>

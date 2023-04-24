@@ -6,7 +6,7 @@ const roomId = localStorage.getItem("roomId");
 const gameName = localStorage.getItem("gameName");
 $(window).on("load", function () {
   $(".block").hide();
-  $("#enter-room-loading").hide();
+  $("#fetch-ai-loading").hide();
   $("#controller").show();
 });
 const timeIdArray = [];
@@ -239,8 +239,6 @@ const quizShow = (quizzObj) => {
     return;
   }
   if (["MCS-EN", "MCS-CH"].includes(quizzObj.type)) {
-    // TODO:
-    console.log(quizzObj);
     const page =
       $(`<div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
     <ul><li><input type="checkbox" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label>
@@ -323,15 +321,15 @@ const renderHostQuizzPage = (quizzObj, rankResult) => {
   }
   if (["TF-EN", "TF-CH"].includes(quizzObj.type)) {
     const page = `<div id="quiz-container"><div id="left-bar"><h2 id="quiz-intro">Question ${quizzObj.num}</h2>
-    <div id="quiz-type">True or False</div></div><div id="quiz"><div id="timer"><div class="bar"></div></div>
+    <div id="quiz-type">True or False</div><button id="show-answer">Show answer</button></div><div id="quiz"><div id="timer"><div class="bar"></div></div>
     <h2 id="question">${quizzObj.question}</h2><div class="t-f-container" data><div class="t-f" data-value="true"><h2>True</h2></div><div class="t-f" data-value="false"><h2>False</h2></div></div></div>
     <div id="scoreboard"><h2>Scoreboard</h2><div id="sort-container"></div></div></div>`;
     $(".container").html(page);
   }
   if (["MCS-EN", "MCS-CH"].includes(quizzObj.type)) {
     const page = `<div id="quiz-container"><div id="left-bar"><h2 id="quiz-intro">Question ${quizzObj.num}</h2>
-    <div id="quiz-type">Multiple Choice</div><div id="player-score">0</div>
-    <div id="score-chart"><div id="score-bar"></div></div></div><div id="quiz">
+    <div id="quiz-type">Multiple Choice</div><button id="show-answer">Show answer</button>
+    <div id="player-score">0</div><div id="score-chart"><div id="score-bar"></div></div></div><div id="quiz">
     <div id="timer"><div class="bar"></div></div><h2 id="question">${quizzObj.question}</h2>
     <ul><li><input type="checkbox" name="answer" value="A" id="A" /><label for="A">${quizzObj.options["A"]}</label>
     </li><li><input type="checkbox" name="answer" value="B" id="B" /><label for="B">${quizzObj.options["B"]}</label>
@@ -344,6 +342,9 @@ const renderHostQuizzPage = (quizzObj, rankResult) => {
   sortPlayers(rankResult);
 };
 
+$(".cancel-fetch-ai").on("click", () => {
+  window.location.href = "/";
+});
 function trueFalseOnClick(quizzObj, $element) {
   $element.on("click", ".t-f", async function () {
     $(".t-f").prop("disabled", true);
