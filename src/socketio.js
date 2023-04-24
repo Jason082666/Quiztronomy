@@ -16,7 +16,7 @@ import { deleteKey } from "./server/models/redis.js";
 export const socketio = async function (server) {
   const io = new Server(server);
   io.on("connection", (socket) => {
-    console.log("A user connected");
+    // console.log("A user connected");
     socket.on("join", async (object) => {
       const { userId, userName, roomId, gameName } = object;
       const validationUser = await gameHostValidation(userId, userName, roomId);
@@ -53,7 +53,7 @@ export const socketio = async function (server) {
       }
     });
     socket.on("disconnect", async () => {
-      console.log("A user disconnected");
+      // console.log("A user disconnected");
       const roomId = socket.roomId;
       if (socket.hostId) {
         await deleteKey(`${roomId}-room`);
@@ -80,8 +80,6 @@ export const socketio = async function (server) {
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
-      // TODO:
-      console.log(firstQuizz);
       if (!firstQuizz || !length) return;
       firstQuizz.num = 1;
       const rankResult = await showRank(roomId, Infinity);
@@ -92,8 +90,6 @@ export const socketio = async function (server) {
       const { roomId } = socket;
       io.quizNum[roomId] += 1;
       const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
-      console.log(io.quizNum[roomId]);
-      console.log(quiz);
       if (quiz) {
         io.to(roomId).emit("showQuiz", quiz);
       } else {
@@ -108,7 +104,6 @@ export const socketio = async function (server) {
       if (!io.score[roomId][index]) io.score[roomId][index] = {};
       if (!io.data[roomId][index]) io.data[roomId][index] = {};
       // 最後用來留紀錄給mongo db 的，用來存歷史資料
-      console.log("chooseoption", chooseOption);
       io.score[roomId][index][userId] = chooseOption;
       chooseOption.forEach((option) => {
         if (!io.data[roomId][index][option]) {
@@ -136,8 +131,6 @@ export const socketio = async function (server) {
     socket.on("showFinal", async () => {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
-      // TODO:
-      console.log(io.score[roomId]);
       const gameRoom = await addGameHistory(roomId, io.score[roomId]);
       await addGameHistoryToHost(
         gameRoom.founder.id,

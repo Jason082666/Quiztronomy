@@ -173,6 +173,9 @@ canvas {
   left: 0;
   z-index: -20;
 }
+#canvas-info {
+  display: none;
+}
 
 .sign-component {
   display: none;

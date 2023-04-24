@@ -9,9 +9,71 @@ localStorage.removeItem("quizzes");
 localStorage.removeItem("roomId");
 const userId = localStorage.getItem("userId");
 const userName = localStorage.getItem("userName");
+const canvasInfo = $("#canvas-info")[0];
+const ctx = canvasInfo.getContext("2d");
 
+canvasInfo.width = window.innerWidth;
+canvasInfo.height = window.innerHeight;
+
+const stars = [];
+
+function init() {
+  for (let i = 0; i < 400; i++) {
+    const x = Math.random() * canvasInfo.width;
+    const y = Math.random() * canvasInfo.height;
+    const radius = Math.random() * 2;
+    stars.push({ x, y, radius });
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvasInfo.width, canvasInfo.height);
+  ctx.fillStyle = "#0e1a3c";
+  ctx.fillRect(0, 0, canvasInfo.width, canvasInfo.height);
+
+  for (let i = 0; i < stars.length; i++) {
+    ctx.beginPath();
+    ctx.arc(stars[i].x, stars[i].y, stars[i].radius, 0, Math.PI * 2);
+    ctx.fillStyle = stars[i].color || "#0e1a3c";
+    ctx.fill();
+  }
+}
+
+function update() {
+  for (let i = 0; i < stars.length; i++) {
+    if (isMouseNear(stars[i])) {
+      stars[i].color = "#ffffff";
+    } else {
+      stars[i].color = null;
+    }
+  }
+}
+
+function isMouseNear(star) {
+  const distance = Math.sqrt((star.x - mouse.x) ** 2 + (star.y - mouse.y) ** 2);
+  return distance < 350;
+}
+
+let mouse = {
+  x: 0,
+  y: 0,
+};
+
+$(document).on("mousemove", (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+  draw();
+  update();
+}
+init();
+animate();
 if (userName && userId) {
-  $("canvas").hide();
+  $("#canvas").off().hide();
+  $("#canvas-info").show();
   $(".middle-container").hide();
   $(".signup-login").hide();
   $(".user-info-container").show();
@@ -197,6 +259,7 @@ $(".log-in-btn").on("click", async function (e) {
   localStorage.setItem("userName", userName);
   localStorage.setItem("userId", userId);
   $("canvas").hide();
+  $("#canvas-info").show();
   $(".middle-enter-container").hide();
   $(".sign-component").hide();
   $(".logout-btn").show();
@@ -218,6 +281,7 @@ $(".sign-up-btn").on("click", async function (e) {
   localStorage.setItem("userName", userName);
   localStorage.setItem("userId", userId);
   $("canvas").hide();
+  $("#canvas-info").show();
   $(".enter-container").hide();
   $(".sign-component").hide();
   $(".logout-btn").show();
