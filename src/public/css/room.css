@@ -43,12 +43,12 @@ h1 {
 
 #player-list div {
   border-radius: 20px; /* 增加圓角 */
-  width: 20%; /* 加寬一點 */
+  width: 15%; /* 加寬一點 */
   color: #0e1a3c; /* 調整文字顏色 */
   background-color: white; /* 調整背景顏色為半透明黑色 */
   font-size: 24px; /* 加大字體 */
   font-weight: 800; /* 增加字體粗細 */
-  min-height: 80px; /* 加高一點 */
+  height: 200px; /* 加高一點 */
   display: flex;
   margin-right: 15px;
   justify-content: center;
@@ -439,8 +439,9 @@ label {
 }
 
 .sort-player {
-  height: 15%;
+  height: 20%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
@@ -469,9 +470,9 @@ label {
   text-align: center;
   padding: 2px;
   color: #5edabd;
-  font-size: 10px;
+  font-size: 12px;
   text-align: center;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 }
 .correct-answer {
   background-color: rgb(134, 221, 110) !important;

@@ -254,6 +254,7 @@ label {
 
 #user-name,
 #room-name {
+  font-family: "Barlow", sans-serif;
   height: 60px;
   padding: 10px;
   border: none;
@@ -263,6 +264,10 @@ label {
   color: #292929;
   background-color: #ffffff;
   box-shadow: 2px 2px 2px #282828;
+}
+
+#user-name::placeholder {
+  color: #cad1cd;
 }
 
 .input {
@@ -409,6 +414,8 @@ h2 {
   justify-content: center;
 }
 #roomId {
+  font-family: "Barlow", sans-serif;
+  font-size: 30px;
   width: 80%;
   height: 60px;
   border-radius: 20px;
@@ -416,9 +423,11 @@ h2 {
   color: #0e1a3c;
 }
 #roomId::placeholder {
+  font-family: "Barlow", sans-serif;
   font-size: 30px;
   color: #c6c7d4;
   text-align: center;
+  vertical-align: middle;
 }
 
 .join-room-component {
