@@ -6,6 +6,7 @@ const CancelToken = axios.CancelToken;
 let source;
 $("#create-by-system").on("change", function () {
   if ($(this).is(":checked")) {
+    $(".search-component").show();
     $("#search-result").show();
     $(".quizz-handy-container").hide();
     $(".quizz").show();
@@ -14,6 +15,7 @@ $("#create-by-system").on("change", function () {
 
 $("#create-by-hand").on("change", function () {
   if ($(this).is(":checked")) {
+    $(".search-component").hide();
     $("#search-result").hide();
     $(".quizz-handy-container").show();
     $(".quizz").hide();
@@ -21,7 +23,6 @@ $("#create-by-hand").on("change", function () {
 });
 
 $(".create-container").on("click", ".MC-handy", function () {
-  $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="mcs-options">
   <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
@@ -58,7 +59,6 @@ $(".create-container").on("click", ".MC-handy", function () {
 });
 
 $(".create-container").on("click", ".MCS-handy", function () {
-  $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="mcs-options">
   <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
@@ -94,7 +94,6 @@ $(".create-container").on("click", ".MCS-handy", function () {
 });
 
 $(".create-container").on("click", ".TF-handy", function () {
-  $("#search-result").hide();
   $(".quizz-handy-container").html(`<div class="tf-options">
   <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">

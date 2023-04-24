@@ -3,7 +3,8 @@ body {
   color: #0e1a3c;
   font-family: "Barlow", sans-serif;
   font-size: 24px;
-  margin: 0;
+  box-sizing: border-box;
+  margin: 0 auto 10px;
 }
 
 header {
@@ -111,11 +112,12 @@ p {
   width: 100vw;
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
   height: 100vh;
 }
 
 .container-left {
-  width: 75vw;
+  width: 70%;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -135,32 +137,103 @@ p {
 }
 
 .container-right {
-  width: 25vw;
+  width: 25%;
+  height: 100%;
   position: relative; /* 設定相對位置 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 400px;
+  overflow-y: scroll;
+  scrollbar-width: none; /* 移除滾動條 */
+  -ms-overflow-style: none; /* 考慮到IE/Edge瀏覽器 */
+}
+.search-component {
+  display: none;
 }
 #search-result {
-  padding-bottom: 400px;
+  width: 90%;
+  margin-top: 20px;
+  margin-left: 20px;
+  padding-bottom: 100px;
+  padding-left: 20px;
+  padding-top: 30px;
   display: flex;
   flex-wrap: wrap;
+  border-radius: 15px;
+  background-color: #ffffff;
+  border: 2px solid #0e1a3c;
+  box-shadow: 2px 2px #0e1a3c;
   flex: 1; /* 將搜索結果設置為彈性項目，占據所有可用空間 */
   min-height: 200px; /* 設置搜索結果的最小高度 */
   overflow: auto; /* 如果內容太長，則顯示滾動條 */
+  scrollbar-width: none; /* 移除滾動條 */
+  -ms-overflow-style: none; /* 考慮到IE/Edge瀏覽器 */
+}
+#search-result::-webkit-scrollbar {
+  display: none;
+}
+.search-box-header {
+  font-weight: bold;
+  margin-left: 20px;
+  margin-top: 30px;
 }
 
 .quiz-card {
+  font-family: "Barlow", sans-serif;
+  background-color: #0e1a3c;
   position: relative;
-  width: 220px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  width: 28%;
+  color: white;
+  border-radius: 10px;
   padding: 10px;
   margin-bottom: 20px;
   margin-right: 20px;
   cursor: pointer;
   transition: box-shadow 0.2s ease;
+}
+.container-right .quiz-card {
+  width: 80%;
+  background-color: #5edabd;
+  color: #0e1a3c;
+  box-shadow: 2px 2px #0e1a3c;
+  font-size: 18px;
+}
+
+.container-right .quizz-question {
+  font-family: "Barlow", sans-serif;
+  color: #0e1a3c;
+}
+
+.container-right .quiz-card:hover {
+  width: 80%;
+  background-color: #fcfcfc;
+  color: #0e1a3c;
+  box-shadow: 2px 2px #0e1a3c;
+}
+
+.container-right .quiz-card .question-container {
+  font-family: "Barlow", sans-serif;
+}
+
+.container-right .quiz-card .question-container > *:last-child {
+  margin-top: 20px;
+}
+.container-right .quiz-card .question-container > *:first-child {
+  margin-top: 20px;
+}
+#search-result .quiz-card .question-container > *:last-child {
+  margin-top: 20px;
+}
+#search-result .quiz-card .question-container > *:first-child {
+  margin-top: 20px;
+}
+
+#search-result .quiz-card {
+  font-size: 18px;
+}
+
+#search-result .quiz-card .question-container {
+  font-family: "Barlow", sans-serif;
 }
 
 .controls {
@@ -174,7 +247,7 @@ p {
 .position-label {
   font-size: 20px;
   font-weight: bolder;
-  color: #e7e256;
+  color: white;
 }
 
 input[type="number"] {
@@ -183,9 +256,8 @@ input[type="number"] {
 }
 
 .quiz-card-resize {
-  height: 100%;
   overflow: hidden;
-  height: 130px;
+  min-height: 130px;
 }
 
 .quiz-card:hover {
@@ -237,16 +309,6 @@ input[type="number"] {
 label {
   font-weight: bold;
 }
-/* #search-result,
-.language-container,
-.generate-container,
-.create-container,
-.for-room-name {
-  displ
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-} */
 
 .for-room-name {
   display: flex;
@@ -366,6 +428,7 @@ label {
   border-radius: 20px;
   border: 2px solid #0e1a3c;
   margin-bottom: 20px;
+  background-color: #5edabd;
 }
 .options-container {
   margin-top: 10px;
