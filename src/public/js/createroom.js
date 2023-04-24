@@ -463,7 +463,7 @@ $(document).ready(function () {
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
       <span class="position-label"></span>
-      <input type="number" min="0" max="60" placeholder="Select countdown time">
+      <input type="number" min="0" max="60" placeholder="Time limits">
     </div>`);
       droppedQuizCard.prepend(controls);
     }
@@ -485,7 +485,7 @@ $(document).ready(function () {
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
       <span class="position-label">1</span>
-      <input type="number" min="0" max="60" placeholder="Select countdown time">
+      <input type="number" min="0" max="60" placeholder="Time limits">
     </div>`);
       draggedElement.prepend(controls);
     }

@@ -14,7 +14,7 @@ class Quizz {
       `<div data-id='${this.id}' class='quiz-card quiz-card-resize' draggable="true">`
     );
     const $cancelBtn = $(`<div class="icon-container">
-    <img src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="icon">
+    <img src="/img/delete.png" alt="icon">
   </div>`);
     const $questionHeader = $(`<h1 class='quizz-question'>`).text(
       this.question

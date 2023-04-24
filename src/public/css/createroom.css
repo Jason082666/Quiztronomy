@@ -251,8 +251,14 @@ p {
 }
 
 input[type="number"] {
+  font-family: "Barlow", sans-serif;
   width: 100px;
   margin-right: 5px;
+  border: none;
+  border-radius: 10px;
+}
+input[type="number"]::placeholder {
+  color:#afaaaa
 }
 
 .quiz-card-resize {
@@ -665,3 +671,4 @@ textarea {
   background-color: #e5f6eb;
   color: #5edabd;
 }
+
