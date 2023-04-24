@@ -48,7 +48,7 @@ h1 {
   background-color: white; /* 調整背景顏色為半透明黑色 */
   font-size: 24px; /* 加大字體 */
   font-weight: 800; /* 增加字體粗細 */
-  height: 200px; /* 加高一點 */
+  height: 100px; /* 加高一點 */
   display: flex;
   margin-right: 15px;
   justify-content: center;

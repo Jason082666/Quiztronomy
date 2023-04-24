@@ -5,9 +5,11 @@ const userId = localStorage.getItem("userId");
 const roomId = localStorage.getItem("roomId");
 const gameName = localStorage.getItem("gameName");
 $(window).on("load", function () {
-  $(".block").hide();
-  $("#fetch-ai-loading").hide();
-  $("#controller").show();
+  setTimeout(() => {
+    $(".block").hide();
+    $("#fetch-ai-loading").hide();
+    $("#controller").show();
+  }, 1500);
 });
 const timeIdArray = [];
 Highcharts.setOptions({
