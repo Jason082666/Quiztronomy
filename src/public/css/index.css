@@ -493,3 +493,24 @@ h2 {
   width: 100px;
   height: 100px;
 }
+
+.carousel-item img {
+  height: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.carousel-caption {
+  font-family: "Barlow", sans-serif;
+
+  background-color: rgba(255, 253, 253, 0.7);
+  border-radius: 10px;
+  color: black;
+}
+
+.carousel-caption h5 {
+  font-family: "KiriFontNormal";
+  color: #0e1a3c;
+}
