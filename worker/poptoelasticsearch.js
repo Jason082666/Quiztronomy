@@ -16,7 +16,8 @@ const funct = async () => {
         const parseObject = JSON.parse(object[1]);
         for (let id in parseObject) {
           const num = parseObject[id];
-          await updateNewPopById(id, num);
+          const popResult = await updateNewPopById(id, num);
+          console.log("popResult", popResult);
         }
       } catch (e) {
         console.error(e);
