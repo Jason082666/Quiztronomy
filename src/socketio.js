@@ -132,15 +132,12 @@ export const socketio = async function (server) {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
       const gameRoom = await addGameHistory(roomId, io.score[roomId]);
-      console.log("io[score]", io.score[roomId]);
-      console.log("response of game history", gameRoom);
       const response = await addGameHistoryToHost(
         gameRoom.founder.id,
         gameRoom._id,
         gameRoom.name,
         gameRoom.date
       );
-      console.log("response of game host history", response);
       await addToQuequeAndUpdateMongo(roomId);
       io.to(roomId).emit("showFinalScore", rankResult);
     });

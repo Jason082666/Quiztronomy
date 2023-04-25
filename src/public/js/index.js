@@ -1,6 +1,5 @@
 const userStatus = await axios.get("/api/1.0/user/status");
 const { data } = userStatus.data;
-console.log(data);
 if (data.error) {
   localStorage.clear();
 }
@@ -270,8 +269,8 @@ $(".log-in-btn").on("click", async function (e) {
 
 $(".sign-up-btn").on("click", async function (e) {
   e.preventDefault();
-  const name = $("#name").val();
-  const email = $("#email").val();
+  const name = $("#signup-name").val();
+  const email = $("#signup-email").val();
   const password = $("#password").val();
   const userdata = { name, email, password };
   const result = await axios.post("/api/1.0/user/signup", userdata);

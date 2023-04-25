@@ -142,7 +142,6 @@ $("#control-paging-btn-container").on(
   ".next-page-btn-host",
   async function () {
     const page = $(this).attr("data-id");
-    console.log(page);
     $(".quiz-container").empty();
     $("#control-paging-btn-container").empty();
     const result = await axios.get(
@@ -157,7 +156,6 @@ $("#control-paging-btn-container").on(
   ".next-page-btn-player",
   async function () {
     const page = $(this).attr("data-id");
-    console.log(page);
     $(".quiz-container").empty();
     $("#control-paging-btn-container").empty();
     const result = await axios.get(
@@ -172,7 +170,6 @@ $("#control-paging-btn-container").on(
   `.prev-page-btn-player`,
   async function () {
     const page = $(this).attr("data-id");
-    console.log(page);
     $(".quiz-container").empty();
     $("#control-paging-btn-container").empty();
     const result = await axios.get(
@@ -187,7 +184,6 @@ $("#control-paging-btn-container").on(
   ".prev-page-btn-host",
   async function () {
     const page = $(this).attr("data-id");
-    console.log(page);
     $(".quiz-container").empty();
     $("#control-paging-btn-container").empty();
     const result = await axios.get(
@@ -201,7 +197,6 @@ $("#control-paging-btn-container").on(
   "click",
   ".back-to-first-player",
   async () => {
-    console.log(123);
     $(".quiz-container").empty();
     $("#control-paging-btn-container").empty();
     const result = await axios.get(
@@ -215,7 +210,6 @@ $("#control-paging-btn-container").on(
   "click",
   ".back-to-first-host",
   async () => {
-    console.log(456);
     $(".quiz-container").empty();
     $("#control-paging-btn-container").empty();
     const result = await axios.get(
@@ -366,7 +360,6 @@ $(".view-player").on("click", function () {
 });
 
 $(".container").on("click", ".view-host", function () {
-  console.log(123123);
   localStorage.setItem("dataId", $(this).attr("data-id"));
   localStorage.setItem("host", true);
   window.location.href = "/game/quiz-detail.html";

@@ -30,7 +30,6 @@ const funct = async () => {
         const gameName = gameRoom.name;
         const date = gameRoom.date;
         const host = gameRoom.founder.name;
-        console.log(gameName, date, host);
         const result = [];
         for (let i = 0; i < rank.length; i += 2) {
           const playerInfo = JSON.parse(rank[i]);
@@ -39,7 +38,7 @@ const funct = async () => {
           const score = rank[i + 1];
           const ranking = i + 1;
           if (id.length !== 36) {
-            const playerResult = await addGameHistoryToPlayer(
+            await addGameHistoryToPlayer(
               id,
               uniqueId,
               gameName,
@@ -48,11 +47,9 @@ const funct = async () => {
               ranking,
               score
             );
-            console.log("playerResult", playerResult);
             result.push({ id, name, score });
           }
         }
-        console.log("result", result);
         gameRoom.score = result;
         const gameRoomData = await gameRoom.save();
         await addGameInfoToRedis(uniqueId, gameRoomData);

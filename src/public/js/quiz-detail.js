@@ -106,9 +106,7 @@ historyArray.forEach((data, index) => {
 
 function generateChart(index) {
   const dataArray = historyArray[index];
-  console.log("dataArray", dataArray);
   const charArray = countOptions(dataArray);
-  console.log("charArray", charArray);
   Highcharts.chart(`chart-${index + 1}`, {
     chart: {
       type: "column",

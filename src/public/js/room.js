@@ -132,7 +132,6 @@ socket.on("userLeft", (users) => {
 $(".host-container").on("click", "#start-game-btn", () => {
   if ($("#player-list").children().length == 0) {
     //TODO: 這裡要放顯示"等待其他玩家加入的字樣"
-    console.log("no-player!");
     return;
   }
   socket.emit("startGame");
@@ -282,7 +281,6 @@ function showRank(players) {
 }
 
 const quizShow = (quizzObj) => {
-  console.log(quizzObj);
   $("#quiz").off().empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
     const page =
@@ -321,7 +319,7 @@ const quizShow = (quizzObj) => {
 };
 
 const renderQuizzPage = (quizzObj, rankResult) => {
-  console.log(quizzObj);
+
   $(".container").empty();
   let $quiz;
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
@@ -375,7 +373,6 @@ const renderQuizzPage = (quizzObj, rankResult) => {
 };
 
 const renderHostQuizzPage = (quizzObj, rankResult) => {
-  console.log(quizzObj);
   $(".container").empty();
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
     const page = `<div id='quiz-container'><div id='left-bar'><h2 id="quiz-intro">Question ${quizzObj.num}</h2><div id='quiz-type'>Multiple choice</div><button id="show-answer">Show answer</button></div><div id='quiz'><div id="timer"><div class="bar"></div></div><h2 id='question'>${quizzObj.question}</h2><ul><li><input type='radio' name='answer' value='A' id='A'><label for='A'>${quizzObj.options["A"]}</label></li>
