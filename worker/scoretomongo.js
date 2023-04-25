@@ -39,7 +39,7 @@ const funct = async () => {
           const score = rank[i + 1];
           const ranking = i + 1;
           if (id.length !== 36) {
-            await addGameHistoryToPlayer(
+            const playerResult = await addGameHistoryToPlayer(
               id,
               uniqueId,
               gameName,
@@ -48,6 +48,7 @@ const funct = async () => {
               ranking,
               score
             );
+            console.log("playerResult", playerResult);
             result.push({ id, name, score });
           }
         }
