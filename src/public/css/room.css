@@ -241,7 +241,25 @@ button:hover {
   padding: 20px;
   width: 50%;
   flex-basis: 60%;
-  height: 70vh;
+  height: 80vh;
+}
+
+#quiz h3 {
+  font-family: "Barlow", sans-serif;
+  padding: 15px;
+  font-size: 24px;
+  width: 80%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  text-align: center;
+}
+#quiz h3 p {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+#chart {
+  border-radius: 20px;
 }
 #timer {
   display: flex;
@@ -327,7 +345,6 @@ button:hover {
 }
 
 #left-bar {
-  height: 70vh;
   width: 15%;
   display: flex;
   flex-direction: column;
@@ -354,6 +371,7 @@ button:hover {
 }
 
 #player-score {
+  font-family: "Barlow", sans-serif;
   margin-top: auto;
   font-size: 16px;
   font-weight: bold;
@@ -365,11 +383,11 @@ button:hover {
 
 #score-chart {
   height: 70%;
-  outline: 1px solid whitesmoke;
   width: 30px;
   position: absolute;
   border-radius: 20px;
   margin-top: auto;
+  outline: 1px solid white;
   bottom: 0;
 }
 
@@ -392,6 +410,7 @@ ul {
   margin: 0;
   padding: 10px;
   height: 65%;
+  margin-top: 20px;
 }
 li {
   height: 23%;
@@ -405,17 +424,22 @@ input[type="checkbox"] {
 label {
   display: block;
   height: 23%;
-  padding: 10px;
+  padding: 20px;
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 20px;
+  vertical-align: middle;
+  padding-bottom: 30px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 #scoreboard {
   display: flex;
   width: 15%;
   flex-direction: column;
-  height: 70vh;
+  /* height: 70vh; */
   justify-content: space-around;
   align-items: center;
   padding: 20px;
@@ -435,7 +459,7 @@ label {
   align-items: center;
   position: relative;
   width: 100%;
-  height: 75%;
+  height: 80%;
   overflow: auto;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -453,7 +477,7 @@ label {
   align-items: center;
   border-radius: 20px;
   margin-top: 10px;
-  width: 80%;
+  width: 90%;
   position: relative;
   font-size: 20px;
   font-weight: bold;
@@ -461,25 +485,14 @@ label {
   background-color: white;
   outline: 1px solid #0e1a3c;
 }
+
 .sort-player-score {
-  /* position: absolute;
-  text-align: center;
-  vertical-align: middle;
-  padding: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  background-color: #5edabd;
-  right: -10px;
-  top: -10px;
-  color: #0e1a3c;
-  font-size: 12px; */
+  font-family: "Barlow", sans-serif;
   text-align: center;
   padding: 2px;
   color: #5edabd;
-  font-size: 12px;
+  font-size: 20px;
   text-align: center;
-  /* margin-left: 10px; */
 }
 .correct-answer {
   background-color: rgb(134, 221, 110) !important;
@@ -533,6 +546,7 @@ label {
 .player-rank {
   margin-left: 30px;
   font-weight: bold;
+  font-size: 30px;
   width: 20%;
 }
 

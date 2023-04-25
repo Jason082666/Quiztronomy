@@ -242,7 +242,9 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     if (controls.length === 0) {
       const control = $(`<div class="controls">
       <span class="position-label"></span>
-      <input type="number" min="0" max="60" placeholder="選擇秒數">
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
     </div>`);
       html.prepend(control);
     }
@@ -278,7 +280,9 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     if (controls.length === 0) {
       const control = $(`<div class="controls">
       <span class="position-label"></span>
-      <input type="number" min="0" max="60" placeholder="選擇秒數">
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
     </div>`);
       html.prepend(control);
     }
@@ -317,7 +321,9 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     if (controls.length === 0) {
       const control = $(`<div class="controls">
       <span class="position-label"></span>
-      <input type="number" min="0" max="60" placeholder="選擇秒數">
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
     </div>`);
       html.prepend(control);
     }

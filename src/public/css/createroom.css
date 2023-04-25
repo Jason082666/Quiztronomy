@@ -212,7 +212,10 @@ p {
 #search-result .quiz-card .question-container > *:first-child {
   margin-top: 20px;
 }
-
+.question-container > *:last-child {
+  white-space: normal;
+  word-wrap: break-word;
+}
 #search-result .quiz-card {
   font-size: 18px;
   margin-right: 20px;
@@ -282,11 +285,12 @@ input[type="number"]::placeholder {
 }
 
 .quiz-card h1 {
-  color: white;
   font-size: 20px;
   font-weight: 300;
   margin-top: 10px;
   margin-bottom: 10px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .quiz-card ul {
@@ -296,7 +300,10 @@ input[type="number"]::placeholder {
 }
 
 .quiz-card ul li {
+  display: block;
   margin-bottom: 5px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .correct-option {
@@ -367,6 +374,8 @@ label {
   outline: 1px solid #0e1a3c;
 }
 #search-language option {
+  white-space: nowrap;
+  overflow: scroll;
   font-family: "Barlow", sans-serif;
   color: #0e1a3c;
 }
