@@ -463,7 +463,9 @@ $(document).ready(function () {
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
       <span class="position-label"></span>
-      <input type="number" min="0" max="60" placeholder="Time limits">
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
     </div>`);
       droppedQuizCard.prepend(controls);
     }
@@ -484,8 +486,10 @@ $(document).ready(function () {
     const controls = draggedElement.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
       const controls = $(`<div class="controls">
-      <span class="position-label">1</span>
-      <input type="number" min="0" max="60" placeholder="Time limits">
+      <span class="position-label"></span>
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value = "10" placeholder="Select time here">
     </div>`);
       draggedElement.prepend(controls);
     }
