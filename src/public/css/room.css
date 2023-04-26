@@ -36,6 +36,11 @@ h1 {
   font-size: xx-large;
 }
 
+#show-answer {
+  font-size: 24px;
+  padding: 10px;
+}
+
 #player-list {
   padding: 30px;
   width: 75vw;
@@ -81,7 +86,7 @@ h1 {
   font-family: "Barlow", sans-serif;
   width: 75vw;
   margin: 0 auto 0;
-  font-size: 30px;
+  font-size: 32px;
 }
 
 button {
@@ -90,7 +95,7 @@ button {
   padding: 5px;
   font-weight: bold;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 24px;
   color: #ffffff;
   background-color: #5edabd;
   cursor: pointer;
@@ -100,14 +105,23 @@ button:hover {
   background-color: white;
   color: #0e1a3c;
 }
-#next-game-btn,
-#show-final-score {
+
+#next-game-btn {
   position: absolute;
-  height: 15%;
-  width: 20%;
+  height: 80px;
+  width: 150px;
   top: 0;
   right: 0;
-  font-size: 15px;
+  font-size: 24px;
+}
+
+#show-final-score {
+  position: absolute;
+  height: 80px;
+  width: 200px;
+  top: 0;
+  right: 0;
+  font-size: 24px;
 }
 
 .host-container {
@@ -242,16 +256,22 @@ button:hover {
   width: 50%;
   flex-basis: 60%;
   height: 80vh;
+  overflow: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 #quiz h3 {
   font-family: "Barlow", sans-serif;
   padding: 15px;
-  font-size: 24px;
+  font-size: 32px;
   width: 80%;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   text-align: center;
+}
+#quiz h2 {
+  font-size: 32px;
 }
 #quiz h3 p {
   white-space: normal;
@@ -365,7 +385,7 @@ button:hover {
   height: 10%;
   margin-top: 0;
   padding-top: 7px;
-  font-size: 16px;
+  font-size: 24px;
   text-align: center;
   margin-bottom: 30px;
 }
@@ -373,7 +393,7 @@ button:hover {
 #player-score {
   font-family: "Barlow", sans-serif;
   margin-top: auto;
-  font-size: 16px;
+  font-size: 24px;
   font-weight: bold;
   position: absolute;
   bottom: 70%;
@@ -428,7 +448,7 @@ label {
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 20px;
+  font-size: 24px;
   vertical-align: middle;
   padding-bottom: 30px;
   white-space: normal;
@@ -479,7 +499,7 @@ label {
   margin-top: 10px;
   width: 90%;
   position: relative;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   color: #0e1a3c;
   background-color: white;
@@ -491,7 +511,7 @@ label {
   text-align: center;
   padding: 2px;
   color: #5edabd;
-  font-size: 20px;
+  font-size: 24px;
   text-align: center;
 }
 .correct-answer {
@@ -621,7 +641,7 @@ label {
 
 .popout-text {
   margin-top: 15px;
-  font-size: 20px;
+  font-size: 24px;
   color: #0e1a3c;
 }
 
@@ -636,7 +656,7 @@ label {
 .back-to-main-btn {
   padding: 10px 20px;
   border-radius: 5px;
-  font-size: 18px;
+  font-size: 24px;
   margin: 0 10px;
   cursor: pointer;
   border: none;
@@ -785,7 +805,7 @@ h2 {
   padding: 5px;
   font-weight: bold;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 24px;
   color: #ffffff;
   background-color: rgb(115, 175, 224);
   cursor: pointer;

@@ -190,7 +190,7 @@ socket.on("showQuizExplain", (scoreObj) => {
   const correctAnswer = parseQuizzObject.answer.join(" ");
   const explain = parseQuizzObject.explain;
   const $correctAnswer = $(`<h2>Correct Answer:  ${correctAnswer}</h2>`);
-  const $explain = $(`<h3>Explaination: <p>${explain}</p></h3>`);
+  const $explain = $(`<h3>Explaination <p>${explain}</p></h3>`);
   $("#quiz").append($correctAnswer);
   $("#quiz").append($explain);
   generateChart(scoreObj);

@@ -2,7 +2,7 @@ body {
   background-color: #e5f6eb;
   color: #0e1a3c;
   font-family: "Barlow", sans-serif;
-  font-size: 20px;
+  font-size: 24px;
   box-sizing: border-box;
   margin: 0 auto 10px;
 }
@@ -31,7 +31,7 @@ header {
 
 ul li {
   margin: 0 10px;
-  font-size: 20px;
+  font-size: 24px;
   display: flex;
   align-items: center;
 }
@@ -54,7 +54,7 @@ ul li {
 }
 .nav-middle-container {
   width: 60%;
-  font-size: 20px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,7 +75,7 @@ ul li {
   padding: 5px;
   font-weight: bold;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 24px;
   color: #ffffff;
   background-color: #5edabd;
   cursor: pointer;
@@ -188,7 +188,7 @@ p {
   background-color: #5edabd;
   color: #0e1a3c;
   box-shadow: 2px 2px #0e1a3c;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .container-right .quizz-question {
@@ -217,7 +217,7 @@ p {
   word-wrap: break-word;
 }
 #search-result .quiz-card {
-  font-size: 18px;
+  font-size: 24px;
   margin-right: 20px;
 }
 
@@ -235,7 +235,7 @@ p {
 }
 
 .position-label {
-  font-size: 20px;
+  font-size: 24x;
   font-weight: bolder;
   color: white;
 }
@@ -245,7 +245,7 @@ input[type="number"] {
   width: 50px;
   height: 30px;
   padding-left: 15px;
-  font-size: 20px;
+  font-size: 24px;
   margin-right: 5px;
   border: none;
   border-radius: 10px;
@@ -285,7 +285,7 @@ input[type="number"]::placeholder {
 }
 
 .quiz-card h1 {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 300;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -344,7 +344,7 @@ label {
 #create-room-name {
   font-family: "Barlow", sans-serif;
   width: 70%;
-  font-size: 20px;
+  font-size: 24px;
   padding: 10px;
   padding-left: 15px;
   margin-left: 10px;
@@ -444,7 +444,7 @@ label {
 .question-text {
   font-family: "Barlow", sans-serif;
   width: 97%;
-  font-size: 20px;
+  font-size: 24px;
   padding: 5px;
   padding-left: 15px;
   margin-top: 30px;
@@ -517,7 +517,7 @@ textarea {
   margin-top: 30px;
   border-radius: 10px;
   font-family: "Barlow", sans-serif;
-  font-size: 20px;
+  font-size: 24px;
   height: 150px;
   padding: 5px;
   padding-left: 15px;
@@ -532,7 +532,7 @@ textarea {
 .create-quizz-btn {
   font-family: "Barlow", sans-serif;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 24px;
   color: #0e1a3c;
   cursor: pointer;
   border: none;
@@ -576,7 +576,7 @@ textarea {
 }
 #search-input {
   font-family: "Barlow", sans-serif;
-  font-size: 20px;
+  font-size: 24px;
   padding: 5px;
   padding-left: 15px;
   margin-bottom: 3px;
@@ -673,7 +673,7 @@ textarea {
   left: 0;
 }
 .popup-text {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   color: #0e1a3c;
   font-family: "KiriFontNormal";
@@ -689,7 +689,7 @@ textarea {
 .popup-buttons .back-to-game-btn,
 .popup-buttons .room-ready-btn,
 .popup-buttons .room-ready-cancell-btn {
-  font-size: 20px;
+  font-size: 24px;
   border: none;
   padding: 5px;
   border-radius: 10px;
