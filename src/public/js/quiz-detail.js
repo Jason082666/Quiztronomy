@@ -145,20 +145,66 @@ historyArray.forEach((data, index) => {
 function generateChart(index) {
   const dataArray = historyArray[index];
   const charArray = countOptions(dataArray);
+  // Highcharts.chart(`chart-${index + 1}`, {
+  //   chart: {
+  //     type: "column",
+  //     width: 400,
+  //     styledMode: true,
+  //     options3d: {
+  //       enabled: true,
+  //       alpha: 15,
+  //       beta: 15,
+  //       depth: 30,
+  //     },
+  //     backgroundColor: "transparent",
+  //   },
+
+  //   credits: {
+  //     enabled: false,
+  //   },
+  //   exporting: {
+  //     enabled: false,
+  //   },
+  //   legend: {
+  //     enabled: false,
+  //   },
+  //   title: {
+  //     text: "Answer Analysis",
+  //   },
+  //   plotOptions: {
+  //     column: {
+  //       depth: 15,
+  //       pointWidth: 30,
+  //     },
+  //   },
+  //   xAxis: {
+  //     categories: Object.keys(charArray),
+  //     title: {
+  //       text: "Options",
+  //       margin: 20,
+  //     },
+  //   },
+  //   yAxis: {
+  //     tickInterval: 1,
+  //     title: {
+  //       text: "Number of people choosed",
+  //       margin: 40,
+  //     },
+  //   },
+  //   series: [
+  //     {
+  //       data: Object.values(charArray),
+  //       colorByPoint: true,
+  //       showInLegend: false,
+  //     },
+  //   ],
+  // });
   Highcharts.chart(`chart-${index + 1}`, {
     chart: {
       type: "column",
       width: 400,
-      styledMode: true,
-      options3d: {
-        enabled: true,
-        alpha: 15,
-        beta: 15,
-        depth: 30,
-      },
       backgroundColor: "transparent",
     },
-
     credits: {
       enabled: false,
     },
@@ -177,8 +223,10 @@ function generateChart(index) {
         pointWidth: 30,
       },
     },
+
     xAxis: {
       categories: Object.keys(charArray),
+      crosshair: true,
       title: {
         text: "Options",
         margin: 20,
@@ -186,10 +234,20 @@ function generateChart(index) {
     },
     yAxis: {
       tickInterval: 1,
+      min: 0,
       title: {
         text: "Number of people choosed",
         margin: 40,
       },
+    },
+    tooltip: {
+      pointFormat: "<b>{point.y} people</b>",
+      style: {
+        fontSize: "18px",
+        color: "#0E1A3C",
+      },
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      borderWidth: 0,
     },
     series: [
       {

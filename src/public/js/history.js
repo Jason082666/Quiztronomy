@@ -401,16 +401,85 @@ Highcharts.chart("pie-char", {
   ],
 });
 
+// Highcharts.chart("bar-char", {
+//   chart: {
+//     type: "cylinder",
+//     options3d: {
+//       enabled: true,
+//       alpha: 15,
+//       beta: 15,
+//       depth: 50,
+//       viewDistance: 25,
+//     },
+//     backgroundColor: "transparent",
+//   },
+//   credits: {
+//     enabled: false,
+//   },
+//   exporting: {
+//     enabled: false,
+//   },
+//   title: {
+//     text: "Last six games performance",
+//     style: {
+//       fontSize: "24px",
+//       color: "white",
+//     },
+//   },
+//   xAxis: {
+//     categories: ["1", "2", "3", "4", "5", "6"],
+//     title: {
+//       text: "",
+//     },
+//     labels: {
+//       style: {
+//         fontSize: "18px",
+//         color: "white",
+//       },
+//     },
+//   },
+//   yAxis: {
+//     title: {
+//       margin: 20,
+//       text: "Scores",
+//       style: {
+//         fontSize: "24px",
+//         color: "white",
+//       },
+//     },
+//     labels: {
+//       style: {
+//         fontSize: "18px",
+//         color: "white",
+//       },
+//     },
+//   },
+//   tooltip: {
+//     headerFormat: "<b>Game {point.x}</b><br>",
+//     style: {
+//       fontSize: "18px",
+//       color: "#0E1A3C",
+//     },
+//     pointFormat: "Date: {point.date}<br>Scores: {point.y}",
+//   },
+//   plotOptions: {
+//     series: {
+//       depth: 25,
+//       colorByPoint: true,
+//     },
+//   },
+//   series: [
+//     {
+//       data: barChartDataArray,
+//       name: "Cases",
+//       showInLegend: false,
+//     },
+//   ],
+// });
+
 Highcharts.chart("bar-char", {
   chart: {
-    type: "cylinder",
-    options3d: {
-      enabled: true,
-      alpha: 15,
-      beta: 15,
-      depth: 50,
-      viewDistance: 25,
-    },
+    type: "column",
     backgroundColor: "transparent",
   },
   credits: {
@@ -428,9 +497,7 @@ Highcharts.chart("bar-char", {
   },
   xAxis: {
     categories: ["1", "2", "3", "4", "5", "6"],
-    title: {
-      text: "",
-    },
+    crosshair: true,
     labels: {
       style: {
         fontSize: "18px",
@@ -439,6 +506,7 @@ Highcharts.chart("bar-char", {
     },
   },
   yAxis: {
+    min: 0,
     title: {
       margin: 20,
       text: "Scores",
@@ -446,11 +514,11 @@ Highcharts.chart("bar-char", {
         fontSize: "24px",
         color: "white",
       },
-    },
-    labels: {
-      style: {
-        fontSize: "18px",
-        color: "white",
+      labels: {
+        style: {
+          fontSize: "18px",
+          color: "white",
+        },
       },
     },
   },
