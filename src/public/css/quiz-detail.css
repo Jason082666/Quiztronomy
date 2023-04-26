@@ -30,7 +30,7 @@ canvas {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 50px;
   border-bottom: 1px solid rgb(169, 162, 162);
 }
 .quiz-big-container {
@@ -229,4 +229,10 @@ img {
 .chart-item {
   border-radius: 20px;
   background-color: transparent;
+}
+
+.your-answer {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  margin-top: 20px;
+  margin-bottom: 40px;
 }
