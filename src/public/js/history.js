@@ -509,16 +509,16 @@ Highcharts.chart("bar-char", {
     min: 0,
     title: {
       margin: 20,
-      text: "Scores",
+      text: "",
       style: {
         fontSize: "24px",
         color: "white",
       },
-      labels: {
-        style: {
-          fontSize: "18px",
-          color: "white",
-        },
+    },
+    labels: {
+      style: {
+        color: "white",
+        fontSize: "16px",
       },
     },
   },
@@ -549,7 +549,7 @@ $(".container").on("click", ".view-player", function () {
   localStorage.setItem("dataId", $(this).attr("data-id"));
   window.location.href = "/game/quiz-detail.html";
 });
-
+$(".highcharts-background ");
 $(".container").on("click", ".view-host", function () {
   localStorage.setItem("dataId", $(this).attr("data-id"));
   localStorage.setItem("host", true);

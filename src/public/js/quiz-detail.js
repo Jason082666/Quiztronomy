@@ -203,7 +203,7 @@ function generateChart(index) {
     chart: {
       type: "column",
       width: 400,
-      backgroundColor: "transparent",
+      backgroundColor: "red",
     },
     credits: {
       enabled: false,

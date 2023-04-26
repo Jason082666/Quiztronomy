@@ -38,6 +38,12 @@ Highcharts.chart(`chart-${index + 1}`, {
       text: "Number of people choosed",
       margin: 40,
     },
+    labels: {
+      style: {
+        color: "white",
+        fontSize: "16px",
+      },
+    },
   },
 
   series: [
