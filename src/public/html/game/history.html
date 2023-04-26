@@ -38,6 +38,12 @@
       href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/css/history.css" />
     <style>
       .bd-placeholder-img {
@@ -56,10 +62,12 @@
     </style>
   </head>
   <body>
+    <canvas id="canvas"></canvas>
     <div class="nav-bar">
       <div class="header-container">
         <div class="header">
           <div class="nav-left-container">
+            <img class="logo" src="/img/logo.png" alt="logo" />
             <ul>
               <li><a class="home-page" href="/">Home</a></li>
               <li><a href="#">About Us</a></li>
@@ -73,12 +81,12 @@
       </div>
     </div>
     <main>
-      <section class="py-5 text-center container">
+      <section class="text-center container id="player-info-session">
         <div class="row py-lg-5">
           <div class="col-lg-6 col-md-8 mx-auto">
             <h1 class="fw-light">Your game records</h1>
-            <p class="lead text-muted game-times"></p>
-            <p class="lead text-muted score-totals"></p>
+            <p class="lead game-times"></p>
+            <p class="lead score-totals"></p>
           </div>
         </div>
         <div class="char-container">
@@ -86,15 +94,13 @@
           <div id="bar-char"></div>
         </div>
       </section>
-      <div class="album py-5 bg-light">
-        <div class="button-container">
+      <div class="album py-5" id="container">
+        <div class="button-container" id="btn-container-1">
           <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-secondary player-history-btn">
+            <button type="button" class="player-history-btn">
               Player history
             </button>
-            <button type="button" class="btn btn-secondary host-history-btn">
-              Host history
-            </button>
+            <button type="button" class="host-history-btn">Host history</button>
           </div>
         </div>
         <div class="container">
@@ -102,9 +108,8 @@
             class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 quiz-container"
           ></div>
         </div>
-        <div class="button-container">
+        <div class="button-container" id="btn-container-2">
           <div
-            class="btn-group"
             role="group"
             aria-label="Basic example"
             id="control-paging-btn-container"
@@ -113,10 +118,10 @@
       </div>
     </main>
 
-    <footer class="text-muted py-5">
-      <div class="container">
+    <footer>
+      <div class="footer-container">
         <p class="float-end mb-1">
-          <a href="#">Back to top</a>
+          <a class="back-to-top" href="#">Back to top</a>
         </p>
       </div>
     </footer>

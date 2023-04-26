@@ -319,7 +319,6 @@ const quizShow = (quizzObj) => {
 };
 
 const renderQuizzPage = (quizzObj, rankResult) => {
-
   $(".container").empty();
   let $quiz;
   if (["MC-EN", "MC-CH"].includes(quizzObj.type)) {
@@ -648,6 +647,9 @@ function generateChart(object) {
       plotBorderWidth: null,
       plotShadow: false,
       type: "pie",
+    },
+    credits: {
+      enabled: false,
     },
     title: {
       text: "Answer Analysis",

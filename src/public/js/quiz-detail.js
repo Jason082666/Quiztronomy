@@ -14,20 +14,58 @@ const historyArray = data.history;
 $(".game-name").text(`Game name: ${gameName}`);
 $(".game-host").text(`Game host: ${host}`);
 $(".create-time").text(`Game time: ${time}`);
+const canvas = $("#canvas")[0];
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.outerWidth;
+canvas.height = window.outerWidth;
+
+const stars = [];
+
+function init() {
+  for (let i = 0; i < 800; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const radius = Math.random() * 1.5;
+    stars.push({ x, y, radius });
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#0e1a3c";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < stars.length; i++) {
+    ctx.beginPath();
+    ctx.arc(stars[i].x, stars[i].y, stars[i].radius, 0, Math.PI * 2);
+    ctx.fillStyle = stars[i].color || "#ffffff";
+    ctx.fill();
+  }
+}
+function animate() {
+  requestAnimationFrame(animate);
+  draw();
+  // update();
+}
+init();
+animate();
 let dropdown = "";
 let container = "";
-let rank = "";
 for (let i = 3; i <= +length; i++) {
   dropdown += `<li><a class="dropdown-item" href="#scrollspyHeading${i}">Quiz ${i}</a></li>`;
 }
 $(".dropdown-menu").html(dropdown);
-
-rankArray.forEach((ranking, index) => {
-  rank += `<div class="rank-item">No. ${index + 1}:  ${ranking.name}  -score: ${
-    ranking.score
-  }</div>`;
-});
-$(".rank-container").html(rank);
+if (rankArray[1]) {
+  $(".player2-name").text(rankArray[1].name);
+  $(".player2-score").text(rankArray[1].score);
+}
+if (rankArray[2]) {
+  $(".player3-name").text(rankArray[2].name);
+  $(".player3-score").text(rankArray[2].score);
+}
+$(".player1-name").text(rankArray[0].name);
+$(".player1-score").text(rankArray[0].score);
 if (!isHost) {
   quizArrray.forEach((quiz, index) => {
     if (["MC-EN", "MC-CH", "MCS-EN", "MCS-CH"].includes(quiz.type)) {
@@ -110,6 +148,7 @@ function generateChart(index) {
   Highcharts.chart(`chart-${index + 1}`, {
     chart: {
       type: "column",
+      width: 400,
       styledMode: true,
       options3d: {
         enabled: true,
@@ -117,22 +156,46 @@ function generateChart(index) {
         beta: 15,
         depth: 30,
       },
+      backgroundColor: "transparent",
+    },
+
+    credits: {
+      enabled: false,
+    },
+    exporting: {
+      enabled: false,
+    },
+    legend: {
+      enabled: false,
     },
     title: {
-      text: "Answer",
+      text: "Answer Analysis",
     },
     plotOptions: {
       column: {
         depth: 15,
+        pointWidth: 30,
       },
     },
     xAxis: {
       categories: Object.keys(charArray),
+      title: {
+        text: "Options",
+        margin: 20,
+      },
+    },
+    yAxis: {
+      tickInterval: 1,
+      title: {
+        text: "Number of people choosed",
+        margin: 40,
+      },
     },
     series: [
       {
         data: Object.values(charArray),
         colorByPoint: true,
+        showInLegend: false,
       },
     ],
   });

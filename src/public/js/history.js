@@ -13,7 +13,42 @@ const barChartDataArray = dataArray.map((data, index) => {
   const time = taiwanDate.toLocaleString();
   return { x: index, y: +data.score, date: time };
 });
+const canvas = $("#canvas")[0];
+const ctx = canvas.getContext("2d");
 
+canvas.width = window.outerWidth;
+canvas.height = window.outerWidth;
+
+const stars = [];
+
+function init() {
+  for (let i = 0; i < 800; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const radius = Math.random() * 1.5;
+    stars.push({ x, y, radius });
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#0e1a3c";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < stars.length; i++) {
+    ctx.beginPath();
+    ctx.arc(stars[i].x, stars[i].y, stars[i].radius, 0, Math.PI * 2);
+    ctx.fillStyle = stars[i].color || "#ffffff";
+    ctx.fill();
+  }
+}
+function animate() {
+  requestAnimationFrame(animate);
+  draw();
+  // update();
+}
+init();
+animate();
 const { game, score } = totalGameAndScore.data.data;
 $(".game-times").html(`You've played ${game} games.`);
 $(".score-totals").html(`You've earned  ${score}  scores.`);
@@ -26,22 +61,24 @@ const renderQuiz = (data) => {
     const taiwanDate = new Date(date.getTime());
     historyDatahtml += `<div class="col">
     <div class="card shadow-sm">
-      <svg
-        class="bd-placeholder-img card-img-top"
-        width="100%"
-        height="225"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="Placeholder: ${data.roomName}"
-        preserveAspectRatio="xMidYMid slice"
-        focusable="false"
-      >
-        <title>Placeholder</title>
-        <rect width="100%" height="100%" fill="#55595c" />
-        <text x="50%" y="50%" fill="#eceeef" dy=".3em">
+        <svg
+      class="bd-placeholder-img card-img-top"
+      width="100%"
+      height="225"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Placeholder:  ${data.roomName}"
+      preserveAspectRatio="xMidYMid slice"
+      focusable="false"
+    >
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="transparent"></rect>
+      <foreignObject x="0" y="0" width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="quiz-card">
           ${data.roomName}
-        </text>
-      </svg>
+        </div></foreignObject
+      >
+    </svg>
       <div class="card-body">
         <p class="card-text">
         <div>Game host: ${data.host}</div>
@@ -73,37 +110,42 @@ const renderHostQuiz = (data) => {
     const date = new Date(data.date);
     const taiwanDate = new Date(date.getTime() + 8 * 60 * 60 * 1000);
     historyDataHosthtml += `<div class="col">
-    <div class="card shadow-sm">
-      <svg
-        class="bd-placeholder-img card-img-top"
-        width="100%"
-        height="225"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="Placeholder: ${data.roomName}"
-        preserveAspectRatio="xMidYMid slice"
-        focusable="false"
-      >
-        <title>Placeholder</title>
-        <rect width="100%" height="100%" fill="#55595c" />
-        <text x="50%" y="50%" fill="#eceeef" dy=".3em">
+  <div class="card shadow-sm">
+    <svg
+      class="bd-placeholder-img card-img-top"
+      width="100%"
+      height="225"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Placeholder:  ${data.roomName}"
+      preserveAspectRatio="xMidYMid slice"
+      focusable="false"
+    >
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="transparent"></rect>
+      <foreignObject x="0" y="0" width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="quiz-card">
           ${data.roomName}
-        </text>
-      </svg>
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary view-host" data-id="${
-              data.roomId
-            }">
-              View
-            </button>
-          </div>
-          <small class="text-muted">${taiwanDate.toLocaleString()}</small>
+        </div></foreignObject
+      >
+    </svg>
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary view-host"
+            data-id="${data.roomId}"
+          >
+            View
+          </button>
         </div>
+        <small class="text-muted">${taiwanDate.toLocaleString()}</small>
       </div>
     </div>
-  </div>`;
+  </div>
+</div>
+`;
   });
   $(".quiz-container").html(historyDataHosthtml);
   renderPagingButton(data.next, "host");
@@ -124,14 +166,14 @@ const renderPagingButton = (next = null, character) => {
       nextPage = +next - 2;
     }
     const $button =
-      $(`<button type="button" class="btn btn-secondary back-to-first-${character}">
-            Back to first page
+      $(`<div class="btn-bottom-group"><button type="button" class="btn back-to-first-${character}">
+          First page
         </button>
-        <button type="button" class="btn btn-secondary prev-page-btn-${character}" data-id="${nextPage}"> Previous page
+        <button type="button" class="btn prev-page-btn-${character}" data-id="${nextPage}"> Previous page
         </button>
-        <button type="button" class="btn btn-secondary next-page-btn-${character}" data-id="${next}">
+        <button type="button" class="btn  next-page-btn-${character}" data-id="${next}">
             Next page
-        </button>`);
+        </button></div>`);
     $("#control-paging-btn-container").append($button);
   }
 };
@@ -256,13 +298,27 @@ data.data.forEach((data) => {
 Highcharts.chart("pie-char", {
   chart: {
     type: "variablepie",
+    backgroundColor: "transparent",
+  },
+  exporting: {
+    enabled: false,
+  },
+  credits: {
+    enabled: false,
   },
   title: {
     text: "Your rank records",
     align: "center",
+    style: {
+      fontSize: "24px",
+      color: "white",
+    },
   },
   tooltip: {
     headerFormat: "",
+    style: {
+      fontSize: "18px",
+    },
     pointFormat:
       '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
       "Times: <b>{point.y}</b><br/>",
@@ -278,31 +334,67 @@ Highcharts.chart("pie-char", {
           name: "Rank 1 ",
           y: rankObject[1],
           z: 192,
+          dataLabels: {
+            style: {
+              fontSize: "18px",
+              color: "#0E1A3C",
+            },
+          },
         },
         {
           name: "Rank 2",
           y: rankObject[2],
           z: 165,
+          dataLabels: {
+            style: {
+              fontSize: "18px",
+              color: "#0E1A3C",
+            },
+          },
         },
         {
           name: "Rank 3",
           y: rankObject[3],
           z: 130,
+          dataLabels: {
+            style: {
+              fontSize: "18px",
+              color: "#0E1A3C",
+            },
+          },
         },
         {
           name: "Rank 4",
           y: rankObject[4],
           z: 116,
+          dataLabels: {
+            style: {
+              fontSize: "18px",
+              color: "#0E1A3C",
+            },
+          },
         },
         {
           name: "Rank 5 ",
           y: rankObject[5],
           z: 90,
+          dataLabels: {
+            style: {
+              fontSize: "18px",
+              color: "#0E1A3C",
+            },
+          },
         },
         {
           name: "Others",
           y: rankObject["other"],
           z: 80,
+          dataLabels: {
+            style: {
+              fontSize: "18px",
+              color: "#0E1A3C",
+            },
+          },
         },
       ],
     },
@@ -319,24 +411,55 @@ Highcharts.chart("bar-char", {
       depth: 50,
       viewDistance: 25,
     },
+    backgroundColor: "transparent",
+  },
+  credits: {
+    enabled: false,
+  },
+  exporting: {
+    enabled: false,
   },
   title: {
     text: "Last six games performance",
+    style: {
+      fontSize: "24px",
+      color: "white",
+    },
   },
   xAxis: {
     categories: ["1", "2", "3", "4", "5", "6"],
     title: {
       text: "",
     },
+    labels: {
+      style: {
+        fontSize: "18px",
+        color: "white",
+      },
+    },
   },
   yAxis: {
     title: {
       margin: 20,
       text: "Scores",
+      style: {
+        fontSize: "24px",
+        color: "white",
+      },
+    },
+    labels: {
+      style: {
+        fontSize: "18px",
+        color: "white",
+      },
     },
   },
   tooltip: {
     headerFormat: "<b>Game {point.x}</b><br>",
+    style: {
+      fontSize: "18px",
+      color: "#0E1A3C",
+    },
     pointFormat: "Date: {point.date}<br>Scores: {point.y}",
   },
   plotOptions: {
@@ -354,7 +477,7 @@ Highcharts.chart("bar-char", {
   ],
 });
 
-$(".view-player").on("click", function () {
+$(".container").on("click", ".view-player", function () {
   localStorage.setItem("dataId", $(this).attr("data-id"));
   window.location.href = "/game/quiz-detail.html";
 });
