@@ -272,7 +272,7 @@ button:hover {
 }
 #quiz h2 {
   font-size: 32px;
-  margin-bottom: 0;
+  vertical-align: middle;
 }
 #quiz h3 p {
   white-space: normal;
