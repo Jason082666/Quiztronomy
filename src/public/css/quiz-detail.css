@@ -19,6 +19,7 @@ canvas {
 .chart-container {
   width: 60%;
   height: 400px;
+  margin-left: 40px;
   display: flex;
   justify-content: flex-end;
 }

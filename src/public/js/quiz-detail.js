@@ -7,7 +7,18 @@ const { data } = result.data;
 const length = data.history.length;
 const gameName = data.name;
 const host = data.founder.name;
-const time = data.date;
+const date = new Date(data.date);
+const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+const targetTime = date.getTime() + timezoneOffset + 8 * 60 * 60 * 1000;
+const targetDate = new Date(targetTime);
+const year = targetDate.getFullYear();
+const month = ("0" + (targetDate.getMonth() + 1)).slice(-2);
+const day = ("0" + targetDate.getDate()).slice(-2);
+const hour = ("0" + targetDate.getHours()).slice(-2);
+const minute = ("0" + targetDate.getMinutes()).slice(-2);
+const second = ("0" + targetDate.getSeconds()).slice(-2);
+const ampm = hour >= 12 ? "pm" : "am";
+const time = `${year}-${month}-${day} ${hour % 12}:${minute}:${second}${ampm}`;
 const quizArrray = data.quizz;
 const rankArray = data.score;
 const historyArray = data.history;
@@ -217,13 +228,6 @@ function generateChart(index) {
     title: {
       text: "Answer Analysis",
     },
-    plotOptions: {
-      column: {
-        depth: 15,
-        pointWidth: 30,
-      },
-    },
-
     xAxis: {
       categories: Object.keys(charArray),
       crosshair: true,
@@ -248,6 +252,12 @@ function generateChart(index) {
       },
       backgroundColor: "rgba(0, 0, 0, 0.7)",
       borderWidth: 0,
+    },
+    plotOptions: {
+      series: {
+        depth: 25,
+        colorByPoint: true,
+      },
     },
     series: [
       {

@@ -58,7 +58,19 @@ const renderQuiz = (data) => {
   const dataArray = data.data;
   dataArray.forEach((data) => {
     const date = new Date(data.date);
-    const taiwanDate = new Date(date.getTime());
+    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+    const targetTime = date.getTime() + timezoneOffset + 8 * 60 * 60 * 1000;
+    const targetDate = new Date(targetTime);
+    const year = targetDate.getFullYear();
+    const month = ("0" + (targetDate.getMonth() + 1)).slice(-2);
+    const day = ("0" + targetDate.getDate()).slice(-2);
+    const hour = ("0" + targetDate.getHours()).slice(-2);
+    const minute = ("0" + targetDate.getMinutes()).slice(-2);
+    const second = ("0" + targetDate.getSeconds()).slice(-2);
+    const ampm = hour >= 12 ? "pm" : "am";
+    const formattedDate = `${year}-${month}-${day} ${
+      hour % 12
+    }:${minute}:${second}${ampm}`;
     historyDatahtml += `<div class="col">
     <div class="card shadow-sm">
         <svg
@@ -87,13 +99,11 @@ const renderQuiz = (data) => {
         </p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary view-player" data-id="${
-              data.roomId
-            }">
+            <button type="button" class="btn btn-sm btn-outline-secondary view-player" data-id="${data.roomId}">
               View
             </button>
           </div>
-          <small class="text-muted">${taiwanDate.toLocaleString()}</small>
+          <small class="text-muted">${formattedDate}</small>
         </div>
       </div>
     </div>
@@ -340,6 +350,7 @@ Highcharts.chart("pie-char", {
               color: "#0E1A3C",
             },
           },
+          color: "#204e77",
         },
         {
           name: "Rank 2",
@@ -351,6 +362,7 @@ Highcharts.chart("pie-char", {
               color: "#0E1A3C",
             },
           },
+          color: "#5362E2",
         },
         {
           name: "Rank 3",
@@ -362,6 +374,7 @@ Highcharts.chart("pie-char", {
               color: "#0E1A3C",
             },
           },
+          color: "#5398E2",
         },
         {
           name: "Rank 4",
@@ -373,6 +386,7 @@ Highcharts.chart("pie-char", {
               color: "#0E1A3C",
             },
           },
+          color: "#A6DBCC",
         },
         {
           name: "Rank 5 ",
@@ -395,6 +409,7 @@ Highcharts.chart("pie-char", {
               color: "#0E1A3C",
             },
           },
+          color: "#34BABD",
         },
       ],
     },
@@ -530,7 +545,12 @@ Highcharts.chart("bar-char", {
     },
     pointFormat: "Date: {point.date}<br>Scores: {point.y}",
   },
+  colors: ["#34BABD", "#A6DBCC", "#5398E2", "#5362E2", "#204E77"],
   plotOptions: {
+    column: {
+      pointWidth: 80,
+      colorByPoint: true,
+    },
     series: {
       depth: 25,
       colorByPoint: true,

@@ -1,56 +1,45 @@
-Highcharts.chart(`chart-${index + 1}`, {
+Highcharts.chart("container", {
   chart: {
     type: "column",
-    width: 400,
-    backgroundColor: "transparent",
-  },
-  credits: {
-    enabled: false,
-  },
-  exporting: {
-    enabled: false,
-  },
-  legend: {
-    enabled: false,
+    styledMode: true,
+    options3d: {
+      enabled: true,
+      alpha: 15,
+      beta: 15,
+      depth: 50,
+    },
   },
   title: {
-    text: "Answer Analysis",
+    text: "Highcharts 3d column in styled mode",
   },
   plotOptions: {
     column: {
-      depth: 15,
-      pointWidth: 30,
+      depth: 25,
     },
   },
-
   xAxis: {
-    categories: Object.keys(charArray),
-    crosshair: true,
-    title: {
-      text: "Options",
-      margin: 20,
-    },
+    categories: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
   },
-  yAxis: {
-    tickInterval: 1,
-    min: 0,
-    title: {
-      text: "Number of people choosed",
-      margin: 40,
-    },
-    labels: {
-      style: {
-        color: "white",
-        fontSize: "16px",
-      },
-    },
-  },
-
   series: [
     {
-      data: Object.values(charArray),
+      data: [
+        29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1,
+        95.6, 54.4,
+      ],
       colorByPoint: true,
-      showInLegend: false,
     },
   ],
 });

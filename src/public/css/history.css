@@ -113,7 +113,8 @@ ul a {
 
 .fw-light {
   font-size: 48px;
-  color: white;
+  font-family: "KiriFontNormal";
+  color: #5edabd;
   margin-bottom: 50px;
 }
 .lead {
