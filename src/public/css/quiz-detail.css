@@ -34,9 +34,7 @@ canvas {
   margin-top: 50px;
   border-bottom: 1px solid rgb(169, 162, 162);
 }
-.quiz-big-container {
-  height: 600px;
-}
+
 
 .quiz-container {
   display: flex;
@@ -180,7 +178,7 @@ img {
 .rank-item {
   display: flex;
   margin-top: 30px;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   border-radius: 20px;
   background-color: white;
@@ -195,11 +193,9 @@ img {
   box-shadow: 3px 3px 5px white;
 }
 .player-name {
-  width: 30%;
   vertical-align: middle;
 }
 .player-score {
-  width: 30%;
   margin-left: auto;
 }
 

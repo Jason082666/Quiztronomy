@@ -569,7 +569,7 @@ Highcharts.chart("bar-char", {
     },
     pointFormat: "Date: {point.date}<br>Scores: {point.y}",
   },
-  colors: ["#34BABD", "#A6DBCC", "#5398E2", "#5362E2", "#204E77"],
+  colors: ["#34BABD", "#A6DBCC", "#5398E2", "#5362E2", "#204E77", "#425189"],
   plotOptions: {
     column: {
       pointWidth: 80,

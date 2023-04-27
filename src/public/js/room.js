@@ -267,6 +267,8 @@ function showRank(players) {
   const $ranking = $("<h1>RANKING</h1>");
   $("#quiz").append($ranking);
   const $rankings = $(".rankings");
+  $("#left-bar").hide();
+  $("#scoreboard").hide();
   let rankNum = 1;
   players.forEach((player) => {
     const $player = $(`<div class="ranking">
@@ -675,6 +677,7 @@ function generateChart(object) {
           format: "<b>{point.name}</b>: {point.y}",
           connectorColor: "silver",
         },
+        colors: ["#34BABD", "#A6DBCC", "#5398E2", "#5362E2", "#204E77"],
       },
     },
     series: [

@@ -132,7 +132,7 @@ export const socketio = async function (server) {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
       const gameRoom = await addGameHistory(roomId, io.score[roomId]);
-      const response = await addGameHistoryToHost(
+      await addGameHistoryToHost(
         gameRoom.founder.id,
         gameRoom._id,
         gameRoom.name,
