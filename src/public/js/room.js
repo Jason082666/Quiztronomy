@@ -2,15 +2,34 @@
 const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
-const roomId = localStorage.getItem("roomId");
+const url = window.location.href;
+const regex = /\/(\d+)$/;
+const match = url.match(regex);
+const roomId = match[1];
 const gameName = localStorage.getItem("gameName");
 $(window).on("load", function () {
   setTimeout(() => {
     $(".block").hide();
-    $("#fetch-ai-loading").hide();
+    $("#entering").hide();
     $("#controller").show();
   }, 1500);
 });
+const isDisconnectUser = await axios.get(
+  `/api/1.0/game/disconnect?roomId=${roomId}`
+);
+if (isDisconnectUser.data.data === "disconnection") {
+  $(".block").show();
+  $("#reconnect").show;
+}
+$(window).on("beforeunload", function () {
+  if (!socket.host) {
+    socket.emit("playerLeave", { userName, roomId, userId });
+  }
+});
+$(".cancel-reconnecting").on("click", () => {
+  window.location.href = "/";
+});
+
 const timeIdArray = [];
 Highcharts.setOptions({
   colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
@@ -129,20 +148,19 @@ socket.on("userLeft", (users) => {
   });
 });
 
+socket.on("wattingForConnect", () => {
+  $("#reconnect").show();
+});
+
 $(".host-container").on("click", "#start-game-btn", () => {
   if ($("#player-list").children().length == 0) {
     //TODO: 這裡要放顯示"等待其他玩家加入的字樣"
     return;
   }
-  // FIXME:
-  console.log($("#player-list").children());
-  console.log("startGame");
   socket.emit("startGame");
 });
 
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
-  // FIXME:
-  console.log("firstQuizz", length, rankResult );
   localStorage.setItem("quizzDetail", JSON.stringify(firstQuizz));
   let intervalId;
   socket.score = 0;
@@ -411,7 +429,7 @@ const renderHostQuizzPage = (quizzObj, rankResult) => {
   sortPlayers(rankResult);
 };
 
-$(".cancel-fetch-ai").on("click", () => {
+$(".entering").on("click", () => {
   window.location.href = "/";
 });
 function trueFalseOnClick(quizzObj, $element) {

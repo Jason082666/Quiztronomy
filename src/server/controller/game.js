@@ -7,6 +7,7 @@ import {
   saveQuizzIntoRoom,
   startRoom,
   checkRoomStatus,
+  checkDisconnectList,
 } from "../models/game.js";
 
 import errors from "../models/errorhandler.js";
@@ -21,7 +22,13 @@ export const createGameRoom = async (req, res, next) => {
   const data = await createRoom(userId, name, gameRoomName);
   res.json({ data });
 };
-
+export const checkDisconnection = async (req, res) => {
+  const { userId } = req.session.user;
+  const { roomId } = req.query;
+  const result = await checkDisconnectList(roomId, userId);
+  if (!result) return res.json({ data: "newPlayer" });
+  return res.json({ data: "disconnection" });
+};
 // TODO: 這個前面要身分驗證
 export const saveQuizzIntoGameRoom = async (req, res, next) => {
   const { array, roomId, founderId } = req.body;

@@ -46,6 +46,22 @@ export const createRoomOnRedis = async function (roomId, hostId, hostName) {
   );
   return true;
 };
+export const playerDisconnect = async function (roomId, userId, name) {
+  if (redisClient.status === "reconnecting") {
+    return false;
+  }
+  const result = await redisClient.hset(`${roomId}-disconnect`, userId, name);
+  return result;
+};
+
+export const checkDisconnectList = async function (roomId, userId) {
+  const exists = await redisClient.hexists(`${roomId}-disconnect`, userId);
+  if (!exists) return false;
+  // 代表這個玩家是新的玩家，第一次來
+  await redisClient.hdel(`${roomId}-disconnect`, userId);
+  return true;
+  // 代表這是段線的玩家重新連線
+};
 
 export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
   if (array.length > 40) return undefined;

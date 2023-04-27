@@ -719,6 +719,9 @@ h2 {
     background: #85a2b6;
   }
 }
+#reconnect {
+  display: none;
+}
 .ldio-7tmnvxp6os div {
   position: absolute;
   width: 40px;
@@ -801,7 +804,8 @@ h2 {
   color: white;
   font-family: "KiriFontNormal";
 }
-.cancel-fetch-ai {
+.entering,
+.cancel-reconnecting {
   border: none;
   padding: 5px;
   font-weight: bold;

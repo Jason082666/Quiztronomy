@@ -15,12 +15,15 @@ import {
   // getCurrentQuizz,
   startGameRoom,
   createGameRoomOnRedis,
+  checkDisconnection,
 } from "../controller/game.js";
 
 // router.route("/game/currentquizz").get(catchError(getCurrentQuizz));
 router
   .route("/game/create")
   .post(catchError(authetication), catchError(createGameRoom));
+
+router.route("/game/disconnect").get(catchError(checkDisconnection));
 // router
 //   .route("/game/enter")
 //   .post(catchError(autheticationForPlaying), catchError(enterGameRoom));

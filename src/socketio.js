@@ -5,6 +5,7 @@ import {
   startRoom,
   getCurrentQuizzFromMongo,
   getCurrentQuizzFromRedis,
+  playerDisconnect,
 } from "./server/models/game.js";
 import { redisClient } from "./server/models/redis.js";
 import { gameHostValidation } from "./server/models/user.js";
@@ -26,7 +27,6 @@ export const socketio = async function (server) {
       if (validationUser) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
-        // 檢查io是否有host,score,data(是否現在線上都不存在房間)
         if (!io.host) io.host = {};
         io.host[roomId] = { userId, userName, roomId };
         if (!io.gameName) io.gameName = {};
@@ -49,12 +49,12 @@ export const socketio = async function (server) {
         });
         socket.userId = userId;
         const user = { userId, userName };
-        // TODO:
-        console.log("ee", io.users);
         io.users[roomId].push(user);
-        console.log("ff", io.users[roomId]);
         io.to(roomId).emit("userJoined", [io.host[roomId], io.users[roomId]]);
       }
+    });
+    socket.on("playerLeave", async ({ userName, roomId, userId }) => {
+      await playerDisconnect(roomId, userId, userName);
     });
     socket.on("disconnect", async () => {
       console.log("A user disconnected");
@@ -63,6 +63,7 @@ export const socketio = async function (server) {
         await deleteKey(`${roomId}-room`);
         await deleteKey(`${roomId} -score`);
         await deleteKey(`${roomId}`);
+        await deleteKey(`${roomId}-disconnect`);
         await terminateRoom(roomId);
         delete io.host[roomId];
         delete io.users[roomId];
@@ -77,24 +78,15 @@ export const socketio = async function (server) {
         io.users[roomId] = io.users[roomId].filter(
           (user) => user.userId !== socket.userId
         );
-        // TODO:
-        console.log("aa", io.users);
-        console.log("bb", io.users[roomId]);
         if (!io.users[roomId]) {
           io.users[roomId] = [];
         }
-        console.log("cc", io.users);
-        console.log("dd", io.users[roomId]);
-
         await leaveRoom(roomId, socket.userId);
         io.to(roomId).emit("userLeft", io.users[roomId]);
       }
     });
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
-      // FIXME:
-      console.log("roomId", roomId);
-      console.log("roomId", hostId);
       const { firstQuizz, length } = await startRoom(roomId, hostId);
       console.log("first quiz", firstQuizz);
       console.log("length", length);
