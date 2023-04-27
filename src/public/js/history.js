@@ -9,8 +9,19 @@ const data = result.data;
 const dataArray = data.data;
 const barChartDataArray = dataArray.map((data, index) => {
   const date = new Date(data.date);
-  const taiwanDate = new Date(date.getTime());
-  const time = taiwanDate.toLocaleString();
+  const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+  const targetTime = date.getTime() + timezoneOffset + 8 * 60 * 60 * 1000;
+  const targetDate = new Date(targetTime);
+  const year = targetDate.getFullYear();
+  const month = ("0" + (targetDate.getMonth() + 1)).slice(-2);
+  const day = ("0" + targetDate.getDate()).slice(-2);
+  const hour = ("0" + targetDate.getHours()).slice(-2);
+  const minute = ("0" + targetDate.getMinutes()).slice(-2);
+  const second = ("0" + targetDate.getSeconds()).slice(-2);
+  const ampm = hour >= 12 ? "pm" : "am";
+  const time = `${year}-${month}-${day} ${
+    hour % 12
+  }:${minute}:${second}${ampm}`;
   return { x: index, y: +data.score, date: time };
 });
 const canvas = $("#canvas")[0];
@@ -118,7 +129,20 @@ const renderHostQuiz = (data) => {
   let historyDataHosthtml = "";
   dataArray.forEach((data) => {
     const date = new Date(data.date);
-    const taiwanDate = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+    const targetTime = date.getTime() + timezoneOffset + 8 * 60 * 60 * 1000;
+    const targetDate = new Date(targetTime);
+    const year = targetDate.getFullYear();
+    const month = ("0" + (targetDate.getMonth() + 1)).slice(-2);
+    const day = ("0" + targetDate.getDate()).slice(-2);
+    const hour = ("0" + targetDate.getHours()).slice(-2);
+    const minute = ("0" + targetDate.getMinutes()).slice(-2);
+    const second = ("0" + targetDate.getSeconds()).slice(-2);
+    const ampm = hour >= 12 ? "pm" : "am";
+    const formattedDate = `${year}-${month}-${day} ${
+      hour % 12
+    }:${minute}:${second}${ampm}`;
+
     historyDataHosthtml += `<div class="col">
   <div class="card shadow-sm">
     <svg
@@ -150,7 +174,7 @@ const renderHostQuiz = (data) => {
             View
           </button>
         </div>
-        <small class="text-muted">${taiwanDate.toLocaleString()}</small>
+        <small class="text-muted">${formattedDate}</small>
       </div>
     </div>
   </div>

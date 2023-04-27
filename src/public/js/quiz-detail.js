@@ -268,7 +268,7 @@ function generateChart(index) {
 
     plotOptions: {
       column: {
-        pointWidth: 80,
+        pointWidth: 60,
       },
       series: {
         depth: 25,  

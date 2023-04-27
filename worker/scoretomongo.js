@@ -49,6 +49,7 @@ const funct = async () => {
             );
           }
           result.push({ id, name, score });
+          console.log("result", result);
         }
         gameRoom.score = result;
         const gameRoomData = await gameRoom.save();
