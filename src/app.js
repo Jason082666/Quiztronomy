@@ -52,11 +52,12 @@ app.get("/game/room/:roomId", async (req, res, next) => {
   if (!req.session.user) {
     return next();
   }
-  const { userId } = req.session.user;
+  const { userId, name } = req.session.user;
   const enter = await enterRoom(roomId, userId);
   if (!enter) {
     return next();
   }
+  await redisClient.hset(`${roomId}-room`, userId, name);
   return res.sendFile(
     path.join(__dirname, ".", "public", "html", "game", "room.html")
   );

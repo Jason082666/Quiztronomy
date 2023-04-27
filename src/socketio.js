@@ -51,8 +51,8 @@ export const socketio = async function (server) {
         const user = { userId, userName };
         // TODO:
         console.log("ee", io.users);
-        console.log("ff", io.users[roomId]);
         io.users[roomId].push(user);
+        console.log("ff", io.users[roomId]);
         io.to(roomId).emit("userJoined", [io.host[roomId], io.users[roomId]]);
       }
     });
@@ -92,7 +92,12 @@ export const socketio = async function (server) {
     });
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
+      // FIXME:
+      console.log("roomId", roomId);
+      console.log("roomId", hostId);
       const { firstQuizz, length } = await startRoom(roomId, hostId);
+      console.log("first quiz", firstQuizz);
+      console.log("length", length);
       if (!firstQuizz || !length) return;
       firstQuizz.num = 1;
       const rankResult = await showRank(roomId, Infinity);

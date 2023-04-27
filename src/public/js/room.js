@@ -134,10 +134,15 @@ $(".host-container").on("click", "#start-game-btn", () => {
     //TODO: 這裡要放顯示"等待其他玩家加入的字樣"
     return;
   }
+  // FIXME:
+  console.log($("#player-list").children());
+  console.log("startGame");
   socket.emit("startGame");
 });
 
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
+  // FIXME:
+  console.log("firstQuizz", length, rankResult );
   localStorage.setItem("quizzDetail", JSON.stringify(firstQuizz));
   let intervalId;
   socket.score = 0;
