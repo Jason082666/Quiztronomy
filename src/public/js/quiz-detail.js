@@ -214,7 +214,7 @@ function generateChart(index) {
     chart: {
       type: "column",
       width: 400,
-      backgroundColor: "red",
+      backgroundColor: "transparent",
     },
     credits: {
       enabled: false,
@@ -227,6 +227,10 @@ function generateChart(index) {
     },
     title: {
       text: "Answer Analysis",
+      style: {
+        color: "white",
+        fontSize: "32px",
+      },
     },
     xAxis: {
       categories: Object.keys(charArray),
@@ -234,6 +238,10 @@ function generateChart(index) {
       title: {
         text: "Options",
         margin: 20,
+        style: {
+          color: "white",
+          fontSize: "20px",
+        },
       },
     },
     yAxis: {
@@ -242,6 +250,10 @@ function generateChart(index) {
       title: {
         text: "Number of people choosed",
         margin: 40,
+        style: {
+          color: "white",
+          fontSize: "20px",
+        },
       },
     },
     tooltip: {
@@ -253,10 +265,13 @@ function generateChart(index) {
       backgroundColor: "rgba(0, 0, 0, 0.7)",
       borderWidth: 0,
     },
+
     plotOptions: {
+      column: {
+        pointWidth: 80,
+      },
       series: {
-        depth: 25,
-        colorByPoint: true,
+        depth: 25,  
       },
     },
     series: [
