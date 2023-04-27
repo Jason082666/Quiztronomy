@@ -7,9 +7,10 @@ import {
 } from "../middleware/authentication.js";
 import {
   createGameRoom,
-  enterGameRoom,
+  // enterGameRoom,
   // leaveGameRoom,
   terminateGameRoom,
+  checkRoomAvailability,
   saveQuizzIntoGameRoom,
   // getCurrentQuizz,
   startGameRoom,
@@ -20,9 +21,12 @@ import {
 router
   .route("/game/create")
   .post(catchError(authetication), catchError(createGameRoom));
+// router
+//   .route("/game/enter")
+//   .post(catchError(autheticationForPlaying), catchError(enterGameRoom));
 router
-  .route("/game/enter")
-  .post(catchError(autheticationForPlaying), catchError(enterGameRoom));
+  .route("/game/search")
+  .post(catchError(autheticationForPlaying), catchError(checkRoomAvailability));
 // router
 //   .route("/game/leave")
 //   .post(catchError(authetication), catchError(leaveGameRoom));

@@ -590,6 +590,9 @@ $("body").on("click", ".room-ready-btn", async () => {
   await axios.post("/api/1.0/question/update", deletePopObj);
   localStorage.removeItem("searcheId");
   localStorage.removeItem("quizzes");
+
+
+  // TODO: 這邊要做先把HOSTE加入到房間
   window.location.href = `/game/room/${roomId}`;
 });
 

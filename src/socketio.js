@@ -6,6 +6,7 @@ import {
   getCurrentQuizzFromMongo,
   getCurrentQuizzFromRedis,
 } from "./server/models/game.js";
+import { redisClient } from "./server/models/redis.js";
 import { gameHostValidation } from "./server/models/user.js";
 import { showRank, addToQuequeAndUpdateMongo } from "./server/models/score.js";
 import {
@@ -16,7 +17,7 @@ import { deleteKey } from "./server/models/redis.js";
 export const socketio = async function (server) {
   const io = new Server(server);
   io.on("connection", (socket) => {
-    // console.log("A user connected");
+    console.log("A user connected");
     socket.on("join", async (object) => {
       const { userId, userName, roomId, gameName } = object;
       const validationUser = await gameHostValidation(userId, userName, roomId);
@@ -48,12 +49,15 @@ export const socketio = async function (server) {
         });
         socket.userId = userId;
         const user = { userId, userName };
+        // TODO:
+        console.log("ee", io.users);
+        console.log("ff", io.users[roomId]);
         io.users[roomId].push(user);
         io.to(roomId).emit("userJoined", [io.host[roomId], io.users[roomId]]);
       }
     });
     socket.on("disconnect", async () => {
-      // console.log("A user disconnected");
+      console.log("A user disconnected");
       const roomId = socket.roomId;
       if (socket.hostId) {
         await deleteKey(`${roomId}-room`);
@@ -73,6 +77,15 @@ export const socketio = async function (server) {
         io.users[roomId] = io.users[roomId].filter(
           (user) => user.userId !== socket.userId
         );
+        // TODO:
+        console.log("aa", io.users);
+        console.log("bb", io.users[roomId]);
+        if (!io.users[roomId]) {
+          io.users[roomId] = [];
+        }
+        console.log("cc", io.users);
+        console.log("dd", io.users[roomId]);
+
         await leaveRoom(roomId, socket.userId);
         io.to(roomId).emit("userLeft", io.users[roomId]);
       }
@@ -132,6 +145,7 @@ export const socketio = async function (server) {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
       const gameRoom = await addGameHistory(roomId, io.score[roomId]);
+      await redisClient.del(`${roomId}-room`);
       await addGameHistoryToHost(
         gameRoom.founder.id,
         gameRoom._id,

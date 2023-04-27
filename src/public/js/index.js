@@ -319,7 +319,11 @@ $("#create").on("click", async (e) => {
 $("#join").on("click", async (e) => {
   e.preventDefault();
   const roomId = $("#roomId").val();
-  const enterResult = await axios.post("/api/1.0/game/enter", { roomId });
+  const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+  if (enterResult.data.error) {
+    return;
+    // TODO: 這邊要有前端錯誤提示，提示加入房間失敗
+  }
   const { data } = enterResult.data;
   localStorage.setItem("userName", data.userName);
   localStorage.setItem("userId", data.userId);
@@ -332,7 +336,11 @@ $(".enter-btn").on("click", async () => {
   const name = $("#user-name").val();
   const result = await axios.post("/api/1.0/visitor/login", { name });
   if (result.error) return;
-  const enterResult = await axios.post("/api/1.0/game/enter", { roomId });
+  const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+  if (enterResult.data.error) {
+    return;
+    // TODO: 這邊要有前端錯誤提示，提示加入房間失敗
+  }
   const { data } = enterResult.data;
   localStorage.setItem("userName", data.userName);
   localStorage.setItem("userId", data.userId);

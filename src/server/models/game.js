@@ -35,7 +35,15 @@ export const createRoomOnRedis = async function (roomId, hostId, hostName) {
   const obj = {};
   obj[hostId] = hostName;
   const hostObj = JSON.stringify(obj);
-  await redisClient.hset(`${roomId}-room`, "host", hostObj);
+  await redisClient.hset(
+    `${roomId}-room`,
+    "host",
+    hostObj,
+    "status",
+    "prepared",
+    hostId,
+    "true"
+  );
   return true;
 };
 
@@ -59,15 +67,29 @@ export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
   return true;
 };
 
-export const enterRoom = async function (roomId, id, name) {
+export const checkRoomStatus = async function (roomId, id, name) {
   if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
   if (result == 0) return null;
-  await redisClient.hlen(`${roomId}-room`);
-  const hostId = await redisClient.hget(`${roomId}-room`, "host");
-  if (hostId === id) return undefined;
-  const respond = await redisClient.hset(`${roomId}-room`, id, name);
-  if (respond == 0) return undefined;
+  const status = await redisClient.hget(`${roomId}-room`, "status");
+  if (status === "prepared") {
+    const hostId = await redisClient.hget(`${roomId}-room`, "host");
+    if (hostId === id) return undefined;
+    const respond = await redisClient.hset(`${roomId}-room`, id, name);
+    if (respond == 0) return undefined;
+    return true;
+  }
+  return false;
+};
+
+export const enterRoom = async function (roomId, id) {
+  if (redisClient.status === "reconnecting") return null;
+  const result = await redisClient.exists(`${roomId}-room`);
+  if (result == 0) return null;
+  const checkExist = await redisClient.hget(`${roomId}-room`, id);
+  if (checkExist == 0) {
+    return undefined;
+  }
   return true;
 };
 
@@ -107,8 +129,11 @@ export const startRoom = async function (roomId, founderId) {
   if (redisClient.status === "reconnecting") {
     return {};
   }
+  await redisClient.hdel(`${roomId}-room`, founderId);
+  await redisClient.hdel(`${roomId}-room`, "status");
   const players = await redisClient.hgetall(`${roomId}-room`);
   delete players.host;
+  delete players.status;
   if (Object.keys(players).length == 0) return {};
   gameRoom.players = players;
   await gameRoom.save();
@@ -119,7 +144,6 @@ export const startRoom = async function (roomId, founderId) {
     const playerData = JSON.stringify(playerObj);
     await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
   }
-  await redisClient.del(`${roomId}-room`);
   const firstQuizz = await redisClient.lindex(roomId, 0);
   const parseFirstQuizz = JSON.parse(firstQuizz);
   return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };

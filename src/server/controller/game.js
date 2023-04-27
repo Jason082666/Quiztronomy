@@ -1,11 +1,12 @@
 import {
   createRoom,
-  enterRoom,
+  // enterRoom,
   // leaveRoom,
   createRoomOnRedis,
   terminateRoom,
   saveQuizzIntoRoom,
   startRoom,
+  checkRoomStatus,
 } from "../models/game.js";
 
 import errors from "../models/errorhandler.js";
@@ -13,9 +14,6 @@ import errors from "../models/errorhandler.js";
 export const createGameRoom = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { gameRoomName } = req.body;
-  console.log("userid", userId);
-  console.log("name", name);
-  console.log("gameroomname", gameRoomName);
   if (!userId || !name || !gameRoomName)
     return next(
       new errors.ParameterError(["userId", "name", "gameRoomName"], 400)
@@ -27,7 +25,6 @@ export const createGameRoom = async (req, res, next) => {
 // TODO: 這個前面要身分驗證
 export const saveQuizzIntoGameRoom = async (req, res, next) => {
   const { array, roomId, founderId } = req.body;
-  console.log(array, roomId, founderId);
   if (!array || !roomId || !founderId)
     return next(
       new errors.ParameterError(["Array", "roomId", "founderId"], 400)
@@ -50,8 +47,7 @@ export const saveQuizzIntoGameRoom = async (req, res, next) => {
     );
   return res.json({ message: "saved" });
 };
-
-export const enterGameRoom = async (req, res, next) => {
+export const checkRoomAvailability = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { roomId } = req.body;
   if (!roomId || !userId || !name)
@@ -67,18 +63,45 @@ export const enterGameRoom = async (req, res, next) => {
         400
       )
     );
-  const result = await enterRoom(roomId, userId, name);
-  if (result === null)
+  const result = await checkRoomStatus(roomId, userId, name);
+  if (!result) {
     return next(
       new errors.CustomError(
         `Room ${roomId} is not existed or the game has started`,
         400
       )
     );
-  if (!result)
-    return next(new errors.CustomError(`You are already in the room`, 400));
+  }
   return res.json({ data: { userId, userName: name } });
 };
+// export const enterGameRoom = async (req, res, next) => {
+//   const { userId, name } = req.session.user;
+//   const { roomId } = req.body;
+//   if (!roomId || !userId || !name)
+//     return next(new errors.ParameterError(["userId", "roomId", "name"], 400));
+//   if (
+//     typeof roomId !== "string" ||
+//     typeof userId !== "string" ||
+//     typeof name !== "string"
+//   )
+//     return next(
+//       new errors.TypeError(
+//         { roomId: "string", userId: "string", name: "string" },
+//         400
+//       )
+//     );
+//   const result = await enterRoom(roomId, userId, name);
+//   if (result === null)
+//     return next(
+//       new errors.CustomError(
+//         `Room ${roomId} is not existed or the game has started`,
+//         400
+//       )
+//     );
+//   if (!result)
+//     return next(new errors.CustomError(`You are already in the room`, 400));
+//   return res.json({ data: { userId, userName: name } });
+// };
 
 // //TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 // export const leaveGameRoom = async (req, res, next) => {
