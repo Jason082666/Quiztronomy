@@ -36,7 +36,7 @@ const funct = async () => {
           const id = Object.keys(playerInfo)[0];
           const name = Object.values(playerInfo)[0];
           const score = rank[i + 1];
-          const ranking = i + 1;
+          const ranking = i / 2 + 1;
           if (id.length !== 36) {
             await addGameHistoryToPlayer(
               id,

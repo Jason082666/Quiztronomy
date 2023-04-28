@@ -34,12 +34,13 @@ export const socketio = async function (server) {
         if (!io.users) io.users = {};
         io.users[roomId] = [];
         if (!io.score) io.score = {};
-        if (!io.score) io.score = {};
         io.score[roomId] = [];
         if (!io.data) io.data = {};
         io.data[roomId] = [];
         if (!io.quizNum) io.quizNum = {};
         io.quizNum[roomId] = 1;
+        if (!io.quizLength) io.quizLength = {};
+        io.quizLength[roomId] = "";
         socket.emit("welcomeMessage");
       } else {
         const welcomeString = `Welcome to the game room, ${userName} !`;
@@ -48,14 +49,16 @@ export const socketio = async function (server) {
           gameName: io.gameName[roomId],
         });
         socket.userId = userId;
+        socket.userName = userName;
         const user = { userId, userName };
         io.users[roomId].push(user);
         io.to(roomId).emit("userJoined", [io.host[roomId], io.users[roomId]]);
       }
     });
-    socket.on("playerLeave", async ({ userName, roomId, userId }) => {
-      await playerDisconnect(roomId, userId, userName);
-    });
+    // socket.on("playerLeave", async ({ userName, roomId, userId }) => {
+    //   console.log(12345);
+    //   await playerDisconnect(roomId, userId, userName);
+    // });
     socket.on("disconnect", async () => {
       console.log("A user disconnected");
       const roomId = socket.roomId;
@@ -71,6 +74,7 @@ export const socketio = async function (server) {
         delete io.data[roomId];
         delete io.quizNum[roomId];
         delete io.gameName[roomId];
+        delete io.quizLength[roomId];
         io.to(roomId).emit("hostLeave");
         return;
       }
@@ -82,15 +86,15 @@ export const socketio = async function (server) {
           io.users[roomId] = [];
         }
         await leaveRoom(roomId, socket.userId);
+        await playerDisconnect(roomId, socket.userId, socket.userName);
         io.to(roomId).emit("userLeft", io.users[roomId]);
       }
     });
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
-      console.log("first quiz", firstQuizz);
-      console.log("length", length);
       if (!firstQuizz || !length) return;
+      io.quizLength[roomId] = length;
       firstQuizz.num = 1;
       const rankResult = await showRank(roomId, Infinity);
       io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length, rankResult });
@@ -99,12 +103,23 @@ export const socketio = async function (server) {
     socket.on("nextQuiz", async (quizNum) => {
       const { roomId } = socket;
       io.quizNum[roomId] += 1;
+      const rankResult = await showRank(roomId, Infinity);
       const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
       if (quiz) {
-        io.to(roomId).emit("showQuiz", quiz);
+        io.to(roomId).emit("showQuiz", {
+          quiz,
+          quizNum,
+          quizLength: io.quizLength[roomId],
+          rankResult,
+        });
       } else {
         const quiz = await getCurrentQuizzFromMongo(roomId, quizNum);
-        io.to(roomId).emit("showQuiz", quiz);
+        io.to(roomId).emit("showQuiz", {
+          quiz,
+          quizNum,
+          quizLength: io.quizLength[roomId],
+          rankResult,
+        });
       }
     });
 

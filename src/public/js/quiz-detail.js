@@ -79,6 +79,9 @@ $(".player1-name").text(rankArray[0].name);
 $(".player1-score").text(rankArray[0].score);
 if (!isHost) {
   quizArrray.forEach((quiz, index) => {
+    const chooseHistory = historyArray[index][userId]
+      ? historyArray[index][userId].join(" ")
+      : "";
     if (["MC-EN", "MC-CH", "MCS-EN", "MCS-CH"].includes(quiz.type)) {
       container += `<div class="quiz-big-container">
       <div class="quiz-container">
@@ -92,9 +95,7 @@ if (!isHost) {
         </div>
         <div class="correct-answer">Answer:  ${quiz.answer.join(" ")}</div>
         <div class="explaination">Explain:   ${quiz.explain}</div>
-        <div class="your-answer">What you choose:   ${historyArray[index][
-          userId
-        ].join(" ")}</div>
+        <div class="your-answer">What you choose:   ${chooseHistory}</div>
         
       </div><div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
@@ -106,9 +107,7 @@ if (!isHost) {
         <div class="quiz-text">${quiz.question}</div>
         <div class="correct-answer">Answer:  ${quiz.answer[0]}</div>
         <div class="explaination">Explain:   ${quiz.explain}</div>
-        <div class="your-answer">What you choose:   ${historyArray[index][
-          userId
-        ].join(" ")}</div>
+        <div class="your-answer">What you choose:   ${chooseHistory}</div>
       
       </div>  <div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
@@ -271,7 +270,7 @@ function generateChart(index) {
         pointWidth: 60,
       },
       series: {
-        depth: 25,  
+        depth: 25,
       },
     },
     series: [

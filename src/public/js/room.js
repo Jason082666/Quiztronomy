@@ -7,25 +7,32 @@ const regex = /\/(\d+)$/;
 const match = url.match(regex);
 const roomId = match[1];
 const gameName = localStorage.getItem("gameName");
+const quizTypeTransform = {
+  "MC-EN": "MULTIPLE CHOICE",
+  "MC-CH": "MULTIPLE CHOICE",
+  "TF-EN": "TRUE OR FALSE",
+  "TF-CH": "TRUE OR FALSE",
+  "MCS-EN": "MULTIPLE CHOICE",
+  "MCS-CH": "MULTIPLE CHOICE",
+};
 $(window).on("load", function () {
-  setTimeout(() => {
+  setTimeout(async () => {
     $(".block").hide();
     $("#entering").hide();
     $("#controller").show();
+    const isDisconnectUser = await axios.get(
+      `/api/1.0/game/disconnect?roomId=${roomId}`
+    );
+    if (isDisconnectUser.data.data == "disconnection") {
+      $(".block").show();
+      $("#reconnect").show();
+      socket.disconnect = true;
+    }
   }, 1500);
 });
-const isDisconnectUser = await axios.get(
-  `/api/1.0/game/disconnect?roomId=${roomId}`
-);
-if (isDisconnectUser.data.data === "disconnection") {
-  $(".block").show();
-  $("#reconnect").show;
-}
-$(window).on("beforeunload", function () {
-  if (!socket.host) {
-    socket.emit("playerLeave", { userName, roomId, userId });
-  }
-});
+
+socket.emit("join", { userName, userId, roomId, gameName });
+
 $(".cancel-reconnecting").on("click", () => {
   window.location.href = "/";
 });
@@ -111,8 +118,6 @@ function animate() {
 init();
 animate();
 
-// Join chatroom
-socket.emit("join", { userName, userId, roomId, gameName });
 socket.on("message", ({ welcomeString, gameName }) => {
   $("h2").text(welcomeString);
   $("h1").text(gameName);
@@ -161,6 +166,11 @@ $(".host-container").on("click", "#start-game-btn", () => {
 });
 
 socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
+  if (socket.disconnect) {
+    $(".block").hide();
+    $("#reconnect").hide();
+    socket.disconnect = false;
+  }
   localStorage.setItem("quizzDetail", JSON.stringify(firstQuizz));
   let intervalId;
   socket.score = 0;
@@ -182,26 +192,72 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
       } else {
         renderHostQuizzPage(firstQuizz, rankResult);
       }
-      socket.quiz = 2;
-      // 進到第二題
+      if (socket.host) socket.quiz = 2;
     }
   }, 1000);
 });
 
-socket.on("showQuiz", (quiz) => {
+socket.on("showQuiz", ({ quiz, quizNum, quizLength, rankResult }) => {
+  if (socket.disconnect) {
+    socket.score = 0;
+    socket.fullScore = quizLength * 500;
+    $(".container").html(`<div id="quiz-container">
+  <div id="left-bar">
+    <h2 id="quiz-intro"></h2>
+    <div id="quiz-type"></div>
+    <div id="player-score">0</div>
+    <div id="score-chart"><div id="score-bar"></div></div>
+  </div>
+  <div id="quiz">
+  </div>
+  <div id="scoreboard">
+    <h2>Scoreboard</h2>
+    <div id="sort-container"></div>
+  </div>
+</div>`);
+    $(".block").hide();
+    $("#reconnect").hide();
+    sortPlayers(rankResult);
+    socket.disconnect = false;
+  }
   localStorage.setItem("quizzDetail", JSON.stringify(quiz));
   if (quiz.lastquizz) socket.lastquizz = true;
   quizShow(quiz);
   $("#show-answer").show();
-  $("#quiz-intro").text(`Question${socket.quiz}`);
-  socket.quiz += 1;
+  $("#quiz-intro").text(`Question${quizNum}`);
+  $("#quiz-type").text(quizTypeTransform[quiz.type]);
+  if (socket.host) socket.quiz += 1;
 });
 
 socket.on("showFinalScore", (rank) => {
+  if (socket.disconnect) {
+    $(".container").empty();
+    $(".container").html(`<div id="quiz-container">
+  <div id="left-bar">
+    <h2 id="quiz-intro"></h2>
+    <div id="quiz-type"></div>
+    <div id="player-score">0</div>
+    <div id="score-chart"><div id="score-bar"></div></div>
+  </div>
+  <div id="quiz">
+  </div>
+  <div id="scoreboard">
+    <h2>Scoreboard</h2>
+    <div id="sort-container"></div>
+  </div>
+</div>`);
+    $(".block").hide();
+    $("#reconnect").hide();
+    socket.disconnect = false;
+  }
   showRank(rank);
 });
 
 socket.on("hostLeave", () => {
+  if (socket.disconnection) {
+    $(".block").hide();
+    $("#reconnect").hide();
+  }
   if (!socket.host) {
     $("#host-leave-room-popup").show();
   }
@@ -440,9 +496,13 @@ function trueFalseOnClick(quizzObj, $element) {
       $(this).addClass("correct-answer");
       $(".t-f").addClass("tf-no-hover");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
-      await axios.post("/api/1.0/score/add", { roomId, score });
+      const result = await axios.post("/api/1.0/score/add", {
+        roomId,
+        score,
+      });
+      const addScore = +result.data.score;
       const initvalue = socket.score;
-      socket.score += score;
+      socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
       socket.emit("getAnswer", {
@@ -453,12 +513,13 @@ function trueFalseOnClick(quizzObj, $element) {
     } else {
       $(this).addClass("wrong-answer");
       $(".t-f").addClass("tf-no-hover");
-      await axios.post("/api/1.0/score/add", {
+      const result = await axios.post("/api/1.0/score/add", {
         roomId,
         score: 100,
       });
+      const addScore = +result.data.score;
       const initvalue = socket.score;
-      socket.score += 100;
+      socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
       socket.emit("getAnswer", {
@@ -480,7 +541,6 @@ function multipleChoicesOnclick(quizzObj, $element) {
     let rightoptions = 0;
     let finalScore = 100;
     $("input[type='checkbox']").each(async function () {
-      // FIXME: 這邊的ui要再想想
       if (
         $(this).attr("data-state") === "right" &&
         $(this).next().hasClass("mcs-checked")
@@ -506,9 +566,13 @@ function multipleChoicesOnclick(quizzObj, $element) {
     const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
     if (rightoptions > 0)
       finalScore = Math.floor((rightoptions / 4) * 1.2 * score);
-    await axios.post("/api/1.0/score/add", { roomId, score: finalScore });
+    const result = await axios.post("/api/1.0/score/add", {
+      roomId,
+      score: finalScore,
+    });
+    const addScore = +result.data.score;
     const initvalue = socket.score;
-    socket.score += finalScore;
+    socket.score = addScore;
     animateScore($("#player-score"), initvalue, socket.score, 1000);
     changeSideBar(socket.score);
     const optionArray = [];
@@ -533,9 +597,10 @@ function multipleChoiceOnclick(quizzObj, $element) {
     if ($selectedInput.attr("data-state") === "right") {
       $('input[data-state="right"]').next().addClass("correct-answer");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
-      await axios.post("/api/1.0/score/add", { roomId, score });
+      const result = await axios.post("/api/1.0/score/add", { roomId, score });
+      const addScore = +result.data.score;
       const initvalue = socket.score;
-      socket.score += score;
+      socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
       socket.emit("getAnswer", {
@@ -545,12 +610,13 @@ function multipleChoiceOnclick(quizzObj, $element) {
       });
     } else {
       $selectedInput.next().addClass("wrong-answer");
-      await axios.post("/api/1.0/score/add", {
+      const result = await axios.post("/api/1.0/score/add", {
         roomId,
         score: 100,
       });
       const initvalue = socket.score;
-      socket.score += 100;
+      const addScore = +result.data.score;
+      socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
       socket.emit("getAnswer", {
