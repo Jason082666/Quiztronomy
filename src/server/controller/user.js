@@ -1,12 +1,13 @@
 import { createUser, validationUser } from "../models/user.js";
 import errors from "../models/errorhandler.js";
 import { v4 as uuidv4 } from "uuid";
-
-export const userLogin = async (req, res) => {
+import { validationResult } from "express-validator";
+export const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
   const pass = await validationUser(email, password);
-  if (pass === undefined) return new errors.CustomError("Email not found", 403);
-  if (!pass) return new errors.CustomError("Validation fail", 403);
+  if (pass === undefined)
+    return next(new errors.CustomError("Email not found", 403));
+  if (!pass) return next(new errors.CustomError("Validation fail", 403));
   const normObject = pass.toObject();
   const userId = normObject._id;
   const name = normObject.name;
@@ -23,8 +24,19 @@ export const visiterLogin = async (req, res) => {
   return res.json({ data: user });
 };
 
-export const userSignup = async (req, res) => {
+export const userSignup = async (req, res, next) => {
   const { name, email, password } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const array = errors.errors;
+    let warning = "";
+    array.forEach((element) => {
+      warning += ` ${element.msg}`;
+    });
+    const err = new Error(warning);
+    err.statusCode = 400;
+    return next(err);
+  }
   try {
     const data = await createUser(name, email, password);
     const normObj = data.toObject();
@@ -34,7 +46,7 @@ export const userSignup = async (req, res) => {
     req.session.user = user;
     return res.json({ data });
   } catch (e) {
-    return new errors.CustomError("Sign up fail", 500);
+    return next(new errors.CustomError("Sign up fail", 500));
   }
 };
 

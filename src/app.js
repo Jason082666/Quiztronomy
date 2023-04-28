@@ -24,10 +24,12 @@ app.use("/img", express.static(path.join(__dirname, ".", "public", "static")));
 app.use(
   session({
     store: redisStore,
-    resave: false, // required: force lightweight session keep alive (touch)
+    resave: true, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
     secret: process.env.SESSION_SECRET,
+    httpOnly: true,
     cookie: { maxAge: 3600000, sameSite: "strict" },
+    rolling: true,
   })
 );
 
