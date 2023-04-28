@@ -15,7 +15,7 @@ export const createRoom = async function (id, name, gameRoomName) {
   let roomId;
   do {
     roomId = Math.floor(Math.random() * 100000000).toString();
-  } while (await gameRoomExistence(roomId));
+  } while (roomId.length !== 8 || (await gameRoomExistence(roomId)));
   const game = new MyGameRoom({
     id: roomId,
     name: gameRoomName,
