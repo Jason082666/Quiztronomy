@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { createAdapter } from "@socket.io/redis-adapter";
 import {
   terminateRoom,
   leaveRoom,
@@ -15,8 +16,16 @@ import {
   addGameHistoryToHost,
 } from "./server/models/historydata.js";
 import { deleteKey } from "./server/models/redis.js";
+
 export const socketio = async function (server) {
   const io = new Server(server);
+  const pubClient = redisClient;
+  const subClient = pubClient.duplicate();
+
+  Promise.all([pubClient, subClient]).then(() => {
+    io.adapter(createAdapter(pubClient, subClient));
+  });
+
   io.on("connection", (socket) => {
     console.log("A user connected");
     socket.on("join", async (object) => {
