@@ -19,6 +19,9 @@ import { deleteKey } from "./server/models/redis.js";
 
 export const socketio = async function (server) {
   const io = new Server(server);
+  const pubClient = redisClient;
+  const subClient = pubClient.duplicate();
+  io.adapter(createAdapter(pubClient, subClient));
   io.on("connection", (socket) => {
     console.log("A user connected");
     socket.on("join", async (object) => {
@@ -166,7 +169,4 @@ export const socketio = async function (server) {
       io.to(roomId).emit("showFinalScore", rankResult);
     });
   });
-  const pubClient = redisClient;
-  const subClient = pubClient.duplicate();
-  io.adapter(createAdapter(pubClient, subClient));
 };

@@ -7,8 +7,6 @@ import Redis from "ioredis";
 const tlsOptions = process.env.MY_REDIS_TLS
   ? JSON.parse(process.env.MY_REDIS_TLS)
   : {};
-
-console.log(tlsOptions);
 export const redisClient = new Redis({
   host: process.env.MY_REDIS_HOST,
   port: parseInt(process.env.MY_REDIS_PORT),
