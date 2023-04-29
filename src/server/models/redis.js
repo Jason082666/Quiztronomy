@@ -12,6 +12,7 @@ export const redisClient = new Redis({
   port: parseInt(process.env.MY_REDIS_PORT),
   username: process.env.MY_REDIS_USERNAME,
   password: process.env.MY_REDIS_PASSWORD,
+  enableReadyCheck: true,
   tls: tlsOptions,
   retryStrategy: function (times) {
     if (times >= 5) {

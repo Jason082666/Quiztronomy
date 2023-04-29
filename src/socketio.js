@@ -7,6 +7,7 @@ import {
   getCurrentQuizzFromMongo,
   getCurrentQuizzFromRedis,
   playerDisconnect,
+  findHostAndUsers,
 } from "./server/models/game.js";
 import { redisClient } from "./server/models/redis.js";
 import { gameHostValidation } from "./server/models/user.js";
@@ -26,18 +27,25 @@ export const socketio = async function (server) {
     console.log("A user connected");
     socket.on("join", async (object) => {
       const { userId, userName, roomId, gameName } = object;
-      const validationUser = await gameHostValidation(userId, userName, roomId);
       socket.join(roomId);
+      socket.gameName = gameName;
+      const validationUser = await gameHostValidation(userId, userName, roomId);
+      socket.roomId = roomId;
+      pubClient.pubsub("channels", (err, channels) => {
+        console.log("all channels", channels);
+        if (!channels.includes(roomId)) {
+          console.log("subscribe");
+          subClient.subscribe(roomId);
+        }
+      });
       socket.roomId = roomId;
       if (validationUser) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
-        if (!io.host) io.host = {};
-        io.host[roomId] = { userId, userName, roomId };
-        if (!io.gameName) io.gameName = {};
-        io.gameName[roomId] = gameName;
-        if (!io.users) io.users = {};
-        io.users[roomId] = [];
+        // if (!io.host) io.host = {};
+        // io.host[roomId] = { userId, userName, roomId };
+        // if (!io.users) io.users = {};
+        // io.users[roomId] = [];
         if (!io.score) io.score = {};
         io.score[roomId] = [];
         if (!io.data) io.data = {};
@@ -51,15 +59,41 @@ export const socketio = async function (server) {
         const welcomeString = `Welcome to the game room, ${userName} !`;
         socket.emit("message", {
           welcomeString,
-          gameName: io.gameName[roomId],
+          gameName: socket.gameName,
         });
         socket.userId = userId;
         socket.userName = userName;
-        const user = { userId, userName };
-        io.users[roomId].push(user);
-        io.to(roomId).emit("userJoined", [io.host[roomId], io.users[roomId]]);
+        // const user = { userId, userName };
+        // io.users[roomId].push(user);
+        const dataArray = await findHostAndUsers(roomId);
+        const hostData = JSON.parse(dataArray[0].userName);
+        const hostKey = Object.keys(hostData)[0];
+        const hostPackage = {
+          userId: hostKey,
+          userName: hostData[hostKey],
+          roomId,
+        };
+        const userPackage = dataArray.slice(2);
+        const message = JSON.stringify({
+          event: "userJoined",
+          data: [hostPackage, userPackage],
+        });
+        console.log("emit message", message);
+        await pubClient.publish(roomId, message);
       }
     });
+
+    subClient.on("message", (roomId, message) => {
+      console.log("message", message);
+      const dataObject = JSON.parse(message);
+      if (dataObject.event === "userJoined") {
+        console.log("catch userJoined");
+        const host = dataObject.data[0];
+        const users = dataObject.data[1];
+        io.to(roomId).emit("userJoined", [host, users]);
+      }
+    });
+
     socket.on("disconnect", async () => {
       console.log("A user disconnected");
       const roomId = socket.roomId;
@@ -69,28 +103,45 @@ export const socketio = async function (server) {
         await deleteKey(`${roomId}`);
         await deleteKey(`${roomId}-disconnect`);
         await terminateRoom(roomId);
-        delete io.host[roomId];
-        delete io.users[roomId];
+        // delete io.host[roomId];
+        // delete io.users[roomId];
         delete io.score[roomId];
         delete io.data[roomId];
         delete io.quizNum[roomId];
-        delete io.gameName[roomId];
         delete io.quizLength[roomId];
         io.to(roomId).emit("hostLeave");
         return;
       }
-      if (io.users && io.users[roomId]) {
-        io.users[roomId] = io.users[roomId].filter(
-          (user) => user.userId !== socket.userId
-        );
-        if (!io.users[roomId]) {
-          io.users[roomId] = [];
-        }
-        await leaveRoom(roomId, socket.userId);
-        await playerDisconnect(roomId, socket.userId, socket.userName);
-        io.to(roomId).emit("userLeft", io.users[roomId]);
+      // if (io.users && io.users[roomId]) {
+      //   io.users[roomId] = io.users[roomId].filter(
+      //     (user) => user.userId !== socket.userId
+      //   );
+      //   if (!io.users[roomId]) {
+      //     io.users[roomId] = [];
+      //   }
+      await leaveRoom(roomId, socket.userId);
+      await playerDisconnect(roomId, socket.userId, socket.userName);
+      const dataArray = await findHostAndUsers(roomId);
+      socket.leave(roomId);
+      const userPackage = dataArray.slice(2);
+      const message = JSON.stringify({
+        event: "userLeft",
+        data: userPackage,
+      });
+      pubClient.publish(roomId, message);
+    });
+
+    subClient.on("message", (roomId, message) => {
+      const dataObject = JSON.parse(message);
+      if (dataObject.event === "userLeft") {
+        console.log("catch left");
+        const { roomId } = socket;
+        io.to(roomId).emit("userLeft", dataObject.data);
       }
     });
+
+    // }
+
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
@@ -140,6 +191,7 @@ export const socketio = async function (server) {
       });
       io.to(roomId).emit("updateRankAndScore", { initvalue, score, userId });
     });
+
     // 只有host會接到timeout
     socket.on("timeout", async () => {
       const { roomId } = socket;

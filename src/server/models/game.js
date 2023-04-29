@@ -207,3 +207,15 @@ export const getCurrentQuizzFromMongo = async function (roomId, currentQuizz) {
   }
   return data;
 };
+
+export const findHostAndUsers = async function (roomId) {
+  const result = await redisClient.hgetall(`${roomId}-room`);
+  const dataArray = [];
+  for (const data in result) {
+    if (data !== "status") {
+      dataArray.push({ userId: data, userName: result[data] });
+    }
+  }
+  return dataArray;
+};
+findHostAndUsers("17654816").then(console.log);

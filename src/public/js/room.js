@@ -135,6 +135,8 @@ socket.on("showControllerInterface", (host) => {
 });
 
 socket.on("userJoined", ([host, users]) => {
+  console.log(host)
+  console.log("users",users)
   $("#host").text(`Host: ${host.userName}, roomId: ${host.roomId}`);
   $("#player-list").empty();
   users.forEach((user) => {
