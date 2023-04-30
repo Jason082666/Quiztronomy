@@ -218,4 +218,3 @@ export const findHostAndUsers = async function (roomId) {
   }
   return dataArray;
 };
-findHostAndUsers("17654816").then(console.log);

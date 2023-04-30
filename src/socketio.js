@@ -25,16 +25,14 @@ export const socketio = async function (server) {
   io.adapter(createAdapter(pubClient, subClient));
   io.on("connection", (socket) => {
     console.log("A user connected");
-    socket.on("join", async (object) => {
+    socket.once("join", async (object) => {
       const { userId, userName, roomId, gameName } = object;
       socket.join(roomId);
       socket.gameName = gameName;
       const validationUser = await gameHostValidation(userId, userName, roomId);
       socket.roomId = roomId;
       pubClient.pubsub("channels", (err, channels) => {
-        console.log("all channels", channels);
         if (!channels.includes(roomId)) {
-          console.log("subscribe");
           subClient.subscribe(roomId);
         }
       });
@@ -42,10 +40,6 @@ export const socketio = async function (server) {
       if (validationUser) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
-        // if (!io.host) io.host = {};
-        // io.host[roomId] = { userId, userName, roomId };
-        // if (!io.users) io.users = {};
-        // io.users[roomId] = [];
         if (!io.score) io.score = {};
         io.score[roomId] = [];
         if (!io.data) io.data = {};
@@ -63,8 +57,6 @@ export const socketio = async function (server) {
         });
         socket.userId = userId;
         socket.userName = userName;
-        // const user = { userId, userName };
-        // io.users[roomId].push(user);
         const dataArray = await findHostAndUsers(roomId);
         const hostData = JSON.parse(dataArray[0].userName);
         const hostKey = Object.keys(hostData)[0];
@@ -78,33 +70,31 @@ export const socketio = async function (server) {
           event: "userJoined",
           data: [hostPackage, userPackage],
         });
-        console.log("emit message", message);
         await pubClient.publish(roomId, message);
       }
     });
 
     subClient.on("message", (roomId, message) => {
-      console.log("message", message);
       const dataObject = JSON.parse(message);
       if (dataObject.event === "userJoined") {
-        console.log("catch userJoined");
         const host = dataObject.data[0];
         const users = dataObject.data[1];
-        io.to(roomId).emit("userJoined", [host, users]);
+        socket.emit("userJoined", [host, users]);
       }
     });
 
-    socket.on("disconnect", async () => {
+    socket.once("disconnect", async () => {
       console.log("A user disconnected");
       const roomId = socket.roomId;
+      // TODO:
+      console.log("hostId", socket.hostId);
       if (socket.hostId) {
+        console.log("catch host leave events");
         await deleteKey(`${roomId}-room`);
         await deleteKey(`${roomId} -score`);
         await deleteKey(`${roomId}`);
         await deleteKey(`${roomId}-disconnect`);
         await terminateRoom(roomId);
-        // delete io.host[roomId];
-        // delete io.users[roomId];
         delete io.score[roomId];
         delete io.data[roomId];
         delete io.quizNum[roomId];
@@ -115,13 +105,6 @@ export const socketio = async function (server) {
         await pubClient.publish(roomId, message);
         return;
       }
-      // if (io.users && io.users[roomId]) {
-      //   io.users[roomId] = io.users[roomId].filter(
-      //     (user) => user.userId !== socket.userId
-      //   );
-      //   if (!io.users[roomId]) {
-      //     io.users[roomId] = [];
-      //   }
       await leaveRoom(roomId, socket.userId);
       await playerDisconnect(roomId, socket.userId, socket.userName);
       const dataArray = await findHostAndUsers(roomId);
@@ -136,28 +119,18 @@ export const socketio = async function (server) {
     subClient.on("message", (roomId, message) => {
       const dataObject = JSON.parse(message);
       if (dataObject.event === "hostLeave") {
-        console.log("hostLeave");
-        io.to(roomId).emit("hostLeave");
+        // TODO:
+        console.log("hostleav");
+        socket.emit("hostLeave");
       }
     });
     subClient.on("message", (roomId, message) => {
       const dataObject = JSON.parse(message);
       if (dataObject.event === "userLeft") {
-        console.log("catch left");
-        const { roomId } = socket;
-        io.to(roomId).emit("userLeft", dataObject.data);
+        socket.emit("userLeft", dataObject.data);
       }
     });
-    // }
-    subClient.on("message", (roomId, message) => {
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "userLeft") {
-        console.log("catch left");
-        const { roomId } = socket;
-        io.to(roomId).emit("userLeft", dataObject.data);
-      }
-    });
-    socket.on("startGame", async () => {
+    socket.once("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
       if (!firstQuizz || !length) return;
@@ -169,13 +142,11 @@ export const socketio = async function (server) {
         data: { firstQuizz, length, rankResult },
       });
       await pubClient.publish(roomId, message);
-      // io.to(roomId).emit("loadFirstQuizz", { firstQuizz, length, rankResult });
     });
     subClient.on("message", (roomId, message) => {
       const dataObject = JSON.parse(message);
       if (dataObject.event === "loadFirstQuizz") {
-        const { roomId } = socket;
-        io.to(roomId).emit("loadFirstQuizz", dataObject.data);
+        socket.emit("loadFirstQuizz", dataObject.data);
       }
     });
     socket.on("nextQuiz", async (quizNum) => {
@@ -184,35 +155,34 @@ export const socketio = async function (server) {
       const rankResult = await showRank(roomId, Infinity);
       const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
       if (quiz) {
-        const message = {
-          quiz,
-          quizNum,
-          quizLength: io.quizLength[roomId],
-          rankResult,
-        };
-        pubClient.publish(roomId, message);
-        io.to(roomId).emit("showQuiz", {
-          quiz,
-          quizNum,
-          quizLength: io.quizLength[roomId],
-          rankResult,
+        const message = JSON.stringify({
+          event: "showQuiz",
+          data: {
+            quiz,
+            quizNum,
+            quizLength: io.quizLength[roomId],
+            rankResult,
+          },
         });
+        pubClient.publish(roomId, message);
       } else {
         const quiz = await getCurrentQuizzFromMongo(roomId, quizNum);
-        const message = {
-          quiz,
-          quizNum,
-          quizLength: io.quizLength[roomId],
-          rankResult,
-        };
+        const message = JSON.stringify({
+          event: "showQuiz",
+          data: {
+            quiz,
+            quizNum,
+            quizLength: io.quizLength[roomId],
+            rankResult,
+          },
+        });
         pubClient.publish(roomId, message);
       }
     });
     subClient.on("message", (roomId, message) => {
       const dataObject = JSON.parse(message);
       if (dataObject.event === "showQuiz") {
-        const { roomId } = socket;
-        io.to(roomId).emit("showQuiz", dataObject.data);
+        socket.emit("showQuiz", dataObject.data);
       }
     });
     socket.on("getAnswer", async ({ chooseOption, initvalue, score }) => {
@@ -228,20 +198,6 @@ export const socketio = async function (server) {
       });
       await pubClient.publish(roomId, dataMessage);
       await pubClient.publish(roomId, message);
-
-      // const index = io.quizNum[roomId] - 1;
-      // if (!io.score[roomId][index]) io.score[roomId][index] = {};
-      // if (!io.data[roomId][index]) io.data[roomId][index] = {};
-      // 最後用來留紀錄給mongo db 的，用來存歷史資料
-      // io.score[roomId][index][userId] = chooseOption;
-      // chooseOption.forEach((option) => {
-      //   if (!io.data[roomId][index][option]) {
-      //     io.data[roomId][index][option] = 1;
-      //   } else {
-      //     io.data[roomId][index][option] += 1;
-      //   }
-      // });
-      // io.to(roomId).emit("updateRankAndScore", { initvalue, score, userId });
     });
 
     subClient.on("message", (roomId, message) => {
@@ -261,17 +217,15 @@ export const socketio = async function (server) {
               io.data[roomId][index][option] += 1;
             }
           });
+          // TODO:
+          console.log("ioscore", io.score[roomId]);
+          console.log("iodata", io.data[roomId]);
         }
       }
     });
     subClient.on("message", (roomId, message) => {
       const dataObject = JSON.parse(message);
       if (dataObject.event === "updateRankAndScore") {
-        // io.to(roomId).emit("updateRankAndScore", {
-        //   initvalue,
-        //   score,
-        //   userId,
-        // });
         io.to(roomId).emit("updateRankAndScore", dataObject.data);
       }
     });
@@ -279,18 +233,47 @@ export const socketio = async function (server) {
     // 只有host會接到timeout
     socket.on("timeout", async () => {
       const { roomId } = socket;
+      // TODO:
+      console.log("host catch timeout event");
       const index = io.quizNum[roomId] - 1;
       const scoreObj = io.data[roomId][index];
-      io.to(roomId).emit("showQuizExplain", scoreObj);
+      const message = JSON.stringify({
+        event: "showQuizExplain",
+        data: scoreObj,
+      });
+      await pubClient.publish(roomId, message);
+    });
+
+    subClient.on("message", (roomId, message) => {
+      const dataObject = JSON.parse(message);
+      // TODO:
+      if (dataObject.event === "showQuizExplain") {
+        console.log("dataobject", dataObject);
+        console.log("data", dataObject.data);
+        socket.emit("showQuizExplain", dataObject.data);
+      }
     });
     socket.on("earlyTimeout", async () => {
       const { roomId } = socket;
       const index = io.quizNum[roomId] - 1;
       const scoreObj = io.data[roomId][index];
-      io.to(roomId).emit("clearCountdown");
-      io.to(roomId).emit("showQuizExplain", scoreObj);
+      const message = JSON.stringify({
+        event: "clearCountdown",
+      });
+      const dataMessage = JSON.stringify({
+        event: "showQuizExplain",
+        data: scoreObj,
+      });
+      await pubClient.publish(roomId, message);
+      await pubClient.publish(roomId, dataMessage);
     });
-    socket.on("showFinal", async () => {
+    subClient.on("message", (roomId, message) => {
+      const dataObject = JSON.parse(message);
+      if (dataObject.event === "clearCountdown") {
+        socket.emit("clearCountdown");
+      }
+    });
+    socket.once("showFinal", async () => {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
       const gameRoom = await addGameHistory(roomId, io.score[roomId]);
@@ -302,7 +285,17 @@ export const socketio = async function (server) {
         gameRoom.date
       );
       await addToQuequeAndUpdateMongo(roomId);
-      io.to(roomId).emit("showFinalScore", rankResult);
+      const message = JSON.stringify({
+        event: "showFinalScore",
+        data: rankResult,
+      });
+      await pubClient.publish(roomId, message);
+    });
+    subClient.on("message", (roomId, message) => {
+      const dataObject = JSON.parse(message);
+      if (dataObject.event === "showFinalScore") {
+        socket.emit("showFinalScore", dataObject.data);
+      }
     });
   });
 };
