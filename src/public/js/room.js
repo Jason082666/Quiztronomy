@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
@@ -6,7 +5,6 @@ const url = window.location.href;
 const regex = /\/(\d+)$/;
 const match = url.match(regex);
 const roomId = match[1];
-const gameName = localStorage.getItem("gameName");
 const quizTypeTransform = {
   "MC-EN": "MULTIPLE CHOICE",
   "MC-CH": "MULTIPLE CHOICE",
@@ -31,7 +29,7 @@ $(window).on("load", function () {
   }, 1500);
 });
 
-socket.emit("join", { userName, userId, roomId, gameName });
+socket.emit("join", { userName, userId, roomId });
 
 $(".cancel-reconnecting").on("click", () => {
   window.location.href = "/";
@@ -84,45 +82,23 @@ function draw() {
   }
 }
 
-// function update() {
-//   for (let i = 0; i < stars.length; i++) {
-//     if (isMouseNear(stars[i])) {
-//       stars[i].color = "#ffffff";
-//     } else {
-//       stars[i].color = null;
-//     }
-//   }
-// }
-
-// function isMouseNear(star) {
-//   const distance = Math.sqrt((star.x - mouse.x) ** 2 + (star.y - mouse.y) ** 2);
-//   return distance < 350;
-// }
-
-// let mouse = {
-//   x: 0,
-//   y: 0,
-// };
-
-// $(document).on("mousemove", (e) => {
-//   mouse.x = e.clientX;
-//   mouse.y = e.clientY;
-// });
-
 function animate() {
   requestAnimationFrame(animate);
   draw();
-  // update();
 }
 
 init();
 animate();
 
-socket.on("message", ({ welcomeString, gameName }) => {
+socket.on("message", async (welcomeString) => {
+  const gameNameResult = await axios.get(`/api/1.0/game/name?roomId=${roomId}`);
+  const gameName = gameNameResult.data.data;
   $("h2").text(welcomeString);
   $("h1").text(gameName);
 });
-socket.on("welcomeMessage", () => {
+socket.on("welcomeMessage", async () => {
+  const gameNameResult = await axios.get(`/api/1.0/game/name?roomId=${roomId}`);
+  const gameName = gameNameResult.data.data;
   $("h2").text("Waiting for more players.");
   $("h1").text(gameName);
 });
@@ -135,8 +111,6 @@ socket.on("showControllerInterface", (host) => {
 });
 
 socket.on("userJoined", ([host, users]) => {
-  console.log(host);
-  console.log("users", users);
   $("#host").text(`Host: ${host.userName}, roomId: ${host.roomId}`);
   $("#player-list").empty();
   users.forEach((user) => {
@@ -173,8 +147,6 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
     $("#reconnect").hide();
     socket.disconnect = false;
   }
-  // TODO:
-  console.log("firstQuizz", firstQuizz);
   if (firstQuizz.lastquizz) socket.lastquizz = true;
   localStorage.setItem("quizzDetail", JSON.stringify(firstQuizz));
   let intervalId;

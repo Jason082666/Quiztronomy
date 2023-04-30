@@ -8,6 +8,7 @@ import {
   getCurrentQuizzFromRedis,
   playerDisconnect,
   findHostAndUsers,
+  setupDisconnectHash,
 } from "./server/models/game.js";
 import { redisClient } from "./server/models/redis.js";
 import { gameHostValidation } from "./server/models/user.js";
@@ -26,21 +27,19 @@ export const socketio = async function (server) {
   io.on("connection", (socket) => {
     console.log("A user connected");
     socket.on("join", async (object) => {
-      const { userId, userName, roomId, gameName } = object;
+      const { userId, userName, roomId } = object;
       socket.join(roomId);
       socket.roomId = roomId;
-      socket.gameName = gameName;
       const validationUser = await gameHostValidation(userId, userName, roomId);
       pubClient.pubsub("channels", (err, channels) => {
-        console.log("channels", channels);
         if (!channels.includes(roomId)) {
           subClient.subscribe(roomId);
-          console.log(`susbscribe channel ${roomId}`);
         }
       });
       if (validationUser) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
+        await setupDisconnectHash(roomId);
         if (!io.score) io.score = {};
         io.score[roomId] = [];
         if (!io.data) io.data = {};
@@ -52,10 +51,7 @@ export const socketio = async function (server) {
         socket.emit("welcomeMessage");
       } else {
         const welcomeString = `Welcome to the game room, ${userName} !`;
-        socket.emit("message", {
-          welcomeString,
-          gameName: socket.gameName,
-        });
+        socket.emit("message", welcomeString);
         socket.userId = userId;
         socket.userName = userName;
         const dataArray = await findHostAndUsers(roomId);
@@ -77,7 +73,6 @@ export const socketio = async function (server) {
 
     subClient.on("message", (roomId, message) => {
       if (roomId !== socket.roomId) return;
-      console.log("chanel roomId", roomId);
       const dataObject = JSON.parse(message);
       if (dataObject.event === "userJoined") {
         const host = dataObject.data[0];
@@ -89,11 +84,13 @@ export const socketio = async function (server) {
     socket.on("disconnect", async () => {
       console.log("A user disconnected");
       const roomId = socket.roomId;
+      console.log("hostId", socket.hostId);
       if (socket.hostId) {
         await deleteKey(`${roomId}-room`);
         await deleteKey(`${roomId} -score`);
         await deleteKey(`${roomId}`);
-        await deleteKey(`${roomId}-disconnect`);
+        const result = await deleteKey(`${roomId}-disconnect`);
+        console.log("delete redus-connection result", result);
         await terminateRoom(roomId);
         delete io.score[roomId];
         delete io.data[roomId];

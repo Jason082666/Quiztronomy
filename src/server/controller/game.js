@@ -8,6 +8,7 @@ import {
   startRoom,
   checkRoomStatus,
   checkDisconnectList,
+  searchGameName,
 } from "../models/game.js";
 
 import errors from "../models/errorhandler.js";
@@ -22,6 +23,15 @@ export const createGameRoom = async (req, res, next) => {
   const data = await createRoom(userId, name, gameRoomName);
   res.json({ data });
 };
+
+export const searchGameNameofGame = async (req, res, next) => {
+  const { roomId } = req.query;
+  if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
+  const data = await searchGameName(roomId);
+  if (!data) return next(new errors.CustomError("Room name not found", 400));
+  res.json({ data });
+};
+
 export const checkDisconnection = async (req, res) => {
   const { userId } = req.session.user;
   const { roomId } = req.query;

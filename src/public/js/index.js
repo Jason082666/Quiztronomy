@@ -6,6 +6,7 @@ if (data.error) {
 localStorage.removeItem("searchedId");
 localStorage.removeItem("quizzes");
 localStorage.removeItem("roomId");
+localStorage.removeItem("gameName");
 const userId = localStorage.getItem("userId");
 const userName = localStorage.getItem("userName");
 const canvasInfo = $("#canvas-info")[0];

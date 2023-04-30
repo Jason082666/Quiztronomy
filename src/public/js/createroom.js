@@ -555,7 +555,6 @@ $("body").on("click", ".room-ready-btn", async () => {
     roomId: createResult.id,
   });
   if (createRoomOnRedis.error) return console.log(createRoomOnRedis.error);
-  localStorage.setItem("gameName", createResult.name);
   const quizzes = localStorage.getItem("quizzes");
   const parseQuizz = JSON.parse(quizzes);
   const readyQuizzesArray = [];
@@ -590,8 +589,6 @@ $("body").on("click", ".room-ready-btn", async () => {
   await axios.post("/api/1.0/question/update", deletePopObj);
   localStorage.removeItem("searcheId");
   localStorage.removeItem("quizzes");
-
-
   // TODO: 這邊要做先把HOSTE加入到房間
   window.location.href = `/game/room/${roomId}`;
 });

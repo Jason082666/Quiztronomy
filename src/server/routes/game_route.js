@@ -13,6 +13,7 @@ import {
   checkRoomAvailability,
   saveQuizzIntoGameRoom,
   // getCurrentQuizz,
+  searchGameNameofGame,
   startGameRoom,
   createGameRoomOnRedis,
   checkDisconnection,
@@ -22,7 +23,7 @@ import {
 router
   .route("/game/create")
   .post(catchError(authetication), catchError(createGameRoom));
-
+router.route("/game/name").get(catchError(searchGameNameofGame));
 router.route("/game/disconnect").get(catchError(checkDisconnection));
 // router
 //   .route("/game/enter")

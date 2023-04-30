@@ -46,13 +46,33 @@ export const createRoomOnRedis = async function (roomId, hostId, hostName) {
   );
   return true;
 };
+
+export const setupDisconnectHash = async function (roomId) {
+  await redisClient.hset(`${roomId}-disconnect`, "", "");
+};
+
 export const playerDisconnect = async function (roomId, userId, name) {
   if (redisClient.status === "reconnecting") {
+    return false;
+  }
+  const exists = await redisClient.exists(`${roomId}-disconnect`);
+  if (exists == 0) {
     return false;
   }
   const result = await redisClient.hset(`${roomId}-disconnect`, userId, name);
   return result;
 };
+
+export const searchGameName = async function (roomId) {
+  const result = await MyGameRoom.findOne({
+    id: roomId,
+    roomStatus: { $ne: "closed" },
+  });
+  if (!result) return "";
+  return result.name;
+};
+
+searchGameName("517314").then(console.log);
 
 export const checkDisconnectList = async function (roomId, userId) {
   const exists = await redisClient.hexists(`${roomId}-disconnect`, userId);
