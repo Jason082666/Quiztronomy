@@ -29,7 +29,8 @@ header {
   color: #e5f6eb;
 }
 
-ul {
+
+.question-container ul {
   display: flex;
   flex-direction: column;
 }
@@ -38,6 +39,9 @@ ul li {
   font-size: 24px;
   display: flex;
   align-items: center;
+}
+.nav-left-container ul {
+  display: flex;
 }
 
 .exit-btn {
