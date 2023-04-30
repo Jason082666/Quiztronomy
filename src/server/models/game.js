@@ -161,6 +161,12 @@ export const startRoom = async function (roomId, founderId) {
     await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
   }
   const firstQuizz = await redisClient.lindex(roomId, 0);
+  const length = await redisClient.llen(roomId);
+  if (length == 1) {
+    const parseFirstQuizz = JSON.parse(firstQuizz);
+    parseFirstQuizz.lastquizz = true;
+    return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
+  }
   const parseFirstQuizz = JSON.parse(firstQuizz);
   return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
 };

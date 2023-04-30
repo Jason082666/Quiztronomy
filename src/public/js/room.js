@@ -135,8 +135,8 @@ socket.on("showControllerInterface", (host) => {
 });
 
 socket.on("userJoined", ([host, users]) => {
-  console.log(host)
-  console.log("users",users)
+  console.log(host);
+  console.log("users", users);
   $("#host").text(`Host: ${host.userName}, roomId: ${host.roomId}`);
   $("#player-list").empty();
   users.forEach((user) => {
@@ -173,6 +173,9 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
     $("#reconnect").hide();
     socket.disconnect = false;
   }
+  // TODO:
+  console.log("firstQuizz", firstQuizz);
+  if (firstQuizz.lastquizz) socket.lastquizz = true;
   localStorage.setItem("quizzDetail", JSON.stringify(firstQuizz));
   let intervalId;
   socket.score = 0;

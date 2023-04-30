@@ -25,18 +25,24 @@ export const socketio = async function (server) {
   io.adapter(createAdapter(pubClient, subClient));
   io.on("connection", (socket) => {
     console.log("A user connected");
-    socket.once("join", async (object) => {
+    socket.on("join", async (object) => {
       const { userId, userName, roomId, gameName } = object;
       socket.join(roomId);
       socket.gameName = gameName;
       const validationUser = await gameHostValidation(userId, userName, roomId);
       socket.roomId = roomId;
       pubClient.pubsub("channels", (err, channels) => {
+        console.log("channels", channels);
         if (!channels.includes(roomId)) {
           subClient.subscribe(roomId);
+          console.log(`susbscribe channel ${roomId}`);
         }
       });
-      socket.roomId = roomId;
+      // console.log("ioadapters", io.adapter.rooms);
+      // if (!io.adapter.rooms.has(roomId)) {
+      //   subClient.subscribe(roomId);
+      //   console.log(`subscribe channel ${roomId}`);
+      // }
       if (validationUser) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
@@ -75,6 +81,8 @@ export const socketio = async function (server) {
     });
 
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
+      console.log("chanel roomId", roomId);
       const dataObject = JSON.parse(message);
       if (dataObject.event === "userJoined") {
         const host = dataObject.data[0];
@@ -83,13 +91,10 @@ export const socketio = async function (server) {
       }
     });
 
-    socket.once("disconnect", async () => {
+    socket.on("disconnect", async () => {
       console.log("A user disconnected");
       const roomId = socket.roomId;
-      // TODO:
-      console.log("hostId", socket.hostId);
       if (socket.hostId) {
-        console.log("catch host leave events");
         await deleteKey(`${roomId}-room`);
         await deleteKey(`${roomId} -score`);
         await deleteKey(`${roomId}`);
@@ -117,20 +122,20 @@ export const socketio = async function (server) {
       await pubClient.publish(roomId, message);
     });
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "hostLeave") {
-        // TODO:
-        console.log("hostleav");
         socket.emit("hostLeave");
       }
     });
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "userLeft") {
         socket.emit("userLeft", dataObject.data);
       }
     });
-    socket.once("startGame", async () => {
+    socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
       if (!firstQuizz || !length) return;
@@ -144,6 +149,7 @@ export const socketio = async function (server) {
       await pubClient.publish(roomId, message);
     });
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "loadFirstQuizz") {
         socket.emit("loadFirstQuizz", dataObject.data);
@@ -180,6 +186,7 @@ export const socketio = async function (server) {
       }
     });
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "showQuiz") {
         socket.emit("showQuiz", dataObject.data);
@@ -201,6 +208,7 @@ export const socketio = async function (server) {
     });
 
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "saveOptions") {
         if (socket.hostId) {
@@ -217,24 +225,20 @@ export const socketio = async function (server) {
               io.data[roomId][index][option] += 1;
             }
           });
-          // TODO:
-          console.log("ioscore", io.score[roomId]);
-          console.log("iodata", io.data[roomId]);
         }
       }
     });
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "updateRankAndScore") {
-        io.to(roomId).emit("updateRankAndScore", dataObject.data);
+        socket.emit("updateRankAndScore", dataObject.data);
       }
     });
 
     // 只有host會接到timeout
     socket.on("timeout", async () => {
       const { roomId } = socket;
-      // TODO:
-      console.log("host catch timeout event");
       const index = io.quizNum[roomId] - 1;
       const scoreObj = io.data[roomId][index];
       const message = JSON.stringify({
@@ -245,11 +249,10 @@ export const socketio = async function (server) {
     });
 
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       // TODO:
       if (dataObject.event === "showQuizExplain") {
-        console.log("dataobject", dataObject);
-        console.log("data", dataObject.data);
         socket.emit("showQuizExplain", dataObject.data);
       }
     });
@@ -268,12 +271,13 @@ export const socketio = async function (server) {
       await pubClient.publish(roomId, dataMessage);
     });
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "clearCountdown") {
         socket.emit("clearCountdown");
       }
     });
-    socket.once("showFinal", async () => {
+    socket.on("showFinal", async () => {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
       const gameRoom = await addGameHistory(roomId, io.score[roomId]);
@@ -292,6 +296,7 @@ export const socketio = async function (server) {
       await pubClient.publish(roomId, message);
     });
     subClient.on("message", (roomId, message) => {
+      if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "showFinalScore") {
         socket.emit("showFinalScore", dataObject.data);
