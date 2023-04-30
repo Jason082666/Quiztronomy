@@ -25,7 +25,6 @@ const funct = async () => {
           -1,
           "WITHSCORES"
         );
-        console.log("rank", rank);
         const gameRoom = await MyGameRoom.findOne({ _id: uniqueId });
         const gameName = gameRoom.name;
         const date = gameRoom.date;
@@ -49,17 +48,13 @@ const funct = async () => {
             );
           }
           result.push({ id, name, score });
-          console.log("result", result);
         }
         gameRoom.score = result;
         const gameRoomData = await gameRoom.save();
         await addGameInfoToRedis(uniqueId, gameRoomData);
         await redisClient.zremrangebyrank(`${roomId} -score`, 0, -1);
-        return true;
       } catch (e) {
-        // 這邊要做錯誤處理=> 丟到error handling 的queque
         console.error(e);
-        return undefined;
       }
     }
   }

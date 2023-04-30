@@ -28,9 +28,9 @@ export const socketio = async function (server) {
     socket.on("join", async (object) => {
       const { userId, userName, roomId, gameName } = object;
       socket.join(roomId);
+      socket.roomId = roomId;
       socket.gameName = gameName;
       const validationUser = await gameHostValidation(userId, userName, roomId);
-      socket.roomId = roomId;
       pubClient.pubsub("channels", (err, channels) => {
         console.log("channels", channels);
         if (!channels.includes(roomId)) {
@@ -38,11 +38,6 @@ export const socketio = async function (server) {
           console.log(`susbscribe channel ${roomId}`);
         }
       });
-      // console.log("ioadapters", io.adapter.rooms);
-      // if (!io.adapter.rooms.has(roomId)) {
-      //   subClient.subscribe(roomId);
-      //   console.log(`subscribe channel ${roomId}`);
-      // }
       if (validationUser) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;

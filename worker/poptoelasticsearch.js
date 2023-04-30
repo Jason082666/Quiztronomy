@@ -20,7 +20,6 @@ const funct = async () => {
         }
       } catch (e) {
         console.error(e);
-        return undefined;
       }
     }
   }
