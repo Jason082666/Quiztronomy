@@ -122,35 +122,18 @@ export const enterRoom = async function (roomId, id) {
   if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
   if (result == 0) return null;
-  const checkExist = await redisClient.hget(`${roomId}-room`, id);
-  if (checkExist == 0) {
-    return undefined;
-  }
+  const enterTimes = await redisClient.zincrby(`${roomId}-connected`, 1, id);
+  console.log("entertines", enterTimes);
+  if (+enterTimes > 1) return false;
   return true;
 };
 
-export const leaveRoom = async function (roomId, playerId, host = false) {
+export const leaveRoom = async function (roomId, playerId) {
   if (redisClient.status === "reconnecting") return null;
   const roomExist = await redisClient.exists(`${roomId}-room`);
   if (roomExist == 0) return null;
-  if (host) {
-    const result = await redisClient.hdel(`${roomId}-room`, "host");
-    if (result == 0) return undefined;
-    const space = await redisClient.hlen(`${roomId}-room`);
-    if (space == 0) {
-      await redisClient.del(`${roomId}-room`);
-      await redisClient.del(roomId);
-    }
-    return true;
-  }
-  const result = await redisClient.hdel(`${roomId}-room`, playerId);
-  if (result == 0) return undefined;
-  const space = await redisClient.hlen(`${roomId}-room`);
-  if (space == 0) {
-    await redisClient.del(`${roomId}-room`);
-    await redisClient.del(roomId);
-  }
-  return true;
+  await redisClient.hdel(`${roomId}-room`, playerId);
+  await redisClient.zrem(`${roomId}-connected`, playerId);
 };
 
 export const startRoom = async function (roomId, founderId) {
