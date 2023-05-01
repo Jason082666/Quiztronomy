@@ -816,3 +816,7 @@ h2 {
   cursor: pointer;
   box-shadow: 0px 0px 5px 0px #ffffff;
 }
+
+.swal2-container {
+  z-index: 10000;
+}

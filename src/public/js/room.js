@@ -134,10 +134,15 @@ socket.on("wattingForConnect", () => {
 });
 
 $(".host-container").on("click", "#start-game-btn", () => {
+  console.log(123);
   if ($("#player-list").children().length == 0) {
-    //TODO: 這裡要放顯示"等待其他玩家加入的字樣"
-    return;
+    console.log(678);
+    return Toast.fire({
+      icon: "error",
+      title: `Wait more players to join !`,
+    });
   }
+
   socket.emit("startGame");
 });
 
@@ -754,3 +759,15 @@ function generateChart(object) {
     ],
   });
 }
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 2000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
