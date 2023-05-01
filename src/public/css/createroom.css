@@ -29,7 +29,6 @@ header {
   color: #e5f6eb;
 }
 
-
 .question-container ul {
   display: flex;
   flex-direction: column;
@@ -718,4 +717,8 @@ img {
 .popup-buttons .room-ready-cancell-btn:hover {
   background-color: #e5f6eb;
   color: #5edabd;
+}
+
+.swal2-container {
+  z-index: 10000;
 }

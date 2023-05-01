@@ -90,7 +90,7 @@ export const socketio = async function (server) {
         await deleteKey(`${roomId} -score`);
         await deleteKey(`${roomId}`);
         await deleteKey(`${roomId}-connected`);
-       await deleteKey(`${roomId}-disconnect`);
+        await deleteKey(`${roomId}-disconnect`);
         await terminateRoom(roomId);
         delete io.score[roomId];
         delete io.data[roomId];

@@ -531,3 +531,8 @@ h2 {
   font-family: "KiriFontNormal";
   color: #0e1a3c;
 }
+
+.swal2-container {
+  z-index: 10000;
+  font-family: "Barlow", sans-serif;
+}

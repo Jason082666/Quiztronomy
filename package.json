@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@elastic/elasticsearch": "^8.6.0",
+    "@socket.io/redis-adapter": "^8.1.0",
     "axios": "^1.3.5",
     "bcrypt": "^5.1.0",
     "connect-redis": "^7.0.1",

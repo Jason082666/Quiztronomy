@@ -118,7 +118,24 @@ $(".create-container").on("click", ".TF-handy", function () {
 
 $(".create-container").on("click", "#search-submit", async function () {
   const quizzes = await search();
-  if (!quizzes[0]) return;
+  if (quizzes === null) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please select a quiz type you want.",
+    });
+  }
+  if (quizzes === undefined) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please enter the quiz title you want to search.",
+    });
+  }
+  if (!quizzes[0]) {
+    return Toast.fire({
+      icon: "warning",
+      title: "No quiz found",
+    });
+  }
   quizzes.forEach((quizz) => {
     const searched = JSON.parse(localStorage.getItem("searchedId"));
     if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quizz.type)) {
@@ -152,7 +169,24 @@ $(".create-container").on("click", "#search-submit", async function () {
 $(".create-container").on("keydown", "#search-input", async function (e) {
   if (e.keyCode == 13) {
     const quizzes = await search();
-    // if (!quizzes[0]) return;
+    if (quizzes === null) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please select a quiz type.",
+      });
+    }
+    if (quizzes === undefined) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter the quiz title you want to search.",
+      });
+    }
+    if (!quizzes[0]) {
+      return Toast.fire({
+        icon: "warning",
+        title: "No quiz found",
+      });
+    }
     quizzes.forEach((quizz) => {
       const searched = JSON.parse(localStorage.getItem("searchedId"));
       if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quizz.type)) {
@@ -185,7 +219,6 @@ $(".create-container").on("keydown", "#search-input", async function (e) {
 });
 
 $(".create-container").on("click", "#search-submit-by-ai", async function () {
-  $("#fetch-ai-loading").show();
   const data = await searchByAI();
   console.log("data", data);
   if (!data) return;
@@ -219,9 +252,27 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
   const create = $("input[name='question-type']:checked").val();
   const type = `${create}-${language}`;
   const question = $(".question-text").val();
+  if (!question) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please enter your quiz title.",
+    });
+  }
   const explain = $(".explain-text").val();
+  if (!explain) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please enter your quiz explaination.",
+    });
+  }
   if (["TF-CH", "TF-EN"].includes(type)) {
     const answer = $("input[name='answer']:checked").val();
+    if (!answer) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please check the correct answer.",
+      });
+    }
     const quizzObj = {
       question,
       answer: [transToBoolean(answer)],
@@ -254,10 +305,40 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
   }
   if (["MC-CH", "MC-EN"].includes(type)) {
     const answer = $("input[name='answer']:checked").val();
+    if (!answer) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please check the correct answer.",
+      });
+    }
     const optionA = $("#optionA").val();
+    if (!optionA) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option A.",
+      });
+    }
     const optionB = $("#optionB").val();
+    if (!optionB) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option B.",
+      });
+    }
     const optionC = $("#optionC").val();
+    if (!optionC) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option C.",
+      });
+    }
     const optionD = $("#optionD").val();
+    if (!optionD) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option D.",
+      });
+    }
     const quizzObj = {
       question,
       options: { A: optionA, B: optionB, C: optionC, D: optionD },
@@ -292,13 +373,43 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
   }
   if (["MCS-CH", "MCS-EN"].includes(type)) {
     const answerArray = [];
+    if ($('input[name="answer"]:checked').length == 0) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please check the correct answers.",
+      });
+    }
     $('input[name="answer"]:checked').each(function () {
       answerArray.push($(this).val());
     });
     const optionA = $("#optionA").val();
+    if (!optionA) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option A.",
+      });
+    }
     const optionB = $("#optionB").val();
+    if (!optionB) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option B.",
+      });
+    }
     const optionC = $("#optionC").val();
+    if (!optionC) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option C.",
+      });
+    }
     const optionD = $("#optionD").val();
+    if (!optionD) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option D.",
+      });
+    }
     const quizzObj = {
       question,
       options: { A: optionA, B: optionB, C: optionC, D: optionD },
@@ -341,8 +452,10 @@ const generateQuizzData = async (quizzObj) => {
 const search = async () => {
   const language = $("#search-language").val();
   const create = $("input[name='question-type']:checked").val();
+  if (!create) return null;
   const type = `${create}-${language}`;
   const query = $("#search-input").val();
+  if (!query) return undefined;
   let searchedArray;
   const resultArray = localStorage.getItem("searchedId");
   if (!resultArray) {
@@ -364,8 +477,21 @@ $(".cancel-fetch-ai").on("click", () => {
 const searchByAI = async () => {
   const language = $("#search-language").val();
   const create = $("input[name='question-type']:checked").val();
+  if (!create) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please select a quiz type.",
+    });
+  }
   const type = `${create}-${language}`;
   const q = $("#search-input").val();
+  if (!q) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please enter the quiz title you want to search.",
+    });
+  }
+  $("#fetch-ai-loading").show();
   const obj = { q, type, mode: "AI" };
   source = CancelToken.source();
   try {
@@ -545,52 +671,69 @@ $("body").on("click", ".room-ready-cancell-btn", () => {
 
 $("body").on("click", ".room-ready-btn", async () => {
   const gameRoomName = $("#create-room-name").val();
-  const createRoomOnMongo = await axios.post("/api/1.0/game/create", {
-    gameRoomName,
-  });
-  const createResult = createRoomOnMongo.data.data;
-  if (createResult.error) return console.log(createResult.error);
-  localStorage.setItem("roomId", createResult.id);
-  const createRoomOnRedis = await axios.post("/api/1.0/game/roomupdate", {
-    roomId: createResult.id,
-  });
-  if (createRoomOnRedis.error) return console.log(createRoomOnRedis.error);
-  const quizzes = localStorage.getItem("quizzes");
-  const parseQuizz = JSON.parse(quizzes);
-  const readyQuizzesArray = [];
-  const readyQuizzesObject = {};
-  const unusedQuizzesObject = {};
-  $(".container-right .quiz-card").each(function () {
-    const id = $(this).attr("data-id");
-    const timeLimits = $(this).find('input[type="number"]').val();
-    const quizzObject = parseQuizz[id];
-    quizzObject.timeLimits = timeLimits;
-    readyQuizzesArray.push(quizzObject);
-  });
 
-  const founderId = localStorage.getItem("userId");
-  const roomId = localStorage.getItem("roomId");
-  await axios.post("/api/1.0/game/savequizz", {
-    array: readyQuizzesArray,
-    roomId,
-    founderId,
-  });
-  $("#search-result .quiz-card").each(function () {
-    const id = $(this).attr("data-id");
-    unusedQuizzesObject[id] = -0.5;
-  });
-  $(".container-right .quiz-card").each(function () {
-    const id = $(this).attr("data-id");
-    readyQuizzesObject[id] = 1.5;
-  });
-  const addPopObj = { popObj: readyQuizzesObject };
-  const deletePopObj = { popObj: unusedQuizzesObject };
-  await axios.post("/api/1.0/question/update", addPopObj);
-  await axios.post("/api/1.0/question/update", deletePopObj);
-  localStorage.removeItem("searcheId");
-  localStorage.removeItem("quizzes");
-  // TODO: 這邊要做先把HOSTE加入到房間
-  window.location.href = `/game/room/${roomId}`;
+  try {
+    const createRoomOnMongo = await axios.post("/api/1.0/game/create", {
+      gameRoomName,
+    });
+    const createResult = createRoomOnMongo.data.data;
+    if (createResult.error) return console.log(createResult.error);
+    localStorage.setItem("roomId", createResult.id);
+    const createRoomOnRedis = await axios.post("/api/1.0/game/roomupdate", {
+      roomId: createResult.id,
+    });
+    if (createRoomOnRedis.error) return console.log(createRoomOnRedis.error);
+    const quizzes = localStorage.getItem("quizzes");
+    const parseQuizz = JSON.parse(quizzes);
+    const readyQuizzesArray = [];
+    const readyQuizzesObject = {};
+    const unusedQuizzesObject = {};
+    $(".container-right .quiz-card").each(function () {
+      const id = $(this).attr("data-id");
+      const timeLimits = $(this).find('input[type="number"]').val();
+      const quizzObject = parseQuizz[id];
+      quizzObject.timeLimits = timeLimits;
+      readyQuizzesArray.push(quizzObject);
+    });
+
+    const founderId = localStorage.getItem("userId");
+    const roomId = localStorage.getItem("roomId");
+    await axios.post("/api/1.0/game/savequizz", {
+      array: readyQuizzesArray,
+      roomId,
+      founderId,
+    });
+    $("#search-result .quiz-card").each(function () {
+      const id = $(this).attr("data-id");
+      unusedQuizzesObject[id] = -0.5;
+    });
+    $(".container-right .quiz-card").each(function () {
+      const id = $(this).attr("data-id");
+      readyQuizzesObject[id] = 1.5;
+    });
+    const addPopObj = { popObj: readyQuizzesObject };
+    const deletePopObj = { popObj: unusedQuizzesObject };
+    await axios.post("/api/1.0/question/update", addPopObj);
+    await axios.post("/api/1.0/question/update", deletePopObj);
+    localStorage.removeItem("searcheId");
+    localStorage.removeItem("quizzes");
+    window.location.href = `/game/room/${roomId}`;
+  } catch (error) {
+    const { response } = error;
+    const { status } = response;
+    if (status == "400") {
+      Toast.fire({
+        icon: "error",
+        title: "Please enter your room name.",
+      });
+    }
+    if (status == "500") {
+      Toast.fire({
+        icon: "error",
+        title: "There should be at least one quiz.",
+      });
+    }
+  }
 });
 
 function updatePositionLabels() {
@@ -646,4 +789,16 @@ $("body").on("click", ".quiz-card", async function (e) {
     $(this).children(".question-container").toggleClass("hidden");
     $(this).toggleClass("quiz-card-resize");
   }
+});
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 2000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
 });

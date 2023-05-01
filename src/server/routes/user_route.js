@@ -10,11 +10,11 @@ import {
 } from "../controller/user.js";
 import { body } from "express-validator";
 const validation = [
-  body("email").isEmail().withMessage("Please enter email in right format"),
+  body("email").isEmail().withMessage("Please enter email in right format."),
   body("password")
     .matches(/^[A-Z0-9]{6,20}$/i)
     .withMessage(
-      "Password should be number or alphabets and should between 6~20 words"
+      "Password should be number or alphabets and should between 6~20 words. "
     ),
 ];
 router.route("/user/signup").post(validation, catchError(userSignup));

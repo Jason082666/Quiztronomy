@@ -250,44 +250,92 @@ $(".home-page").on("click", () => {
 $(".log-in-btn").on("click", async function (e) {
   e.preventDefault();
   const email = $("#email").val();
+  if (!email) {
+    return Toast.fire({
+      icon: "error",
+      title: "Email is required.",
+    });
+  }
   const password = $("#password").val();
+  if (!password) {
+    return Toast.fire({
+      icon: "error",
+      title: "Password is required.",
+    });
+  }
   const userdata = { email, password };
-  const result = await axios.post("/api/1.0/user/login", userdata);
-  if (result.error) return;
-  const userName = result.data.data.name;
-  const userId = result.data.data._id;
-  localStorage.setItem("userName", userName);
-  localStorage.setItem("userId", userId);
-  $("canvas").hide();
-  $("#canvas-info").show();
-  $(".middle-enter-container").hide();
-  $(".sign-component").hide();
-  $(".logout-btn").show();
-  $(".back-to-main").hide();
-  $(".user-info-container").show();
-  $("#welcome-message").text(`Welcome back ${userName} !`);
+  try {
+    const result = await axios.post("/api/1.0/user/login", userdata);
+    const userName = result.data.data.name;
+    const userId = result.data.data._id;
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("userId", userId);
+    $("canvas").hide();
+    $("#canvas-info").show();
+    $(".middle-enter-container").hide();
+    $(".sign-component").hide();
+    $(".logout-btn").show();
+    $(".back-to-main").hide();
+    $(".user-info-container").show();
+    $("#welcome-message").text(`Welcome back ${userName} !`);
+  } catch (e) {
+    return Toast.fire({
+      icon: "error",
+      title: e.response.data.error,
+    });
+  }
 });
 
 $(".sign-up-btn").on("click", async function (e) {
   e.preventDefault();
   const name = $("#signup-name").val();
+  if (!name) {
+    return Toast.fire({
+      icon: "error",
+      title: "Name is required.",
+    });
+  }
+  if (name.length > 10) {
+    return Toast.fire({
+      icon: "error",
+      title: "Name should be less than 10 characters.",
+    });
+  }
   const email = $("#signup-email").val();
-  const password = $("#password").val();
-  const userdata = { name, email, password };
-  const result = await axios.post("/api/1.0/user/signup", userdata);
-  if (result.error) return;
-  const userName = result.data.data.name;
-  const userId = result.data.data._id;
-  localStorage.setItem("userName", userName);
-  localStorage.setItem("userId", userId);
-  $("canvas").hide();
-  $("#canvas-info").show();
-  $(".enter-container").hide();
-  $(".sign-component").hide();
-  $(".logout-btn").show();
-  $(".back-to-main").hide();
-  $(".user-info-container").show();
-  $("#welcome-message").text(`Welcome back ${userName} !`);
+  if (!email) {
+    return Toast.fire({
+      icon: "error",
+      title: "Email is required.",
+    });
+  }
+  const password = $("#signup-password").val();
+  if (!password) {
+    return Toast.fire({
+      icon: "error",
+      title: "Password is required.",
+    });
+  }
+  try {
+    const userdata = { name, email, password };
+    const result = await axios.post("/api/1.0/user/signup", userdata);
+    const userName = result.data.data.name;
+    const userId = result.data.data._id;
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("userId", userId);
+    $("canvas").hide();
+    $("#canvas-info").show();
+    $(".enter-container").hide();
+    $(".sign-component").hide();
+    $(".logout-btn").show();
+    $(".back-to-main").hide();
+    $(".user-info-container").show();
+    $("#welcome-message").text(`Welcome back ${userName} !`);
+  } catch (e) {
+    return Toast.fire({
+      icon: "error",
+      title: e.response.data.error,
+    });
+  }
 });
 
 $(".sign-up").on("click", function () {
@@ -320,35 +368,78 @@ $("#create").on("click", async (e) => {
 $("#join").on("click", async (e) => {
   e.preventDefault();
   const roomId = $("#roomId").val();
-  const enterResult = await axios.post("/api/1.0/game/search", { roomId });
-  if (enterResult.data.error) {
-    return;
-    // TODO: 這邊要有前端錯誤提示，提示加入房間失敗
+  if (!roomId) {
+    return Toast.fire({
+      icon: "error",
+      title: "Please enter a valid roomId.",
+    });
   }
-  const { data } = enterResult.data;
-  localStorage.setItem("userName", data.userName);
-  localStorage.setItem("userId", data.userId);
-  localStorage.setItem("roomId", roomId);
-  window.location.href = `/game/room/${roomId}`;
+  try {
+    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const { data } = enterResult.data;
+    localStorage.setItem("userName", data.userName);
+    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("roomId", roomId);
+    window.location.href = `/game/room/${roomId}`;
+  } catch (e) {
+    Toast.fire({
+      icon: "error",
+      title: `Room ${roomId} is empty.`,
+    });
+  }
 });
 
 $(".enter-btn").on("click", async () => {
   const roomId = $("#room-name").val();
-  const name = $("#user-name").val();
-  const result = await axios.post("/api/1.0/visitor/login", { name });
-  if (result.error) return;
-  const enterResult = await axios.post("/api/1.0/game/search", { roomId });
-  if (enterResult.data.error) {
-    return;
-    // TODO: 這邊要有前端錯誤提示，提示加入房間失敗
+  if (!roomId) {
+    return Toast.fire({
+      icon: "error",
+      title: "Please enter a valid roomId.",
+    });
   }
-  const { data } = enterResult.data;
-  localStorage.setItem("userName", data.userName);
-  localStorage.setItem("userId", data.userId);
-  localStorage.setItem("roomId", roomId);
-  window.location.href = `/game/room/${roomId}`;
+  const name = $("#user-name").val();
+  if (name.length > 10) {
+    return Toast.fire({
+      icon: "error",
+      title: "Name should be less than 10 characters.",
+    });
+  }
+  try {
+    await axios.post("/api/1.0/visitor/login", { name });
+  } catch (e) {
+    return Toast.fire({
+      icon: "error",
+      title: `Log in failed.`,
+    });
+  }
+
+  try {
+    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const { data } = enterResult.data;
+    localStorage.setItem("userName", data.userName);
+    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("roomId", roomId);
+    window.location.href = `/game/room/${roomId}`;
+  } catch (e) {
+    Toast.fire({
+      icon: "error",
+      title: `Room ${roomId} is empty.`,
+    });
+  }
 });
 
 $("#user-dashboard").on("click", () => {
   window.location.href = "/game/history.html";
+});
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 2000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
 });

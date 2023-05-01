@@ -6,8 +6,8 @@ export const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
   const pass = await validationUser(email, password);
   if (pass === undefined)
-    return next(new errors.CustomError("Email not found", 403));
-  if (!pass) return next(new errors.CustomError("Validation fail", 403));
+    return next(new errors.CustomError("Email not found.", 403));
+  if (!pass) return next(new errors.CustomError("Validation failed.", 403));
   const normObject = pass.toObject();
   const userId = normObject._id;
   const name = normObject.name;
@@ -46,7 +46,9 @@ export const userSignup = async (req, res, next) => {
     req.session.user = user;
     return res.json({ data });
   } catch (e) {
-    return next(new errors.CustomError("Sign up fail", 500));
+    const err = new Error("This email has been registered.");
+    err.statusCode = 400;
+    return next(err);
   }
 };
 
