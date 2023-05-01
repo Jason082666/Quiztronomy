@@ -671,7 +671,12 @@ $("body").on("click", ".room-ready-cancell-btn", () => {
 
 $("body").on("click", ".room-ready-btn", async () => {
   const gameRoomName = $("#create-room-name").val();
-
+  if (!gameRoomName) {
+    return Toast.fire({
+      icon: "error",
+      title: "Please enter your room name.",
+    });
+  }
   try {
     const createRoomOnMongo = await axios.post("/api/1.0/game/create", {
       gameRoomName,
@@ -695,7 +700,6 @@ $("body").on("click", ".room-ready-btn", async () => {
       quizzObject.timeLimits = timeLimits;
       readyQuizzesArray.push(quizzObject);
     });
-
     const founderId = localStorage.getItem("userId");
     const roomId = localStorage.getItem("roomId");
     await axios.post("/api/1.0/game/savequizz", {
@@ -719,20 +723,10 @@ $("body").on("click", ".room-ready-btn", async () => {
     localStorage.removeItem("quizzes");
     window.location.href = `/game/room/${roomId}`;
   } catch (error) {
-    const { response } = error;
-    const { status } = response;
-    if (status == "400") {
-      Toast.fire({
-        icon: "error",
-        title: "Please enter your room name.",
-      });
-    }
-    if (status == "500") {
-      Toast.fire({
-        icon: "error",
-        title: "There should be at least one quiz.",
-      });
-    }
+    Toast.fire({
+      icon: "error",
+      title: "There should be at least one quiz.",
+    });
   }
 });
 
