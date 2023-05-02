@@ -87,7 +87,7 @@ const renderQuiz = (data) => {
     const formattedDate = `${year}-${month}-${day} ${
       hour % 12
     }:${minute}:${second}${ampm}`;
-    historyDatahtml += `<div class="col">
+    historyDatahtml = `<div class="col">
     <div class="card shadow-sm">
         <svg
       class="bd-placeholder-img card-img-top"
@@ -95,15 +95,13 @@ const renderQuiz = (data) => {
       height="225"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Placeholder:  ${data.roomName}"
       preserveAspectRatio="xMidYMid slice"
       focusable="false"
     >
       <title>Placeholder</title>
       <rect width="100%" height="100%" fill="transparent"></rect>
       <foreignObject x="0" y="0" width="100%" height="100%">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="quiz-card">
-          ${data.roomName}
+        <div xmlns="http://www.w3.org/1999/xhtml" id="${data.roomId}-info" class="quiz-card">
         </div></foreignObject
       >
     </svg>
@@ -124,8 +122,10 @@ const renderQuiz = (data) => {
       </div>
     </div>
   </div>`;
+    $(".quiz-container").append(historyDatahtml);
+    $(`#${data.roomId}-info`).text(data.roomName);
   });
-  $(".quiz-container").html(historyDatahtml);
+
   renderPagingButton(data.next, "player");
 };
 
@@ -149,7 +149,7 @@ const renderHostQuiz = (data) => {
       hour % 12
     }:${minute}:${second}${ampm}`;
 
-    historyDataHosthtml += `<div class="col">
+    historyDataHosthtml = `<div class="col">
   <div class="card shadow-sm">
     <svg
       class="bd-placeholder-img card-img-top"
@@ -157,15 +157,13 @@ const renderHostQuiz = (data) => {
       height="225"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Placeholder:  ${data.roomName}"
       preserveAspectRatio="xMidYMid slice"
       focusable="false"
     >
       <title>Placeholder</title>
       <rect width="100%" height="100%" fill="transparent"></rect>
       <foreignObject x="0" y="0" width="100%" height="100%">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="quiz-card">
-          ${data.roomName}
+        <div xmlns="http://www.w3.org/1999/xhtml" id="${data.roomId}-info" class="quiz-card">
         </div></foreignObject
       >
     </svg>
@@ -186,8 +184,10 @@ const renderHostQuiz = (data) => {
   </div>
 </div>
 `;
+    $(".quiz-container").append(historyDataHosthtml);
+    $(`#${data.roomId}-info`).text(data.roomName);
   });
-  $(".quiz-container").html(historyDataHosthtml);
+
   renderPagingButton(data.next, "host");
 };
 
