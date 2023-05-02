@@ -62,7 +62,6 @@ function animate() {
 init();
 animate();
 let dropdown = "";
-let container = "";
 for (let i = 3; i <= +length; i++) {
   dropdown += `<li><a class="dropdown-item" href="#scrollspyHeading${i}">Quiz ${i}</a></li>`;
 }
@@ -83,70 +82,87 @@ if (!isHost) {
       ? historyArray[index][userId].join(" ")
       : "";
     if (["MC-EN", "MC-CH", "MCS-EN", "MCS-CH"].includes(quiz.type)) {
-      container += `<div class="quiz-big-container">
+      const container = `<div class="quiz-big-container">
       <div class="quiz-container">
       <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
-        <div class="quiz-text">${quiz.question}</div>
+        <div class="quiz-text" id="quiz-text-${index}"></div>
         <div class="option-container">
-          <div class="option">A:  ${quiz.options["A"]}</div>
-          <div class="option">B:  ${quiz.options["B"]}</div>
-          <div class="option">C:  ${quiz.options["C"]}</div>
-          <div class="option">D:  ${quiz.options["D"]}</div>
+          <div class="option" id="A-${index}"></div>
+          <div class="option" id="B-${index}"></div>
+          <div class="option" id="C-${index}"></div>
+          <div class="option" id="D-${index}"></div>
         </div>
         <div class="correct-answer">Answer:  ${quiz.answer.join(" ")}</div>
-        <div class="explaination">Explain:   ${quiz.explain}</div>
+        <div class="explaination" id="explain-${index}"></div>
         <div class="your-answer">What you choose:   ${chooseHistory}</div>
         
       </div><div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
         </div></div>`;
+      $(".scrollspy-example").append(container);
+      $(`#quiz-text-${index}`).text(quiz.question);
+      $(`#A-${index}`).text(`A:  ${quiz.options["A"]}`);
+      $(`#B-${index}`).text(`B:  ${quiz.options["B"]}`);
+      $(`#C-${index}`).text(`C:  ${quiz.options["C"]}`);
+      $(`#D-${index}`).text(`D:  ${quiz.options["D"]}`);
+      $(`#explain-${index}`).text(`Explain:   ${quiz.explain}`);
     } else {
-      container += `<div class="quiz-big-container">
+      const container = `<div class="quiz-big-container">
       <div class="quiz-container">
       <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
-        <div class="quiz-text">${quiz.question}</div>
+        <div class="quiz-text" id="quiz-text-${index}"></div>
         <div class="correct-answer">Answer:  ${quiz.answer[0]}</div>
-        <div class="explaination">Explain:   ${quiz.explain}</div>
+        <div class="explaination" id="explain-${index}"></div>
         <div class="your-answer">What you choose:   ${chooseHistory}</div>
-      
       </div>  <div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
         </div></div>`;
+      $(".scrollspy-example").append(container);
+      $(`#quiz-text-${index}`).text(quiz.question);
+      $(`#explain-${index}`).text(`Explain:   ${quiz.explain}`);
     }
   });
 } else {
   quizArrray.forEach((quiz, index) => {
     if (["MC-EN", "MC-CH", "MCS-EN", "MCS-CH"].includes(quiz.type)) {
-      container += `<div class="quiz-big-container">
+      const container = `<div class="quiz-big-container">
       <div class="quiz-container">
       <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
-        <div class="quiz-text">${quiz.question}</div>
+        <div class="quiz-text" id="quiz-text-${index}"></div>
         <div class="option-container">
-          <div class="option">A:  ${quiz.options["A"]}</div>
-          <div class="option">B:  ${quiz.options["B"]}</div>
-          <div class="option">C:  ${quiz.options["C"]}</div>
-          <div class="option">D:  ${quiz.options["D"]}</div>
+          <div class="option" id="A-${index}"></div>
+          <div class="option" id="B-${index}"></div>
+          <div class="option" id="C-${index}"></div>
+          <div class="option" id="D-${index}"></div>
         </div>
         <div class="correct-answer">Answer:  ${quiz.answer.join(" ")}</div>
-        <div class="explaination">Explain:   ${quiz.explain}</div>
+        <div class="explaination" id="explain-${index}"></div>
       </div><div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
         </div></div>`;
+      $(".scrollspy-example").append(container);
+      $(`#quiz-text-${index}`).text(quiz.question);
+      $(`#A-${index}`).text(`A:  ${quiz.options["A"]}`);
+      $(`#B-${index}`).text(`B:  ${quiz.options["B"]}`);
+      $(`#C-${index}`).text(`C:  ${quiz.options["C"]}`);
+      $(`#D-${index}`).text(`D:  ${quiz.options["D"]}`);
+      $(`#explain-${index}`).text(`Explain:   ${quiz.explain}`);
     } else {
-      container += `<div class="quiz-big-container">
+      const container = `<div class="quiz-big-container">
       <div class="quiz-container">
       <h4 id="scrollspyHeading${index + 1}">Quiz ${index + 1}</h4>
-        <div class="quiz-text">${quiz.question}</div>
+        <div class="quiz-text" id="quiz-text-${index}"></div>
         <div class="correct-answer">Answer:  ${quiz.answer[0]}</div>
-        <div class="explaination">Explain:   ${quiz.explain}</div>
+        <div class="explaination" id="explain-${index}"></div>
       </div>  <div class="chart-container">
           <div id="chart-${index + 1}" class="chart-item"></div>
         </div></div>`;
+      $(".scrollspy-example").append(container);
+      $(`#quiz-text-${index}`).text(quiz.question);
+      $(`#explain-${index}`).text(`Explain:   ${quiz.explain}`);
     }
   });
 }
-
-$(".scrollspy-example").html(container);
 
 historyArray.forEach((data, index) => {
   generateChart(index);
