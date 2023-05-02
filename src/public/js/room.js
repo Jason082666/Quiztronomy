@@ -643,7 +643,7 @@ function clearCountDown(timeIdArray) {
 }
 
 const calculateScore = (totalTime, remainTime) => {
-  const baseScore = 100;
+  const baseScore = 0;
   const timeBonus = Math.round(500 * Math.pow(remainTime / totalTime, 2));
   const score = baseScore + timeBonus;
   return score;

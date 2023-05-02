@@ -32,8 +32,12 @@ export class TrueFalse extends Quizz {
 
   get html() {
     const $element = super.html;
-    const $answerText = $(`<div>Answer: ${this.answer[0]}</div>`);
-    const $explainText = $(`<div>${this.explain}</div>`);
+    const $answerDiv = $("<div>");
+    const $answerText = $answerDiv.text(`Answer:  ${this.answer[0]}`);
+    // const $answerText = $(`<div>Answer: ${this.answer[0]}</div>`);
+    const $explainDiv = $("<div>");
+    const $explainText = $explainDiv.text(this.explain);
+    // const $explainText = $(`<div>${this.explain}</div>`);
     const $questionContent = $(`<div class = "question-container hidden">`);
     $questionContent.append($answerText);
     $questionContent.append($explainText);
@@ -50,11 +54,14 @@ export class MultiChoice extends Quizz {
   get html() {
     const $element = super.html;
     const $optionsList = $("<ul>");
-    const $explainText = $(`<div>${this.explain}</div>`);
+    const $explainDiv = $("<div>");
+    const $explainText = $explainDiv.text(this.explain);
+    // const $explainText = $(`<div>${this.explain}</div>`);
     for (const option in this.options) {
       const $label = $("<label>").text(`${option}`);
       const $optionItem = $(`<li>`);
-      $optionItem.html(this.options[option]);
+      $optionItem.text(this.options[option]);
+      // $optionItem.html(this.options[option]);
       $optionItem.on("mousemove", () => {
         if (this.checkAnswer(option)) {
           $optionItem.addClass("correct-option");
