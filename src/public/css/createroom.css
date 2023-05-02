@@ -267,11 +267,14 @@ input[type="number"]::placeholder {
   height: 20px;
   width: 20px;
 }
-.quiz-card-resize {
+#search-result .quiz-card-resize {
   overflow: hidden;
-  min-height: 130px;
+  height: 170px;
 }
-
+.container-right .quiz-card-resize {
+  overflow: hidden;
+  min-height: 150px;
+}
 .quiz-card:hover {
   box-shadow: 0 0 5px #ccc; /* 設定卡片滑鼠懸停時的陰影效果 */
 }
