@@ -49,7 +49,6 @@ button,
 
 .nav-left-container ul {
   display: flex;
-  width: 50%;
   height: 100%;
   justify-content: space-around;
   list-style: none;

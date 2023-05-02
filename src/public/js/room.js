@@ -134,9 +134,7 @@ socket.on("wattingForConnect", () => {
 });
 
 $(".host-container").on("click", "#start-game-btn", () => {
-  console.log(123);
   if ($("#player-list").children().length == 0) {
-    console.log(678);
     return Toast.fire({
       icon: "error",
       title: `Wait more players to join !`,

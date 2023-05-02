@@ -255,7 +255,6 @@ button:hover {
   color: #f7f7f8;
   border-radius: 20px;
   padding: 20px;
-  width: 50%;
   flex-basis: 60%;
 }
 
@@ -366,7 +365,6 @@ button:hover {
 }
 
 #left-bar {
-  width: 15%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -458,7 +456,6 @@ label {
 
 #scoreboard {
   display: flex;
-  width: 15%;
   flex-direction: column;
   /* height: 70vh; */
   justify-content: space-around;

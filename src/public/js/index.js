@@ -401,7 +401,7 @@ $(".enter-btn").on("click", async () => {
   if (name.length > 10) {
     return Toast.fire({
       icon: "error",
-      title: "Name should be less than 10 characters.",
+      title: "Name should be up to 10 characters.",
     });
   }
   try {
