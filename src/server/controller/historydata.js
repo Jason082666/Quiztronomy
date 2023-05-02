@@ -15,6 +15,7 @@ export const findUserHistory = async (req, res, next) => {
   if (!Number.isInteger(+paging) || +paging < 0)
     return next(new errors.CustomError("invalid page", 400));
   const result = await countUserHistory(userId);
+  if (result == 0) return res.json({ data: "no data" });
   const length = result / 6;
   if (Number.isInteger(length)) {
     if (+paging === length - 1) {
@@ -46,6 +47,7 @@ export const findHostHistory = async (req, res, next) => {
   if (!Number.isInteger(+paging) || +paging < 0)
     return next(new errors.CustomError("invalid page", 400));
   const result = await countHostHistory(userId);
+  if (result == 0) return res.json({ data: "no data" });
   const length = result / 6;
   if (Number.isInteger(length)) {
     if (+paging === length - 1) {

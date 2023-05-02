@@ -7,23 +7,27 @@ const totalGameAndScore = await axios.get(
 );
 const data = result.data;
 const dataArray = data.data;
-const barChartDataArray = dataArray.map((data, index) => {
-  const date = new Date(data.date);
-  const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
-  const targetTime = date.getTime() + timezoneOffset + 8 * 60 * 60 * 1000;
-  const targetDate = new Date(targetTime);
-  const year = targetDate.getFullYear();
-  const month = ("0" + (targetDate.getMonth() + 1)).slice(-2);
-  const day = ("0" + targetDate.getDate()).slice(-2);
-  const hour = ("0" + targetDate.getHours()).slice(-2);
-  const minute = ("0" + targetDate.getMinutes()).slice(-2);
-  const second = ("0" + targetDate.getSeconds()).slice(-2);
-  const ampm = hour >= 12 ? "pm" : "am";
-  const time = `${year}-${month}-${day} ${
-    hour % 12
-  }:${minute}:${second}${ampm}`;
-  return { x: index, y: +data.score, date: time };
-});
+let barChartDataArray;
+if (dataArray !== "no data") {
+  barChartDataArray = dataArray.map((data, index) => {
+    const date = new Date(data.date);
+    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+    const targetTime = date.getTime() + timezoneOffset + 8 * 60 * 60 * 1000;
+    const targetDate = new Date(targetTime);
+    const year = targetDate.getFullYear();
+    const month = ("0" + (targetDate.getMonth() + 1)).slice(-2);
+    const day = ("0" + targetDate.getDate()).slice(-2);
+    const hour = ("0" + targetDate.getHours()).slice(-2);
+    const minute = ("0" + targetDate.getMinutes()).slice(-2);
+    const second = ("0" + targetDate.getSeconds()).slice(-2);
+    const ampm = hour >= 12 ? "pm" : "am";
+    const time = `${year}-${month}-${day} ${
+      hour % 12
+    }:${minute}:${second}${ampm}`;
+    return { x: index, y: +data.score, date: time };
+  });
+}
+
 const canvas = $("#canvas")[0];
 const ctx = canvas.getContext("2d");
 
@@ -67,6 +71,7 @@ $(".score-totals").html(`You've earned  ${score}  scores.`);
 const renderQuiz = (data) => {
   let historyDatahtml = "";
   const dataArray = data.data;
+  if (dataArray == "no data") return;
   dataArray.forEach((data) => {
     const date = new Date(data.date);
     const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
@@ -126,6 +131,7 @@ const renderQuiz = (data) => {
 
 const renderHostQuiz = (data) => {
   const dataArray = data.data;
+  if (dataArray == "no data") return;
   let historyDataHosthtml = "";
   dataArray.forEach((data) => {
     const date = new Date(data.date);
@@ -313,21 +319,23 @@ $(".player-history-btn").on("click", async () => {
   renderQuiz(result.data, "player");
 });
 const rankObject = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, other: 0 };
-data.data.forEach((data) => {
-  if (data.rank == 1) {
-    rankObject["1"] += 1;
-  } else if (data.rank == 2) {
-    rankObject["2"] += 1;
-  } else if (data.rank == 3) {
-    rankObject["3"] += 1;
-  } else if (data.rank == 4) {
-    rankObject["4"] += 1;
-  } else if (data.rank == 5) {
-    rankObject["5"] += 1;
-  } else {
-    rankObject["other"] += 1;
-  }
-});
+if (data.data !== "no data") {
+  data.data.forEach((data) => {
+    if (data.rank == 1) {
+      rankObject["1"] += 1;
+    } else if (data.rank == 2) {
+      rankObject["2"] += 1;
+    } else if (data.rank == 3) {
+      rankObject["3"] += 1;
+    } else if (data.rank == 4) {
+      rankObject["4"] += 1;
+    } else if (data.rank == 5) {
+      rankObject["5"] += 1;
+    } else {
+      rankObject["other"] += 1;
+    }
+  });
+}
 
 Highcharts.chart("pie-char", {
   chart: {
