@@ -615,7 +615,8 @@ textarea {
 #search-submit:hover {
   cursor: pointer;
 }
-img {
+#search-submit-by-ai-pic,
+.logo {
   width: 40px;
   height: 40px;
 }

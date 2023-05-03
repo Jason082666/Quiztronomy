@@ -231,7 +231,7 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
     );
     const html = quizz.html;
     html.prepend(
-      `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai"></div>`
+      `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai" width="30" height="30"></div>`
     );
     $("#search-result").append(html);
   }
@@ -245,7 +245,7 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
     );
     const html = quizz.html;
     html.prepend(
-      `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai"></div>`
+      `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai" width="30" height="30"></div>`
     );
     $("#search-result").append(html);
   }
@@ -301,7 +301,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       <span class="position-label"></span>
       <span class="count-down-text">select time</span>
       <img class="time-arrow" src="/img/arrow.png" alt="arrow">
-      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
+      <input type="number" min="0" max="60" value="10">
     </div>`);
       html.prepend(control);
     }
@@ -373,7 +373,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       <span class="position-label"></span>
       <span class="count-down-text">select time</span>
       <img class="time-arrow" src="/img/arrow.png" alt="arrow">
-      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
+      <input type="number" min="0" max="60" value="10">
     </div>`);
       html.prepend(control);
     }
@@ -448,7 +448,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       <span class="position-label"></span>
       <span class="count-down-text">select time</span>
       <img class="time-arrow" src="/img/arrow.png" alt="arrow">
-      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
+      <input type="number" min="0" max="60" value="10">
     </div>`);
       html.prepend(control);
     }
@@ -619,7 +619,7 @@ $(document).ready(function () {
       <span class="position-label"></span>
       <span class="count-down-text">select time</span>
       <img class="time-arrow" src="/img/arrow.png" alt="arrow">
-      <input type="number" min="0" max="60" value="10" placeholder="Select time here">
+      <input type="number" min="0" max="60" value="10">
     </div>`);
       droppedQuizCard.prepend(controls);
     }
@@ -643,7 +643,7 @@ $(document).ready(function () {
       <span class="position-label"></span>
       <span class="count-down-text">select time</span>
       <img class="time-arrow" src="/img/arrow.png" alt="arrow">
-      <input type="number" min="0" max="60" value = "10" placeholder="Select time here">
+      <input type="number" min="0" max="60" value = "10">
     </div>`);
       draggedElement.prepend(controls);
     }
@@ -699,6 +699,20 @@ $("body").on("click", ".room-ready-btn", async () => {
       title: "Please enter your room name.",
     });
   }
+  let countDownCheck = true;
+  $('input[type="number"]').each(function () {
+    const timeLimits = $(this).val();
+    if (!Number.isInteger(+timeLimits) || +timeLimits <= 0) {
+      countDownCheck = false;
+      return;
+    }
+  });
+  if (!countDownCheck)
+    return Toast.fire({
+      icon: "error",
+      title: "Quiz countdown should be an integer.",
+    });
+
   try {
     const createRoomOnMongo = await axios.post("/api/1.0/game/create", {
       gameRoomName,
