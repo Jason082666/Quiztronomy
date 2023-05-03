@@ -71,16 +71,6 @@ export const socketio = async function (server) {
       }
     });
 
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "userJoined") {
-        const host = dataObject.data[0];
-        const users = dataObject.data[1];
-        socket.emit("userJoined", [host, users]);
-      }
-    });
-
     socket.on("disconnect", async () => {
       console.log("A user disconnected");
       const roomId = socket.roomId;
@@ -113,20 +103,7 @@ export const socketio = async function (server) {
       });
       await pubClient.publish(roomId, message);
     });
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "hostLeave") {
-        socket.emit("hostLeave");
-      }
-    });
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "userLeft") {
-        socket.emit("userLeft", dataObject.data);
-      }
-    });
+
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
@@ -140,13 +117,7 @@ export const socketio = async function (server) {
       });
       await pubClient.publish(roomId, message);
     });
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "loadFirstQuizz") {
-        socket.emit("loadFirstQuizz", dataObject.data);
-      }
-    });
+
     socket.on("nextQuiz", async (quizNum) => {
       const { roomId } = socket;
       io.quizNum[roomId] += 1;
@@ -177,13 +148,7 @@ export const socketio = async function (server) {
         pubClient.publish(roomId, message);
       }
     });
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "showQuiz") {
-        socket.emit("showQuiz", dataObject.data);
-      }
-    });
+
     socket.on("getAnswer", async ({ chooseOption, initvalue, score }) => {
       const { roomId, userId } = socket;
       const message = JSON.stringify({
@@ -199,35 +164,6 @@ export const socketio = async function (server) {
       await pubClient.publish(roomId, message);
     });
 
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "saveOptions") {
-        if (socket.hostId) {
-          const index = io.quizNum[roomId] - 1;
-          if (!io.score[roomId][index]) io.score[roomId][index] = {};
-          if (!io.data[roomId][index]) io.data[roomId][index] = {};
-          // 最後用來留紀錄給mongo db 的，用來存歷史資料
-          const dataArray = dataObject.data;
-          io.score[roomId][index][dataObject.userId] = dataArray;
-          dataArray.forEach((option) => {
-            if (!io.data[roomId][index][option]) {
-              io.data[roomId][index][option] = 1;
-            } else {
-              io.data[roomId][index][option] += 1;
-            }
-          });
-        }
-      }
-    });
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "updateRankAndScore") {
-        socket.emit("updateRankAndScore", dataObject.data);
-      }
-    });
-
     // 只有host會接到timeout
     socket.on("timeout", async () => {
       const { roomId } = socket;
@@ -240,14 +176,6 @@ export const socketio = async function (server) {
       await pubClient.publish(roomId, message);
     });
 
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      // TODO:
-      if (dataObject.event === "showQuizExplain") {
-        socket.emit("showQuizExplain", dataObject.data);
-      }
-    });
     socket.on("earlyTimeout", async () => {
       const { roomId } = socket;
       const index = io.quizNum[roomId] - 1;
@@ -261,13 +189,6 @@ export const socketio = async function (server) {
       });
       await pubClient.publish(roomId, message);
       await pubClient.publish(roomId, dataMessage);
-    });
-    subClient.on("message", (roomId, message) => {
-      if (roomId !== socket.roomId) return;
-      const dataObject = JSON.parse(message);
-      if (dataObject.event === "clearCountdown") {
-        socket.emit("clearCountdown");
-      }
     });
     socket.on("showFinal", async () => {
       const { roomId } = socket;
@@ -290,6 +211,50 @@ export const socketio = async function (server) {
     subClient.on("message", (roomId, message) => {
       if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
+      if (dataObject.event === "userJoined") {
+        const host = dataObject.data[0];
+        const users = dataObject.data[1];
+        socket.emit("userJoined", [host, users]);
+      }
+      if (dataObject.event === "hostLeave") {
+        socket.emit("hostLeave");
+      }
+      if (dataObject.event === "userLeft") {
+        socket.emit("userLeft", dataObject.data);
+      }
+      if (dataObject.event === "loadFirstQuizz") {
+        socket.emit("loadFirstQuizz", dataObject.data);
+      }
+      if (dataObject.event === "showQuiz") {
+        socket.emit("showQuiz", dataObject.data);
+      }
+      if (dataObject.event === "saveOptions") {
+        if (socket.hostId) {
+          const index = io.quizNum[roomId] - 1;
+          if (!io.score[roomId][index]) io.score[roomId][index] = {};
+          if (!io.data[roomId][index]) io.data[roomId][index] = {};
+          // 最後用來留紀錄給mongo db 的，用來存歷史資料
+          const dataArray = dataObject.data;
+          io.score[roomId][index][dataObject.userId] = dataArray;
+          dataArray.forEach((option) => {
+            if (!io.data[roomId][index][option]) {
+              io.data[roomId][index][option] = 1;
+            } else {
+              io.data[roomId][index][option] += 1;
+            }
+          });
+        }
+      }
+      if (dataObject.event === "updateRankAndScore") {
+        socket.emit("updateRankAndScore", dataObject.data);
+      }
+
+      if (dataObject.event === "showQuizExplain") {
+        socket.emit("showQuizExplain", dataObject.data);
+      }
+      if (dataObject.event === "clearCountdown") {
+        socket.emit("clearCountdown");
+      }
       if (dataObject.event === "showFinalScore") {
         socket.emit("showFinalScore", dataObject.data);
       }
