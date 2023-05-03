@@ -220,6 +220,9 @@ $(".create-container").on("keydown", "#search-input", async function (e) {
 
 $(".create-container").on("click", "#search-submit-by-ai", async function () {
   const data = await searchByAI();
+  const searched = JSON.parse(localStorage.getItem("searchedId"));
+  searched.push(data.id);
+  localStorage.setItem("searchedId", JSON.stringify(searched));
   console.log("data", data);
   if (!data) return;
   if (["TF-CH", "TF-EN"].includes(data.type)) {

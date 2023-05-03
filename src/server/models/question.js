@@ -71,14 +71,6 @@ export const searchQuestionText = async function (text, type, excludeIds) {
                       },
                     },
                   },
-                  // {
-                  //   weight: 0.5,
-                  //   field_value_factor: {
-                  //     field: "popularity",
-                  //     factor: 1,
-                  //     modifier: "log1p",
-                  //   },
-                  // },
                 ],
                 score_mode: "sum",
                 boost_mode: "multiply",
