@@ -720,18 +720,18 @@ function sortPlayers(players) {
 }
 
 function sortScores() {
-  var container = $("#sort-container");
-  var items = container.find(".sort-player");
+  const container = $("#sort-container");
+  const items = container.find(".sort-player");
 
   items.sort(function (a, b) {
-    var scoreA = parseInt($(a).find(".sort-player-score").text());
-    var scoreB = parseInt($(b).find(".sort-player-score").text());
+    const scoreA = parseInt($(a).find(".sort-player-score").text());
+    const scoreB = parseInt($(b).find(".sort-player-score").text());
     return scoreA < scoreB ? 1 : scoreA > scoreB ? -1 : 0;
   });
 
   items.each(function (index) {
-    var currentPosition = $(this).position();
-    var newPosition = {
+    const currentPosition = $(this).position();
+    const newPosition = {
       top: index * ($(this).outerHeight() + 10) + "px",
     };
     $(this)

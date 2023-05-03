@@ -56,7 +56,7 @@ h1 {
 
 #player-list div {
   border-radius: 20px; /* 增加圓角 */
-  /* width: 15%; 加寬一點 */
+  width: 23%;
   color: #0e1a3c; /* 調整文字顏色 */
   background-color: white; /* 調整背景顏色為半透明黑色 */
   font-size: 24px; /* 加大字體 */
@@ -489,12 +489,13 @@ label {
 
 .sort-player {
   height: 20%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  margin-top: 10px;
+  margin-top: 20px;
   /* width: 90%; */
   position: relative;
   font-size: 24px;
