@@ -109,34 +109,40 @@
           </div>
           <div class="create-container">
             <label for="question-type">Quiz type :</label>
-            <input
-              type="radio"
-              name="question-type"
-              class="MC-handy"
-              id="single-choice"
-              value="MC"
-            />
-            <label class="label-for-question" for="single-choice"
-              >MCQ (One Answer)</label
-            >
-            <input
-              type="radio"
-              id="true-false"
-              class="TF-handy"
-              name="question-type"
-              value="TF"
-            />
-            <label class="label-for-question" for="true-false">TFQ</label>
-            <input
-              type="radio"
-              id="multiple-choice"
-              class="MCS-handy"
-              name="question-type"
-              value="MCS"
-            />
-            <label class="label-for-question" for="multiple-choice"
-              >MCQ (Several Answers)</label
-            >
+
+            <div class="quiz-type-container">
+              <input
+                type="radio"
+                name="question-type"
+                class="MC-handy"
+                id="single-choice"
+                value="MC"
+              />
+              <label class="label-for-question" for="single-choice"
+                >Multiple choice (One Answer)</label
+              >
+              <input
+                type="radio"
+                id="true-false"
+                class="TF-handy"
+                name="question-type"
+                value="TF"
+              />
+              <label class="label-for-question" for="true-false"
+                >True or False</label
+              >
+              <input
+                type="radio"
+                id="multiple-choice"
+                class="MCS-handy"
+                name="question-type"
+                value="MCS"
+              />
+              <label class="label-for-question" for="multiple-choice"
+                >Multiple choice (Several Answer)</label
+              >
+            </div>
+
             <br />
             <div class="quizz-handy-container"></div>
             <div class="quizz">

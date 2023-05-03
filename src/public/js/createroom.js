@@ -710,7 +710,7 @@ $("body").on("click", ".room-ready-btn", async () => {
   if (!countDownCheck)
     return Toast.fire({
       icon: "error",
-      title: "Quiz countdown should be an integer.",
+      title: "Quiz countdown should be an integer .",
     });
 
   try {

@@ -280,7 +280,9 @@ input[type="number"]::placeholder {
 .container-right div .ai-icon-container {
   display: none;
 }
-
+.quiz-type-container {
+  margin-top: 30px;
+}
 .quiz-card {
   font-family: "Barlow", sans-serif;
   background-color: #0e1a3c;
