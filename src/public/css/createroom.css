@@ -192,7 +192,7 @@ p {
 
 .container-right .quiz-card {
   width: 80%;
-  background-color: #5edabd;
+  background-color: rgb(218, 234, 234);
   color: #0e1a3c;
   box-shadow: 2px 2px #0e1a3c;
   font-size: 24px;
@@ -242,9 +242,8 @@ p {
 }
 
 .position-label {
-  font-size: 24x;
+  /* font-size: 24x; */
   font-weight: bolder;
-  color: white;
 }
 
 input[type="number"] {
@@ -261,7 +260,7 @@ input[type="number"]::placeholder {
   color: #a19c9c;
 }
 .count-down-text {
-  color: white;
+  color: #0e1a3c;
 }
 .time-arrow {
   height: 20px;
@@ -277,6 +276,9 @@ input[type="number"]::placeholder {
 }
 .quiz-card:hover {
   box-shadow: 0 0 5px #ccc; /* 設定卡片滑鼠懸停時的陰影效果 */
+}
+.container-right div .ai-icon-container {
+  display: none;
 }
 
 .quiz-card {
@@ -643,7 +645,7 @@ img {
 #search-submit-by-ai-pic {
   height: 40px;
   width: 40px;
-  background-image: url("/img/ai.png");
+  background-image: url("/img/chatbot.png");
   background-size: contain;
   background-repeat: no-repeat;
 }

@@ -230,6 +230,9 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
       data.id
     );
     const html = quizz.html;
+    html.prepend(
+      `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai"></div>`
+    );
     $("#search-result").append(html);
   }
   if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(data.type)) {
@@ -241,6 +244,9 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
       data.id
     );
     const html = quizz.html;
+    html.prepend(
+      `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai"></div>`
+    );
     $("#search-result").append(html);
   }
   $("#fetch-ai-loading").hide();
@@ -512,8 +518,8 @@ const searchByAI = async () => {
     });
     const { data } = result.data;
     Toast.fire({
-      icon: "warning",
-      title: "AI have generated the quiz for you !",
+      icon: "success",
+      title: "AI generated a quiz for you !",
     });
     return data;
   } catch (e) {
@@ -739,6 +745,7 @@ $("body").on("click", ".room-ready-btn", async () => {
     localStorage.removeItem("quizzes");
     window.location.href = `/game/room/${roomId}`;
   } catch (error) {
+    console.log(error);
     Toast.fire({
       icon: "error",
       title: "There should be at least one quiz.",
