@@ -1,6 +1,7 @@
 const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
+import { Queue } from "./queue.js";
 const url = window.location.href;
 const regex = /\/(\d+)$/;
 const match = url.match(regex);
@@ -29,6 +30,7 @@ $(window).on("load", function () {
   }, 1500);
 });
 
+const rankQueue = new Queue();
 socket.emit("join", { userName, userId, roomId });
 
 $(".cancel-reconnecting").on("click", () => {
@@ -314,14 +316,18 @@ const $countdown = $(
 $(".container").after($countdown);
 
 socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
-  animateScore(
-    $(`.sort-player-score[data-id=${userId}]`),
-    initvalue,
-    score,
-    1000
-  );
-  $(`.sort-player-score[data-id=${userId}]`).text(score);
-  sortScores();
+  const sortPlayerRank = function (callback) {
+    animateScore(
+      $(`.sort-player-score[data-id=${userId}]`),
+      initvalue,
+      score,
+      1000
+    );
+    $(`.sort-player-score[data-id=${userId}]`).text(score);
+    sortScores();
+    callback();
+  };
+  rankQueue.add(sortPlayerRank);
 });
 
 function showRank(players) {
