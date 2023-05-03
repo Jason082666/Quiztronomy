@@ -300,6 +300,10 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       html.prepend(control);
     }
     $(".container-right").append(html);
+    Toast.fire({
+      icon: "warning",
+      title: "Quiz generated !",
+    });
     updatePositionLabels();
     return;
   }
@@ -368,6 +372,10 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       html.prepend(control);
     }
     $(".container-right").append(html);
+    Toast.fire({
+      icon: "warning",
+      title: "Quiz generated !",
+    });
     updatePositionLabels();
     return;
   }
@@ -439,6 +447,10 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       html.prepend(control);
     }
     $(".container-right").append(html);
+    Toast.fire({
+      icon: "warning",
+      title: "Quiz generated !",
+    });
     updatePositionLabels();
   }
 });
@@ -499,6 +511,10 @@ const searchByAI = async () => {
       cancelToken: source.token,
     });
     const { data } = result.data;
+    Toast.fire({
+      icon: "warning",
+      title: "AI have generated the quiz for you !",
+    });
     return data;
   } catch (e) {
     if (axios.isCancel()) {
@@ -789,7 +805,7 @@ const Toast = Swal.mixin({
   toast: true,
   position: "top-end",
   showConfirmButton: false,
-  timer: 2000,
+  timer: 3000,
   timerProgressBar: true,
   didOpen: (toast) => {
     toast.addEventListener("mouseenter", Swal.stopTimer);
