@@ -14,6 +14,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,16 +31,33 @@
   </head>
 
   <body>
-    <div class="enter-container">
-      <label for="user-name">Your name :</label>
-      <input
-        type="text"
-        id="user-name"
-        name="user-name"
-        placeholder="Up to 10 characters"
-      />
-      <button class="enter-btn">Enter</button>
+    <div id="enter-room-box">
+      <div class="container">
+        <h2 class="quick-enter">Enter room !</h2>
+        <div class="host-info"></div>
+        <div class="enter-container">
+          <label for="user-name">Enter your name :</label>
+          <input
+            type="text"
+            id="user-name"
+            name="user-name"
+            placeholder="Up to 10 characters"
+          />
+          <button class="enter-btn">Enter</button>
+        </div>
+      </div>
     </div>
+    <div id="enter-box">
+      <div class="container">
+        <h2 class="quick-enter"></h2>
+        <div class="enter-container">
+          <div class="host-info"></div>
+          <div class="join-text">Click enter to join !</div>
+          <button class="login-enter">Enter</button>
+        </div>
+      </div>
+    </div>
+
     <script src="/js/fastenter.js" type="module"></script>
   </body>
 </html>

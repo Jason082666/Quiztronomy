@@ -1,7 +1,5 @@
 import {
   createRoom,
-  // enterRoom,
-  // leaveRoom,
   createRoomOnRedis,
   terminateRoom,
   saveQuizzIntoRoom,
@@ -9,6 +7,7 @@ import {
   checkRoomStatus,
   checkDisconnectList,
   searchGameName,
+  findRoomOnRedis,
 } from "../models/game.js";
 
 import errors from "../models/errorhandler.js";
@@ -91,51 +90,14 @@ export const checkRoomAvailability = async (req, res, next) => {
   }
   return res.json({ data: { userId, userName: name } });
 };
-// export const enterGameRoom = async (req, res, next) => {
-//   const { userId, name } = req.session.user;
-//   const { roomId } = req.body;
-//   if (!roomId || !userId || !name)
-//     return next(new errors.ParameterError(["userId", "roomId", "name"], 400));
-//   if (
-//     typeof roomId !== "string" ||
-//     typeof userId !== "string" ||
-//     typeof name !== "string"
-//   )
-//     return next(
-//       new errors.TypeError(
-//         { roomId: "string", userId: "string", name: "string" },
-//         400
-//       )
-//     );
-//   const result = await enterRoom(roomId, userId, name);
-//   if (result === null)
-//     return next(
-//       new errors.CustomError(
-//         `Room ${roomId} is not existed or the game has started`,
-//         400
-//       )
-//     );
-//   if (!result)
-//     return next(new errors.CustomError(`You are already in the room`, 400));
-//   return res.json({ data: { userId, userName: name } });
-// };
-
-// //TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
-// export const leaveGameRoom = async (req, res, next) => {
-//   const { userId } = req.session.user;
-//   const { roomId } = req.body;
-//   if (!roomId) return next(new errors.ParameterError(["id"], 400));
-//   if (typeof roomId !== "string")
-//     return next(new errors.TypeError({ roomId: "string" }, 400));
-//   const result = await leaveRoom(roomId, userId);
-//   if (result === null)
-//     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
-//   if (!result)
-//     return next(new errors.CustomError(`Player is not in room ${roomId}`, 400));
-//   return res.json({ message: `Leave room ${roomId} !` });
-// };
-
-//TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
+export const findHostOnRedis = async (req, res, next) => {
+  const { roomId } = req.query;
+  if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
+  const data = await findRoomOnRedis(roomId);
+  if (!data)
+    return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
+  res.json({ data });
+};
 export const startGameRoom = async (req, res, next) => {
   const { userId } = req.session.user;
   const { roomId } = req.body;

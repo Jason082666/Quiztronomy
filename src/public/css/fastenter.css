@@ -1,0 +1,99 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  background-color: #0e1a3c;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: "KiriFontNormal";
+  font-weight: normal;
+  font-style: normal;
+}
+
+.container {
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  display: flex;
+  /* width: 45%; */
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  margin-top: 40px;
+  color: white;
+}
+
+label,
+.host-info,
+.join-text {
+  display: block;
+  font-size: 20px;
+  color: #ffffff;
+  /* margin-bottom: 10px; */
+}
+
+#user-name {
+  font-family: "Barlow", sans-serif;
+  height: 60px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: #292929;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 2px #282828;
+}
+
+.enter-btn,
+.login-enter {
+  font-family: "KiriFontNormal";
+  padding: 15px 10px 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 32px;
+  color: #ffffff;
+  background-color: #5edabd;
+  cursor: pointer;
+  box-shadow: 0px 0px 3px 0px #ffffff;
+}
+.enter-btn:hover,
+.login-enter:hover {
+  background-color: #ffffff;
+  color: #0e1a3c;
+}
+.enter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 30px;
+  padding-bottom: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.swal2-container {
+  z-index: 10000;
+  font-family: "Barlow", sans-serif;
+}
+
+.quick-enter {
+  font-size: 40px;
+  color: #5edabd;
+}
+
+#enter-box {
+  display: none;
+}

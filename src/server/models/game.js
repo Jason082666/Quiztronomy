@@ -1,3 +1,4 @@
+import { findHostOnRedis } from "../controller/game.js";
 import { MyGameRoom } from "../models/mongodb.js";
 import { redisClient } from "../models/redis.js";
 //TODO:之後可以用CRONTAB來刪掉建立太久的房間
@@ -71,8 +72,6 @@ export const searchGameName = async function (roomId) {
   if (!result) return "";
   return result.name;
 };
-
-searchGameName("517314").then(console.log);
 
 export const checkDisconnectList = async function (roomId, userId) {
   const exists = await redisClient.hexists(`${roomId}-disconnect`, userId);
@@ -226,4 +225,11 @@ export const findHostAndUsers = async function (roomId) {
     }
   }
   return dataArray;
+};
+
+export const findRoomOnRedis = async function (roomId) {
+  const result = await redisClient.hget(`${roomId}-room`, "host");
+  if (!result) return undefined;
+  const hostObj = JSON.parse(result);
+  return Object.values(hostObj)[0];
 };

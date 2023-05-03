@@ -7,33 +7,25 @@ import {
 } from "../middleware/authentication.js";
 import {
   createGameRoom,
-  // enterGameRoom,
-  // leaveGameRoom,
   terminateGameRoom,
   checkRoomAvailability,
   saveQuizzIntoGameRoom,
-  // getCurrentQuizz,
   searchGameNameofGame,
   startGameRoom,
   createGameRoomOnRedis,
   checkDisconnection,
+  findHostOnRedis,
 } from "../controller/game.js";
 
-// router.route("/game/currentquizz").get(catchError(getCurrentQuizz));
 router
   .route("/game/create")
   .post(catchError(authetication), catchError(createGameRoom));
 router.route("/game/name").get(catchError(searchGameNameofGame));
+router.route("/game/room").get(catchError(findHostOnRedis));
 router.route("/game/disconnect").get(catchError(checkDisconnection));
-// router
-//   .route("/game/enter")
-//   .post(catchError(autheticationForPlaying), catchError(enterGameRoom));
 router
   .route("/game/search")
   .post(catchError(autheticationForPlaying), catchError(checkRoomAvailability));
-// router
-//   .route("/game/leave")
-//   .post(catchError(authetication), catchError(leaveGameRoom));
 router
   .route("/game/start")
   .post(catchError(authetication), catchError(startGameRoom));

@@ -48,8 +48,6 @@ app.use("/api/" + APIVERSION, [
 
 import { enterRoom } from "./server/models/game.js";
 app.get("/game/room/:roomId", async (req, res, next) => {
-  // 這邊到時候要做cookie裡面username,userid的驗證，其實就是再去fetch enterroom的api
-  // const filePath = path.join(__dirname, "src/public/html/game/room.html");
   const roomId = req.params.roomId;
   if (!req.session.user) {
     return next();
@@ -64,6 +62,13 @@ app.get("/game/room/:roomId", async (req, res, next) => {
     path.join(__dirname, ".", "public", "html", "game", "room.html")
   );
 });
+
+app.get("/game/fastenter/:roomId", async (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, ".", "public", "html", "game", "fastenter.html")
+  );
+});
+
 app.use((req, res) => {
   return res
     .status(404)
