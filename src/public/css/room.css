@@ -14,7 +14,7 @@ body {
 }
 
 canvas {
-  position: absolute;
+  position: fixed;
   height: 100vh;
   width: 100vw;
   top: 0;
@@ -899,7 +899,7 @@ h2 {
   }
 }
 
-.planet-1 {
+.planet-container {
   position: fixed;
   top: 5%;
   left: 3%;
