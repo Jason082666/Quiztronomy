@@ -29,6 +29,16 @@ $(window).on("load", function () {
     }
   }, 1500);
 });
+const clipboard = new ClipboardJS(".click-btn");
+const hostName = window.location.hostname;
+$("#copy-url").val(`${hostName}/game/fastenter/${roomId}`);
+
+$(".click-btn").on("click", () => {
+  Toast.fire({
+    icon: "success",
+    title: `Url copied !`,
+  });
+});
 
 const rankQueue = new Queue();
 socket.emit("join", { userName, userId, roomId });
@@ -109,7 +119,7 @@ socket.on("showControllerInterface", (host) => {
   const $startButton = $('<button id="start-game-btn">Start the game</button>');
   $("#host").text(`Host: ${host.userName}  roomId: ${host.roomId}`);
   socket.host = true;
-  $startButton.appendTo($(".host-container"));
+  $(".url-container").append($startButton);
 });
 
 socket.on("userJoined", ([host, users]) => {
@@ -135,7 +145,7 @@ socket.on("wattingForConnect", () => {
   $("#reconnect").show();
 });
 
-$(".host-container").on("click", "#start-game-btn", () => {
+$(".container").on("click", "#start-game-btn", () => {
   if ($("#player-list").children().length == 0) {
     return Toast.fire({
       icon: "error",

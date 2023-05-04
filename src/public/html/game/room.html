@@ -25,6 +25,7 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script src="/js/clickboard.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap"
       rel="stylesheet"
@@ -80,9 +81,18 @@
   <body>
     <div id="controller">
       <div class="container">
-        <h1></h1>
+        <h1 id="room-name"></h1>
         <h2></h2>
         <div class="host-container"><div id="host"></div></div>
+        <div class="url-container">
+          <div class="url-content">
+            <div class="room-link">Room link</div>
+            <input id="copy-url" value="" readonly />
+            <button class="click-btn" data-clipboard-target="#copy-url">
+              <img src="/img/copy.png" alt="Copy to clipboard" />
+            </button>
+          </div>
+        </div>
         <div id="player-list"></div>
       </div>
       <div class="footer-container">

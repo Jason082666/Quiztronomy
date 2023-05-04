@@ -84,8 +84,6 @@ h1 {
 
 #host {
   font-family: "Barlow", sans-serif;
-  width: 75vw;
-  margin: 0 auto 0;
   font-size: 32px;
 }
 
@@ -128,10 +126,10 @@ button:hover {
   display: flex;
   width: 75vw;
   margin: 0 auto 0;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   margin-bottom: 30px;
-  margin-top: 30px;
+  margin-top: 50px;
 }
 
 .count-down-wrapper {
@@ -669,6 +667,9 @@ label {
   color: #5edabd;
 }
 
+#room-name {
+  color: #5edabd;
+}
 h2 {
   text-align: center;
 }
@@ -816,4 +817,52 @@ h2 {
 
 .swal2-container {
   z-index: 10000;
+  font-family: "Barlow", sans-serif;
+}
+
+.click-btn img {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+
+.click-btn {
+  height: 45px;
+  width: 45px;
+  position: absolute;
+  background-color: white;
+  right: 10px;
+  top: 4px;
+  box-shadow: none;
+}
+
+#copy-url {
+  font-family: "Barlow", sans-serif;
+  height: 40px;
+  font-size: 24px;
+  border-radius: 20px;
+  padding: 5px 0px 5px 20px;
+  color: #aeb1b3;
+  width: 480px;
+}
+.url-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  width: 75vw;
+  margin: 50px auto 20px;
+}
+
+.url-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.room-link {
+  font-size: 20px;
+  margin-right: 10px;
+  padding-top: 10px;
 }
