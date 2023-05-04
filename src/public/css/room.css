@@ -104,6 +104,9 @@ button:hover {
   color: #0e1a3c;
 }
 
+#start-game-btn {
+  padding: 10px;
+}
 #next-game-btn {
   position: absolute;
   height: 80px;
@@ -865,4 +868,41 @@ h2 {
   font-size: 20px;
   margin-right: 10px;
   padding-top: 10px;
+}
+
+.box_astronaut1 {
+  position: fixed;
+  top: 80%;
+  right: 20%;
+  will-change: transform;
+  animation: move-astronaut1 25s infinite linear both alternate;
+  z-index: -1;
+}
+
+@keyframes move-astronaut1 {
+  100% {
+    -webkit-transform: translate(-160px, -160px);
+    transform: translate(-160px, -160px);
+  }
+}
+
+.astronaut1 {
+  animation: rotate-astronaut 200s infinite linear both alternate;
+}
+
+@keyframes rotate-astronaut {
+  100% {
+    -webkit-transform: rotate(-720deg);
+    transform: rotate(-720deg);
+  }
+}
+
+.planet-1 {
+  position: fixed;
+  top: 5%;
+  left: 3%;
+}
+
+.planet {
+  width: 100px;
 }

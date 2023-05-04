@@ -72,17 +72,6 @@ $(".login-enter").on("click", async (e) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
 const Toast = Swal.mixin({
   toast: true,
   position: "top-end",

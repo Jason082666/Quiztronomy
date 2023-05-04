@@ -7,7 +7,7 @@ body {
   height: 100vh;
   overflow: hidden;
   font-size: 12px;
-  background-image: linear-gradient(to right bottom, #060d21, #192d65);
+  background-color: #0e1a3c;
   font-family: "Open Sans", sans-serif;
   letter-spacing: 0.2px;
   color: #fff;
@@ -26,7 +26,7 @@ body {
 }
 .center {
   position: relative;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   transition: transform 0.5s;

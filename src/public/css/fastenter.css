@@ -5,7 +5,7 @@ body {
   height: 100vh;
   width: 100vw;
   margin: 0;
-  background-color: #0e1a3c;
+  background-color: #e3e8f3;
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
@@ -13,11 +13,12 @@ body {
   font-family: "KiriFontNormal";
   font-weight: normal;
   font-style: normal;
+  position: relative;
 }
 
 .container {
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #0e1a3c;
   border-radius: 20px;
   margin-top: 40px;
   margin-bottom: 40px;
@@ -96,4 +97,20 @@ label,
 
 #enter-box {
   display: none;
+}
+
+#enter-room-box {
+  width: 40vw;
+}
+
+.img-container {
+  position: fixed;
+  bottom: 10px;
+}
+
+.img-container {
+  left: 0;
+}
+img {
+  width: 300px;
 }
