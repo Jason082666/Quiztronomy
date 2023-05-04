@@ -1,5 +1,5 @@
 body {
-  background-color: #0e1a3c;
+  background-image: url("/img/background.jpg");
   color: #ffffff;
   display: flex;
   font-family: "KiriFontNormal";
@@ -7,6 +7,8 @@ body {
   font-style: normal;
   flex-direction: column;
   justify-content: space-around;
+  background-repeat: no-repeat;
+  background-size: cover;
   height: 100vh;
   width: 100vw;
 }

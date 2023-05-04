@@ -5,7 +5,7 @@ body {
   height: 100vh;
   width: 100vw;
   margin: 0;
-  background-color: #e3e8f3;
+  background-color: #0e1a3c;
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
@@ -15,10 +15,17 @@ body {
   font-style: normal;
   position: relative;
 }
-
+canvas {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: -20;
+}
 .container {
   padding: 20px;
-  background-color: #0e1a3c;
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 20px;
   margin-top: 40px;
   margin-bottom: 40px;
@@ -39,7 +46,7 @@ label,
 .host-info,
 .join-text {
   display: block;
-  font-size: 20px;
+  font-size: 24px;
   color: #ffffff;
   /* margin-bottom: 10px; */
 }
@@ -103,14 +110,6 @@ label,
   width: 40vw;
 }
 
-.img-container {
-  position: fixed;
-  bottom: 10px;
-}
-
-.img-container {
-  left: 0;
-}
 img {
   width: 300px;
 }

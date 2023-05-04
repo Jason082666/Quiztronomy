@@ -180,8 +180,10 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
       $(".count-down-wrapper").fadeOut();
       $(".overlay").fadeOut();
       if (!socket.host) {
+        $("canvas").hide();
         renderQuizzPage(firstQuizz, rankResult);
       } else {
+        $("canvas").hide();
         renderHostQuizzPage(firstQuizz, rankResult);
       }
       if (socket.host) socket.quiz = 2;
@@ -242,6 +244,7 @@ socket.on("showFinalScore", (rank) => {
     $("#reconnect").hide();
     socket.disconnect = false;
   }
+  $("body").css("background-image", 'url("/img/rankpage.jpg")');
   showRank(rank);
 });
 

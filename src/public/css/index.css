@@ -452,16 +452,17 @@ h2 {
 }
 #join {
   width: 15%;
+  padding-top: 10px;
   margin-left: 10px;
   font-family: "KiriFontNormal";
-  padding: 5px 5px;
   border: none;
   color: #5edabd;
-  border-radius: 5px;
+  border-radius: 20px;
   font-size: 16px;
   color: #0e1a3c;
   background-color: #5edabd;
   cursor: pointer;
+  box-shadow: 3px 3px #ffffff;
 }
 #join:hover {
   background-color: white;
