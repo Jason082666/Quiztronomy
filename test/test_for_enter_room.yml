@@ -1,0 +1,9 @@
+config:
+  target: "https://localhost:3000"
+  phases:
+    - duration: 5
+      arrivalRate: 1
+  engines:
+    socketio-v3:
+      query:
+        token: secret-token
