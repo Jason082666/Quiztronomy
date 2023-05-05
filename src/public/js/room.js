@@ -181,9 +181,11 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
       $(".overlay").fadeOut();
       if (!socket.host) {
         $("canvas").hide();
+        $(".star-container").show();
         renderQuizzPage(firstQuizz, rankResult);
       } else {
         $("canvas").hide();
+        $(".star-container").show();
         renderHostQuizzPage(firstQuizz, rankResult);
       }
       if (socket.host) socket.quiz = 2;
@@ -245,6 +247,8 @@ socket.on("showFinalScore", (rank) => {
     socket.disconnect = false;
   }
   $("body").css("background-image", 'url("/img/rankpage.jpg")');
+  $(".star-container").hide();
+  $(".night").show();
   showRank(rank);
 });
 
