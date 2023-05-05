@@ -1,9 +1,28 @@
+# my-scenario.yml
 config:
-  target: "https://localhost:3000"
+  target: "quiztronomy.xyz/game/fastenter/79740913"
   phases:
-    - duration: 5
-      arrivalRate: 1
+    - duration: 60
+      arrivalRate: 10
   engines:
-    socketio-v3:
-      query:
-        token: secret-token
+    socketio-v3: {}
+  # setupScript: "./fake_localstorage.js"
+
+scenarios:
+  - name: Enter room scenario
+    engine: socketio-v3
+    flow:
+      # wait for the WebSocket upgrade (optional)
+      - think: 1
+      # basic emit
+      # - eval: |
+      #     const value = localStorage.getItem('myKey');
+      # emit an object
+      - emit:
+          channel: "join"
+          data:
+            userName: "Jason"
+            userId: "456789"
+            roomId: "79740913"
+      # do nothing for 30 seconds then disconnect
+      - think: 30
