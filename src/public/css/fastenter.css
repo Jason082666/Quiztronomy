@@ -124,16 +124,25 @@ img {
 
 .box_astronaut {
   position: fixed;
-  top: 50%;
-  left: 10%;
+  top: 60%;
+  right: 8%;
   will-change: transform;
   animation: move-astronaut 25s infinite linear both alternate;
   z-index: -1;
+}
+.astronaut {
+  animation: rotate-astronaut 200s infinite linear both alternate;
 }
 
 @keyframes move-astronaut {
   100% {
     -webkit-transform: translate(-160px, -160px);
     transform: translate(-160px, -160px);
+  }
+}
+@keyframes rotate-astronaut {
+  100% {
+    -webkit-transform: rotate(-720deg);
+    transform: rotate(-720deg);
   }
 }

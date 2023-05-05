@@ -872,41 +872,21 @@ h2 {
   padding-top: 10px;
 }
 
-.box_astronaut1 {
-  position: fixed;
-  top: 80%;
-  right: 20%;
-  will-change: transform;
-  animation: move-astronaut1 25s infinite linear both alternate;
-  z-index: -1;
-}
-.box_astronaut2 {
+.box_astronaut {
   position: fixed;
   top: 40%;
   left: 5%;
   will-change: transform;
-  animation: move-astronaut1 25s infinite linear both alternate;
+  animation: move-astronaut 25s infinite linear both alternate;
   z-index: -1;
 }
 
-@keyframes move-astronaut1 {
+@keyframes move-astronaut {
   100% {
     -webkit-transform: translate(-160px, -160px);
     transform: translate(-160px, -160px);
   }
 }
-
-.astronaut1 {
-  animation: rotate-astronaut 200s infinite linear both alternate;
-}
-
-@keyframes rotate-astronaut {
-  100% {
-    -webkit-transform: rotate(-720deg);
-    transform: rotate(-720deg);
-  }
-}
-
 .planet-container {
   position: fixed;
   top: 5%;
