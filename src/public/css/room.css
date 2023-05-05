@@ -572,7 +572,7 @@ label {
 }
 
 .footer-container {
-  height: 15%;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1173,7 +1173,7 @@ h2 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 0;
   overflow: hidden;
 }
 .star > li {
@@ -1182,9 +1182,9 @@ h2 {
   width: 7px;
   height: 7px;
   background: white;
-  left: 65%;
+  left: 90%;
   animation: animate 25s linear infinite;
-  bottom: -150px;
+  bottom: 150px;
   box-shadow: 0 0 45px 20px rgba(136, 255, 219, 0.849);
   overflow: hidden;
 }
@@ -1193,23 +1193,47 @@ h2 {
   height: 5px;
   border-radius: 50%;
   background: white;
-  left: 25%;
+  left: 2%;
   animation-delay: 3s;
 }
 
 .star > li:nth-child(2) {
   width: 10px;
   height: 10px;
-  left: 55%;
+  left: 5%;
   animation-delay: 1s;
 }
 
 .star > li:nth-child(3) {
   width: 20px;
   height: 20px;
-  left: 35%;
+  left: 8%;
+  animation-delay: 0s;
+  animation-duration: 6s;
+}
+
+.star > li:nth-child(4) {
+  width: 25px;
+  height: 25px;
+  right: -5%;
   animation-delay: 0s;
   animation-duration: 11s;
+}
+
+.star > li:nth-child(5) {
+  width: 10px;
+  height: 10px;
+  right: -8%;
+  animation-delay: 0s;
+  animation-duration: 13s;
+}
+
+.star > li:nth-child(6) {
+  width: 30px;
+  height: 30px;
+  right: -2%;
+  animation-delay: 0s;
+  animation-duration: 8s;
 }
 
 @keyframes animate {
