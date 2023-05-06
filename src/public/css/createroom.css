@@ -482,11 +482,21 @@ label {
   border: 2px solid #0e1a3c;
   margin-bottom: 20px;
   background-color: #5edabd;
+  position: relative;
 }
 .options-container {
   margin-top: 30px;
 }
-
+.cancel-update {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}
+#cancel-update {
+  width: 30px;
+  height: 30px;
+}
 .option-a,
 .option-b,
 .option-c,
@@ -661,10 +671,15 @@ textarea {
 
 /* 彈出視窗 */
 #pop-for-leave,
-#pop-for-create {
+#pop-for-create,
+#pop-for-edit {
   display: none;
 }
-
+#edit-component {
+  width: 600px;
+  height: 600px;
+  overflow: auto;
+}
 .popup-container {
   position: fixed;
   z-index: 9999;

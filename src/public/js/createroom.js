@@ -816,6 +816,53 @@ $("body").on("click", "#cancel", async function (e) {
   $(this).parent().parent().remove();
 });
 
+$("body").on("click", "#edit", async function (e) {
+  e.stopPropagation();
+  const id = $(this).parent().parent().attr("data-id");
+  if ($(this).parent().parent().find("ul:hidden").length > 0) {
+    $("#edit-component").html(`<div class="mcs-options">
+  <div class="cancel-update"><img src="/img/close.png" id="cancel-update" alt="clode" /></div>
+  <label>Update Quiz Question:</label>
+  <input type="text" class="question-text">
+  <div class="options-container">
+  <div class="option-a">
+  <label>A</label>
+  <input type="checkbox" id="checkA" name="answer" value="A">
+  <input type="text" id="optionA" name="optionA">
+  </div>
+  <div class="option-b"> 
+  <label>B</label>
+  <input type="checkbox" id="checkB" name="answer" value="B">
+  <input type="text" id="optionB" name="optionB">
+  </div>
+  <div class="option-c"> 
+  <label>C</label>
+  <input type="checkbox" id="checkC" name="answer" value="C">
+  <input type="text" id="optionC" name="optionC">
+  </div>
+  <div class="option-d"> 
+  <label>D</label>
+  <input type="checkbox" id="checkD" name="answer" value="D">
+  <input type="text" id="optionD" name="optionD">
+  </div>
+  <div class="explain-container">
+  <label>Answer Explaination :</label>
+  <textarea class= "explain-text"></textarea>
+  <div class="submit-btn-container">
+  <button type="submit" class="create-quizz-btn">update</button>
+  </div>
+  </div>
+</div>`);
+    $("#pop-for-edit").show();
+    $(".question-text").text($(this).parent().parent().find("h1").text());
+    $("#edit-component .mcs-options").attr("data-id", id);
+  }
+});
+
+$("body").on("click", ".cancel-update", async function () {
+  $(this).parent().parent().parent().parent().hide();
+});
+
 $("body").on("click", ".quiz-card", async function (e) {
   if (!$(e.target).is("input")) {
     $(this).children(".question-container").toggleClass("hidden");
