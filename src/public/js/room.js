@@ -263,6 +263,7 @@ socket.on("hostLeave", () => {
 });
 
 socket.on("showQuizExplain", (scoreObj) => {
+  sortScores();
   $("#quiz").empty();
   const parseQuizzObject = JSON.parse(localStorage.getItem("quizzDetail"));
   const correctAnswer = parseQuizzObject.answer.join(" ");
@@ -338,11 +339,13 @@ socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
       $(`.sort-player-score[data-id=${userId}]`),
       initvalue,
       score,
-      1000
+      500
     );
     $(`.sort-player-score[data-id=${userId}]`).text(score);
     sortScores();
-    callback();
+    setTimeout(() => {
+      callback();
+    }, 500);
   };
   rankQueue.add(sortPlayerRank);
 });
