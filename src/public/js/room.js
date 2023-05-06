@@ -31,7 +31,7 @@ $(window).on("load", function () {
 });
 const clipboard = new ClipboardJS(".click-btn");
 const hostName = window.location.hostname;
-$("#copy-url").val(`${hostName}/game/fastenter/${roomId}`);
+$("#copy-url").val(`https://${hostName}/game/fastenter/${roomId}`);
 
 $(".click-btn").on("click", () => {
   Toast.fire({
@@ -537,6 +537,7 @@ function trueFalseOnClick(quizzObj, $element) {
   $element.on("click", ".t-f", async function () {
     $(".t-f").prop("disabled", true);
     const chooseOption = $(this).data("value");
+    const initvalue = socket.score;
     if (chooseOption === quizzObj.answer[0]) {
       $(this).addClass("correct-answer");
       $(".t-f").addClass("tf-no-hover");
@@ -546,33 +547,18 @@ function trueFalseOnClick(quizzObj, $element) {
         score,
       });
       const addScore = +result.data.score;
-      const initvalue = socket.score;
       socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
-      socket.emit("getAnswer", {
-        chooseOption: [chooseOption],
-        initvalue,
-        score: socket.score,
-      });
     } else {
       $(this).addClass("wrong-answer");
       $(".t-f").addClass("tf-no-hover");
-      const result = await axios.post("/api/1.0/score/add", {
-        roomId,
-        score: 100,
-      });
-      const addScore = +result.data.score;
-      const initvalue = socket.score;
-      socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 1000);
-      changeSideBar(socket.score);
-      socket.emit("getAnswer", {
-        chooseOption: [chooseOption],
-        initvalue,
-        score: socket.score,
-      });
     }
+    socket.emit("getAnswer", {
+      chooseOption: [chooseOption],
+      initvalue,
+      score: socket.score,
+    });
   });
 }
 
@@ -584,7 +570,8 @@ function multipleChoicesOnclick(quizzObj, $element) {
     $("input[type='checkbox']").prop("disabled", true);
     $(this).prop("disabled", true);
     let rightoptions = 0;
-    let finalScore = 100;
+    let finalScore = 0;
+    const initvalue = socket.score;
     $("input[type='checkbox']").each(async function () {
       if (
         $(this).attr("data-state") === "right" &&
@@ -609,17 +596,17 @@ function multipleChoicesOnclick(quizzObj, $element) {
       }
     });
     const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
-    if (rightoptions > 0)
+    if (rightoptions > 0) {
       finalScore = Math.floor((rightoptions / 4) * 1.2 * score);
-    const result = await axios.post("/api/1.0/score/add", {
-      roomId,
-      score: finalScore,
-    });
-    const addScore = +result.data.score;
-    const initvalue = socket.score;
-    socket.score = addScore;
-    animateScore($("#player-score"), initvalue, socket.score, 1000);
-    changeSideBar(socket.score);
+      const result = await axios.post("/api/1.0/score/add", {
+        roomId,
+        score: finalScore,
+      });
+      const addScore = +result.data.score;
+      socket.score = addScore;
+      animateScore($("#player-score"), initvalue, socket.score, 1000);
+      changeSideBar(socket.score);
+    }
     const optionArray = [];
     $(".mcs-checked")
       .prev()
@@ -639,37 +626,23 @@ function multipleChoiceOnclick(quizzObj, $element) {
     $("input[name='answer']").attr("disabled", true);
     const $selectedInput = $('input[name="answer"]:checked');
     const chooseOption = $('input[name="answer"]:checked').val();
+    const initvalue = socket.score;
     if ($selectedInput.attr("data-state") === "right") {
       $('input[data-state="right"]').next().addClass("correct-answer");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
       const result = await axios.post("/api/1.0/score/add", { roomId, score });
       const addScore = +result.data.score;
-      const initvalue = socket.score;
       socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 1000);
       changeSideBar(socket.score);
-      socket.emit("getAnswer", {
-        chooseOption: [chooseOption],
-        initvalue,
-        score: socket.score,
-      });
     } else {
       $selectedInput.next().addClass("wrong-answer");
-      const result = await axios.post("/api/1.0/score/add", {
-        roomId,
-        score: 100,
-      });
-      const initvalue = socket.score;
-      const addScore = +result.data.score;
-      socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 1000);
-      changeSideBar(socket.score);
-      socket.emit("getAnswer", {
-        chooseOption: [chooseOption],
-        initvalue,
-        score: socket.score,
-      });
     }
+    socket.emit("getAnswer", {
+      chooseOption: [chooseOption],
+      initvalue,
+      score: socket.score,
+    });
   });
 }
 
