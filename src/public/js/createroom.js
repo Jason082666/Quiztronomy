@@ -812,7 +812,7 @@ const saveQuizzItemToLocal = (quizObj) => {
 
 $("body").on("click", "#cancel", async function (e) {
   e.stopPropagation();
-  const id = $(this).parent().attr("data-id");
+  const id = $(this).parent().parent().attr("data-id");
   const quizzes = localStorage.getItem("quizzes");
   const parseQuizz = JSON.parse(quizzes);
   delete parseQuizz[id];
