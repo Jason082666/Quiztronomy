@@ -144,7 +144,8 @@ $(".create-container").on("click", "#search-submit", async function () {
         quizz.answer,
         quizz.explain,
         quizz.options,
-        quizz.id
+        quizz.id,
+        quizz.type
       );
       searched.push(quizz.id);
       localStorage.setItem("searchedId", JSON.stringify(searched));
@@ -155,7 +156,8 @@ $(".create-container").on("click", "#search-submit", async function () {
         quizz.question,
         quizz.answer,
         quizz.explain,
-        quizz.id
+        quizz.id,
+        quizz.type
       );
       searched.push(quizz.id);
       localStorage.setItem("searchedId", JSON.stringify(searched));
@@ -195,7 +197,8 @@ $(".create-container").on("keydown", "#search-input", async function (e) {
           quizz.answer,
           quizz.explain,
           quizz.options,
-          quizz.id
+          quizz.id,
+          quizz.type
         );
         searched.push(quizz.id);
         localStorage.setItem("searchedId", JSON.stringify(searched));
@@ -206,7 +209,8 @@ $(".create-container").on("keydown", "#search-input", async function (e) {
           quizz.question,
           quizz.answer,
           quizz.explain,
-          quizz.id
+          quizz.id,
+          quizz.type
         );
         searched.push(quizz.id);
         localStorage.setItem("searchedId", JSON.stringify(searched));
@@ -230,7 +234,8 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
       data.question,
       data.answer,
       data.explain,
-      data.id
+      data.id,
+      data.type
     );
     const html = quizz.html;
     html.prepend(
@@ -244,7 +249,8 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
       data.answer,
       data.explain,
       data.options,
-      data.id
+      data.id,
+      data.type
     );
     const html = quizz.html;
     html.prepend(
@@ -293,7 +299,8 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.question,
       data.answer,
       data.explain,
-      data.id
+      data.id,
+      data.type
     );
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
@@ -365,7 +372,8 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.answer,
       data.explain,
       data.options,
-      data.id
+      data.id,
+      data.type
     );
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
@@ -440,7 +448,8 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.answer,
       data.explain,
       data.options,
-      data.id
+      data.id,
+      data.type
     );
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
@@ -819,6 +828,7 @@ $("body").on("click", "#cancel", async function (e) {
 $("body").on("click", "#edit", async function (e) {
   e.stopPropagation();
   const id = $(this).parent().parent().attr("data-id");
+  const type = $(this).parent().parent().attr("data-type");
   if ($(this).parent().parent().find("ul:hidden").length > 0) {
     $("#edit-component").html(`<div class="mcs-options">
   <div class="cancel-update"><img src="/img/close.png" id="cancel-update" alt="clode" /></div>
@@ -849,13 +859,68 @@ $("body").on("click", "#edit", async function (e) {
   <label>Answer Explaination :</label>
   <textarea class= "explain-text"></textarea>
   <div class="submit-btn-container">
-  <button type="submit" class="create-quizz-btn">update</button>
+  <button type="submit" class="create-quizz-btn" id="update">update</button>
   </div>
   </div>
 </div>`);
     $("#pop-for-edit").show();
-    $(".question-text").text($(this).parent().parent().find("h1").text());
     $("#edit-component .mcs-options").attr("data-id", id);
+    $("#edit-component .mcs-options").attr("data-type", type);
+    $("#edit-component .mcs-options .question-text").val(
+      $(this).parent().parent().find("h1").text()
+    );
+    $("#edit-component .mcs-options .options-container .option-a #optionA").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[0]).text()
+    );
+    $("#edit-component .mcs-options .options-container .option-b #optionB").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[1]).text()
+    );
+    $("#edit-component .mcs-options .options-container .option-c #optionC").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[2]).text()
+    );
+    $("#edit-component .mcs-options .options-container .option-d #optionD").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[3]).text()
+    );
+    $(
+      "#edit-component .mcs-options .options-container .explain-container .explain-text"
+    ).val($($(this).parent().parent().find(".question-container div")).text());
+  } else {
+    $("#edit-component").html(`<div class="tf-options">
+  <div class="cancel-update"><img src="/img/close.png" id="cancel-update" alt="clode" /></div>
+  <label>Update Quiz Question:</label>
+  <input type="text" class="question-text">
+  <div class="options-container">
+  <div class="tf-container">
+  <label>True</label>
+  <input type="radio" name="answer" value="true" class="tf-option">
+  <label>False</label>
+  <input type="radio" name="answer" value="false" class="tf-option">
+  </div>
+  </div>
+  <br>
+    <div class="explain-container">
+  <label>Answer Explaination :</label>
+  <textarea class= "explain-text"></textarea>
+  <div class="submit-btn-container">
+  <button type="submit" class="create-quizz-btn" id="update">Update</button>
+  </div>
+  </div>
+</div>
+`);
+    $("#pop-for-edit").show();
+    $("#edit-component .tf-options").attr("data-id", id);
+    $("#edit-component .tf-options").attr("data-type", type);
+    $("#edit-component .tf-options .question-text").val(
+      $(this).parent().parent().find("h1").text()
+    );
+    $("#edit-component .tf-options .explain-container .explain-text").val(
+      $($(this).parent().parent().find(".question-container div")[1]).text()
+    );
+  }
+});
+
+$("#edit-component").on("click", "#update", () => {
+  if ($("#edit-component").find(".tf-options").length > 0) {
   }
 });
 

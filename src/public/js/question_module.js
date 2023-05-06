@@ -1,9 +1,10 @@
 class Quizz {
-  constructor(question, answer, explain, id) {
+  constructor(question, answer, explain, id, type) {
     this.question = question;
     this.answer = answer;
     this.explain = explain;
     this.id = id;
+    this.type = type;
   }
   checkAnswer(selectedOption) {
     return this.answer.includes(selectedOption);
@@ -11,7 +12,7 @@ class Quizz {
 
   get html() {
     const $element = $(
-      `<div data-id='${this.id}' class='quiz-card quiz-card-resize' draggable="true">`
+      `<div data-id='${this.id}' data-type='${this.type}' class='quiz-card quiz-card-resize' draggable="true">`
     );
     const $iconContainer = $(`<div class="icon-container">
     <img src="/img/edit.png" id="edit" alt="edit">
@@ -27,8 +28,8 @@ class Quizz {
 }
 
 export class TrueFalse extends Quizz {
-  constructor(question, answer, explain, id) {
-    super(question, answer, explain, id);
+  constructor(question, answer, explain, id, type) {
+    super(question, answer, explain, id, type);
   }
 
   get html() {
@@ -48,8 +49,8 @@ export class TrueFalse extends Quizz {
 }
 
 export class MultiChoice extends Quizz {
-  constructor(question, answer, explain, options, id) {
-    super(question, answer, explain, id);
+  constructor(question, answer, explain, options, id, type) {
+    super(question, answer, explain, id, type);
     this.options = options;
   }
   get html() {
