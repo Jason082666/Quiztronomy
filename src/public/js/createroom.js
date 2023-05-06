@@ -870,16 +870,16 @@ $("body").on("click", "#edit", async function (e) {
       $(this).parent().parent().find("h1").text()
     );
     $("#edit-component .mcs-options .options-container .option-a #optionA").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[0]).text()
+      $($(this).parent().parent().find("ul li")[0]).text()
     );
     $("#edit-component .mcs-options .options-container .option-b #optionB").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[1]).text()
+      $($(this).parent().parent().find("ul li")[1]).text()
     );
     $("#edit-component .mcs-options .options-container .option-c #optionC").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[2]).text()
+      $($(this).parent().parent().find("ul li")[2]).text()
     );
     $("#edit-component .mcs-options .options-container .option-d #optionD").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[3]).text()
+      $($(this).parent().parent().find("ul li")[3]).text()
     );
     $(
       "#edit-component .mcs-options .options-container .explain-container .explain-text"
@@ -929,16 +929,16 @@ $("body").on("click", "#edit", async function (e) {
       $(this).parent().parent().find("h1").text()
     );
     $("#edit-component .mc-options .options-container .option-a #optionA").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[0]).text()
+      $($(this).parent().parent().find("ul li")[0]).text()
     );
     $("#edit-component .mc-options .options-container .option-b #optionB").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[1]).text()
+      $($(this).parent().parent().find("ul li")[1]).text()
     );
     $("#edit-component .mc-options .options-container .option-c #optionC").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[2]).text()
+      $($(this).parent().parent().find("ul li")[2]).text()
     );
     $("#edit-component .mc-options .options-container .option-d #optionD").val(
-      $($(this).parent().parent().find("ul:hidden li:hidden")[3]).text()
+      $($(this).parent().parent().find("ul li")[3]).text()
     );
 
     $(
