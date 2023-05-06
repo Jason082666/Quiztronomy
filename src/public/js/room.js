@@ -212,6 +212,8 @@ socket.on("showQuiz", ({ quiz, quizNum, quizLength, rankResult }) => {
   </div>
 </div>`);
     $(".block").hide();
+    $("canvas").hide();
+    $(".star-container").show();
     $("#reconnect").hide();
     sortPlayers(rankResult);
     socket.disconnect = false;
@@ -243,6 +245,10 @@ socket.on("showFinalScore", (rank) => {
   </div>
 </div>`);
     $(".block").hide();
+    $("canvas").hide();
+    $("body").css("background-image", 'url("/img/rankpage.jpg")');
+    $(".star-container").hide();
+    $(".night").show();
     $("#reconnect").hide();
     socket.disconnect = false;
   }
@@ -335,12 +341,12 @@ $(".container").after($countdown);
 
 socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
   const sortPlayerRank = function (callback) {
-    animateScore(
-      $(`.sort-player-score[data-id=${userId}]`),
-      initvalue,
-      score,
-      500
-    );
+    // animateScore(
+    //   $(`.sort-player-score[data-id=${userId}]`),
+    //   initvalue,
+    //   score,
+    //   500
+    // );
     $(`.sort-player-score[data-id=${userId}]`).text(score);
     sortScores();
     setTimeout(() => {
