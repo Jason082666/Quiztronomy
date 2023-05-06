@@ -13,13 +13,14 @@ class Quizz {
     const $element = $(
       `<div data-id='${this.id}' class='quiz-card quiz-card-resize' draggable="true">`
     );
-    const $cancelBtn = $(`<div class="icon-container">
-    <img src="/img/delete.png" alt="icon">
+    const $iconContainer = $(`<div class="icon-container">
+    <img src="/img/edit.png" id="edit" alt="edit">
+    <img src="/img/delete.png" id="cancel" alt="cancel">
   </div>`);
     const $questionHeader = $(`<h1 class='quizz-question'>`).text(
       this.question
     );
-    $element.append($cancelBtn);
+    $element.append($iconContainer);
     $element.append($questionHeader);
     return $element;
   }

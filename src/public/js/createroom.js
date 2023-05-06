@@ -297,7 +297,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     );
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
-    html.find(".icon-container").addClass("hide-cancle-btn");
+    html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
       const control = $(`<div class="controls">
@@ -369,7 +369,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     );
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
-    html.find(".icon-container").addClass("hide-cancle-btn");
+    html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
       const control = $(`<div class="controls">
@@ -444,7 +444,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     );
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
-    html.find(".icon-container").addClass("hide-cancle-btn");
+    html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
       const control = $(`<div class="controls">
@@ -542,137 +542,135 @@ const transToBoolean = (answer) => {
   return false;
 };
 
-$(document).ready(function () {
-  // Drag quiz cards from search result to container-right
-  $("#search-result").on("dragstart", ".quiz-card", function (event) {
-    const dataId = $(event.target).attr("data-id");
-    event.originalEvent.dataTransfer.setData("text/plain", dataId);
-  });
+// Drag quiz cards from search result to container-right
+$("#search-result").on("dragstart", ".quiz-card", function (event) {
+  const dataId = $(event.target).attr("data-id");
+  event.originalEvent.dataTransfer.setData("text/plain", dataId);
+});
 
-  // Drag quiz cards from container-right to search result
-  $(".container-right").on("dragstart", ".quiz-card", function (event) {
-    // $(event.target).find(".controls").remove();
-    const dataId = $(event.target).attr("data-id");
-    event.originalEvent.dataTransfer.setData("text/plain", dataId);
-  });
+// Drag quiz cards from container-right to search result
+$(".container-right").on("dragstart", ".quiz-card", function (event) {
+  // $(event.target).find(".controls").remove();
+  const dataId = $(event.target).attr("data-id");
+  event.originalEvent.dataTransfer.setData("text/plain", dataId);
+});
 
-  // Allow dropping on container-right
-  $(".container-right").on("dragover", function (event) {
-    event.preventDefault();
-  });
+// Allow dropping on container-right
+$(".container-right").on("dragover", function (event) {
+  event.preventDefault();
+});
 
-  // Allow dropping on search-result
-  $("#search-result").on("dragover", function (event) {
-    event.preventDefault();
-  });
+// Allow dropping on search-result
+$("#search-result").on("dragover", function (event) {
+  event.preventDefault();
+});
 
-  // Handle dropping on search-result
-  $("#search-result").on("drop", function (event) {
-    event.preventDefault();
-    const dataId = event.originalEvent.dataTransfer.getData("text");
-    const draggedElement = $(`[data-id="${dataId}"]`);
-    draggedElement.find(".controls").remove();
-    draggedElement.find(".icon-container").removeClass("hide-cancle-btn");
-    $(this).append(draggedElement);
-    updatePositionLabels();
-  });
+// Handle dropping on search-result
+$("#search-result").on("drop", function (event) {
+  event.preventDefault();
+  const dataId = event.originalEvent.dataTransfer.getData("text");
+  const draggedElement = $(`[data-id="${dataId}"]`);
+  draggedElement.find(".controls").remove();
+  draggedElement.find(".icon-container").removeClass("hide-btn");
+  $(this).append(draggedElement);
+  updatePositionLabels();
+});
 
-  // Enable draggable and sortable on quiz cards in container-right
-  $(".container-right .quiz-card")
-    .draggable({
-      revert: "invalid",
-      helper: "clone",
-    })
-    .sortable({
-      axis: "y",
-      containment: "parent",
-      tolerance: "pointer",
-      cursor: "move",
-    });
-
-  // Enable draggable on quiz cards in search-result
-  $("#search-result .quiz-card").draggable({
+// Enable draggable and sortable on quiz cards in container-right
+$(".container-right .quiz-card")
+  .draggable({
     revert: "invalid",
     helper: "clone",
+  })
+  .sortable({
+    axis: "y",
+    containment: "parent",
+    tolerance: "pointer",
+    cursor: "move",
   });
 
-  // Allow dropping on quiz-cards in container-right
-  $(".container-right").on("dragover", ".quiz-card", function (event) {
-    event.preventDefault();
-    $(this).addClass("drag-over");
-  });
+// Enable draggable on quiz cards in search-result
+$("#search-result .quiz-card").draggable({
+  revert: "invalid",
+  helper: "clone",
+});
 
-  // Remove drag-over class when leaving quiz-cards in container-right
-  $(".container-right").on("dragleave", ".quiz-card", function (event) {
-    event.preventDefault();
-    $(this).removeClass("drag-over");
-  });
+// Allow dropping on quiz-cards in container-right
+$(".container-right").on("dragover", ".quiz-card", function (event) {
+  event.preventDefault();
+  $(this).addClass("drag-over");
+});
 
-  // Handle dropping quiz-cards in container-right
-  $(".container-right").on("drop", ".quiz-card", function (event) {
-    event.preventDefault();
-    $(this).removeClass("drag-over");
-    const dataId = event.originalEvent.dataTransfer.getData("text/plain");
-    const droppedQuizCard = $(`[data-id="${dataId}"]`);
-    droppedQuizCard.find(".icon-container").addClass("hide-cancle-btn");
-    const targetQuizCard = $(this);
-    const controls = droppedQuizCard.find(".controls"); // 檢查是否已經存在 controls
-    if (controls.length === 0) {
-      const controls = $(`<div class="controls">
+// Remove drag-over class when leaving quiz-cards in container-right
+$(".container-right").on("dragleave", ".quiz-card", function (event) {
+  event.preventDefault();
+  $(this).removeClass("drag-over");
+});
+
+// Handle dropping quiz-cards in container-right
+$(".container-right").on("drop", ".quiz-card", function (event) {
+  event.preventDefault();
+  $(this).removeClass("drag-over");
+  const dataId = event.originalEvent.dataTransfer.getData("text/plain");
+  const droppedQuizCard = $(`[data-id="${dataId}"]`);
+  droppedQuizCard.find(".icon-container").addClass("hide-btn");
+  const targetQuizCard = $(this);
+  const controls = droppedQuizCard.find(".controls"); // 檢查是否已經存在 controls
+  if (controls.length === 0) {
+    const controls = $(`<div class="controls">
       <span class="position-label"></span>
       <span class="count-down-text">select time</span>
       <img class="time-arrow" src="/img/arrow.png" alt="arrow">
       <input type="number" min="0" max="60" value="10">
     </div>`);
-      droppedQuizCard.prepend(controls);
-    }
-    if (droppedQuizCard.index() < targetQuizCard.index()) {
-      targetQuizCard.after(droppedQuizCard);
-    } else {
-      targetQuizCard.before(droppedQuizCard);
-    }
-    updatePositionLabels();
-  });
+    droppedQuizCard.prepend(controls);
+  }
+  if (droppedQuizCard.index() < targetQuizCard.index()) {
+    targetQuizCard.after(droppedQuizCard);
+  } else {
+    targetQuizCard.before(droppedQuizCard);
+  }
+  updatePositionLabels();
+});
 
-  // Handle dropping on container-right
-  $(".container-right").on("drop", function (event) {
-    event.preventDefault();
-    const dataId = event.originalEvent.dataTransfer.getData("text");
-    const draggedElement = $(`[data-id="${dataId}"]`);
-    draggedElement.find(".icon-container").addClass("hide-cancle-btn");
-    const controls = draggedElement.find(".controls"); // 檢查是否已經存在 controls
-    if (controls.length === 0) {
-      const controls = $(`<div class="controls">
+// Handle dropping on container-right
+$(".container-right").on("drop", function (event) {
+  event.preventDefault();
+  const dataId = event.originalEvent.dataTransfer.getData("text");
+  const draggedElement = $(`[data-id="${dataId}"]`);
+  draggedElement.find(".icon-container").addClass("hide-btn");
+  const controls = draggedElement.find(".controls"); // 檢查是否已經存在 controls
+  if (controls.length === 0) {
+    const controls = $(`<div class="controls">
       <span class="position-label"></span>
       <span class="count-down-text">select time</span>
       <img class="time-arrow" src="/img/arrow.png" alt="arrow">
       <input type="number" min="0" max="60" value = "10">
     </div>`);
-      draggedElement.prepend(controls);
-    }
-    const containerRight = $(this);
-    const dropTarget = getDropTarget(containerRight, event.pageY);
-    if (dropTarget) {
-      draggedElement.insertBefore(dropTarget);
-    } else {
-      containerRight.append(draggedElement);
-    }
-    updatePositionLabels();
-  });
-  // Helper function to find drop target
-  function getDropTarget(container, mouseY) {
-    const children = container.children();
-    for (let i = 0; i < children.length; i++) {
-      const child = $(children[i]);
-      const childTop = child.offset().top;
-      const childHeight = child.outerHeight();
-      if (mouseY >= childTop && mouseY <= childTop + childHeight) {
-        return child;
-      }
-    }
-    return null;
+    draggedElement.prepend(controls);
   }
+  const containerRight = $(this);
+  const dropTarget = getDropTarget(containerRight, event.pageY);
+  if (dropTarget) {
+    draggedElement.insertBefore(dropTarget);
+  } else {
+    containerRight.append(draggedElement);
+  }
+  updatePositionLabels();
 });
+// Helper function to find drop target
+function getDropTarget(container, mouseY) {
+  const children = container.children();
+  for (let i = 0; i < children.length; i++) {
+    const child = $(children[i]);
+    const childTop = child.offset().top;
+    const childHeight = child.outerHeight();
+    if (mouseY >= childTop && mouseY <= childTop + childHeight) {
+      return child;
+    }
+  }
+  return null;
+}
 
 $(".exit-btn").on("click", () => {
   $("#pop-for-leave").show();
@@ -803,7 +801,7 @@ const saveQuizzItemToLocal = (quizObj) => {
   localStorage.setItem("quizzes", stringifyQuizzes);
 };
 
-$("body").on("click", ".icon-container", async function (e) {
+$("body").on("click", "#cancel", async function (e) {
   e.stopPropagation();
   const id = $(this).parent().attr("data-id");
   const quizzes = localStorage.getItem("quizzes");
@@ -815,7 +813,7 @@ $("body").on("click", ".icon-container", async function (e) {
   obj[id] = -0.5;
   const popObj = { popObj: obj };
   await axios.post("/api/1.0/question/update", popObj);
-  $(this).parent().remove();
+  $(this).parent().parent().remove();
 });
 
 $("body").on("click", ".quiz-card", async function (e) {

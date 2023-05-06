@@ -275,8 +275,14 @@ input[type="number"]::placeholder {
   min-height: 150px;
 }
 .quiz-card:hover {
-  box-shadow: 0 0 5px #ccc; /* 設定卡片滑鼠懸停時的陰影效果 */
+  box-shadow: 0 0 5px #ccc;
 }
+.ai-icon-container {
+  position: absolute;
+  top: 0;
+  left: 1px;
+}
+
 .container-right div .ai-icon-container {
   display: none;
 }
@@ -301,7 +307,7 @@ input[type="number"]::placeholder {
 .quiz-card h1 {
   font-size: 24px;
   font-weight: 300;
-  margin-top: 10px;
+  margin-top: 30px;
   margin-bottom: 10px;
   white-space: normal;
   word-wrap: break-word;
@@ -331,7 +337,7 @@ input[type="number"]::placeholder {
   display: none;
 }
 
-.hide-cancle-btn {
+.hide-btn {
   display: none;
 }
 
@@ -342,8 +348,8 @@ input[type="number"]::placeholder {
 }
 
 .icon-container img {
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: 30px;
 }
 label {
   font-weight: bold;
