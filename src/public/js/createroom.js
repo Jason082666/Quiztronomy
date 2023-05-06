@@ -305,7 +305,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
     html.find(".icon-container").addClass("hide-btn");
-    const controls = html.find(".controls"); // 檢查是否已經存在 controls
+    const controls = html.find(".controls");
     if (controls.length === 0) {
       const control = $(`<div class="controls">
       <span class="position-label"></span>
@@ -317,7 +317,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     }
     $(".container-right").append(html);
     Toast.fire({
-      icon: "warning",
+      icon: "success",
       title: "Quiz generated !",
     });
     updatePositionLabels();
@@ -378,7 +378,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     saveQuizzItemToLocal({ ...quizzObj, id: data.id });
     const html = quizz.html;
     html.find(".icon-container").addClass("hide-btn");
-    const controls = html.find(".controls"); // 檢查是否已經存在 controls
+    const controls = html.find(".controls");
     if (controls.length === 0) {
       const control = $(`<div class="controls">
       <span class="position-label"></span>
@@ -390,7 +390,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     }
     $(".container-right").append(html);
     Toast.fire({
-      icon: "warning",
+      icon: "success",
       title: "Quiz generated !",
     });
     updatePositionLabels();
@@ -466,7 +466,7 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
     }
     $(".container-right").append(html);
     Toast.fire({
-      icon: "warning",
+      icon: "success",
       title: "Quiz generated !",
     });
     updatePositionLabels();
@@ -829,7 +829,7 @@ $("body").on("click", "#edit", async function (e) {
   e.stopPropagation();
   const id = $(this).parent().parent().attr("data-id");
   const type = $(this).parent().parent().attr("data-type");
-  if ($(this).parent().parent().find("ul:hidden").length > 0) {
+  if (["MCS-CH", "MCS-EN"].includes(type)) {
     $("#edit-component").html(`<div class="mcs-options">
   <div class="cancel-update"><img src="/img/close.png" id="cancel-update" alt="clode" /></div>
   <label>Update Quiz Question:</label>
@@ -884,7 +884,68 @@ $("body").on("click", "#edit", async function (e) {
     $(
       "#edit-component .mcs-options .options-container .explain-container .explain-text"
     ).val($($(this).parent().parent().find(".question-container div")).text());
-  } else {
+  }
+  if (["MC-CH", "MC-EN"].includes(type)) {
+    $("#edit-component").html(
+      `<div class="mc-options">
+      <div class="cancel-update"><img src="/img/close.png" id="cancel-update" alt="clode" /></div>
+  <label>Update Quiz Question:</label>
+  <input type="text" class="question-text">
+  <div class="options-container">
+  <div class="option-a">
+  <label>A</label>
+  <input type="radio" id="radioA" name="answer" value="A">
+  <input type="text" id="optionA" name="optionA">
+  </div>
+  <div class="option-b">
+  <label>B</label>
+  <input type="radio" id="radioB" name="answer" value="B">
+  <input type="text" id="optionB" name="optionB">
+  </div>
+    <div class="option-c">
+  <label>C</label>
+  <input type="radio" id="radioC" name="answer" value="C">
+  <input type="text" id="optionC" name="optionC">
+  </div>
+    <div class="option-d">
+  <label>D</label>
+  <input type="radio" id="radioD" name="answer" value="D">
+  <input type="text" id="optionD" name="optionD">
+  </div>
+  <div class="explain-container">
+    <label>Answer Explaination :</label>
+    <textarea class= "explain-text"></textarea>
+    <div class="submit-btn-container">
+    <button type="submit" class="create-quizz-btn" id="update">Update</button>
+    </div>
+  </div>
+  </div>
+`
+    );
+    $("#pop-for-edit").show();
+    $("#edit-component .mc-options").attr("data-id", id);
+    $("#edit-component .mc-options").attr("data-type", type);
+    $("#edit-component .mc-options .question-text").val(
+      $(this).parent().parent().find("h1").text()
+    );
+    $("#edit-component .mc-options .options-container .option-a #optionA").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[0]).text()
+    );
+    $("#edit-component .mc-options .options-container .option-b #optionB").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[1]).text()
+    );
+    $("#edit-component .mc-options .options-container .option-c #optionC").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[2]).text()
+    );
+    $("#edit-component .mc-options .options-container .option-d #optionD").val(
+      $($(this).parent().parent().find("ul:hidden li:hidden")[3]).text()
+    );
+
+    $(
+      "#edit-component .mc-options .options-container .explain-container .explain-text"
+    ).val($($(this).parent().parent().find(".question-container div")).text());
+  }
+  if (["TF-CH", "TF-EN"].includes(type)) {
     $("#edit-component").html(`<div class="tf-options">
   <div class="cancel-update"><img src="/img/close.png" id="cancel-update" alt="clode" /></div>
   <label>Update Quiz Question:</label>
@@ -919,13 +980,245 @@ $("body").on("click", "#edit", async function (e) {
   }
 });
 
-$("#edit-component").on("click", "#update", () => {
+$("#edit-component").on("click", "#update", async function () {
+  const question = $("#edit-component div .question-text").val();
+  const type = $("#edit-component div").attr("data-type");
+  if (!question) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please enter your quiz title.",
+    });
+  }
+  const explain = $(".explain-text:visible").val();
+  if (!explain) {
+    return Toast.fire({
+      icon: "warning",
+      title: "Please enter the explaination",
+    });
+  }
   if ($("#edit-component").find(".tf-options").length > 0) {
+    const answer = $(
+      "#edit-component div .options-container .tf-container input[name='answer']:checked"
+    ).val();
+    if (!answer) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please check the correct answer.",
+      });
+    }
+    const quizzObj = {
+      question,
+      answer: [transToBoolean(answer)],
+      type,
+      explain,
+    };
+    const data = await generateQuizzData(quizzObj);
+    const quizz = new TrueFalse(
+      data.question,
+      data.answer,
+      data.explain,
+      data.id,
+      data.type
+    );
+    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
+    const html = quizz.html;
+    html.find(".icon-container").addClass("hide-btn");
+    const controls = html.find(".controls");
+    if (controls.length === 0) {
+      const control = $(`<div class="controls">
+      <span class="position-label"></span>
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value="10">
+    </div>`);
+      html.prepend(control);
+    }
+    $(".container-right").append(html);
+    $("#edit-component").empty();
+    $("#pop-for-edit").hide();
+    Toast.fire({
+      icon: "success",
+      title: "Quiz generated !",
+    });
+    updatePositionLabels();
+    return;
+  }
+  if ($("#edit-component").find(".mc-options").length > 0) {
+    const answer = $("input[name='answer']:visible:checked").val();
+    if (!answer) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please check the correct answer.",
+      });
+    }
+    const optionA = $(
+      "#edit-component div .options-container .option-a #optionA"
+    ).val();
+    if (!optionA) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option A.",
+      });
+    }
+    const optionB = $(
+      "#edit-component div .options-container .option-b #optionB"
+    ).val();
+    if (!optionB) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option B.",
+      });
+    }
+    const optionC = $(
+      "#edit-component div .options-container .option-c #optionC"
+    ).val();
+    if (!optionC) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option C.",
+      });
+    }
+    const optionD = $(
+      "#edit-component div .options-container .option-d #optionD"
+    ).val();
+    if (!optionD) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option D.",
+      });
+    }
+    const quizzObj = {
+      question,
+      options: { A: optionA, B: optionB, C: optionC, D: optionD },
+      answer: [answer],
+      type,
+      explain,
+    };
+    const data = await generateQuizzData(quizzObj);
+    const quizz = new MultiChoice(
+      data.question,
+      data.answer,
+      data.explain,
+      data.options,
+      data.id,
+      data.type
+    );
+    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
+    const html = quizz.html;
+    html.find(".icon-container").addClass("hide-btn");
+    const controls = html.find(".controls");
+    if (controls.length === 0) {
+      const control = $(`<div class="controls">
+      <span class="position-label"></span>
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value="10">
+    </div>`);
+      html.prepend(control);
+    }
+    $(".container-right").append(html);
+    $("#edit-component").empty();
+    $("#pop-for-edit").hide();
+    Toast.fire({
+      icon: "success",
+      title: "Quiz generated !",
+    });
+    updatePositionLabels();
+    return;
+  }
+  if ($("#edit-component").find(".mcs-options").length > 0) {
+    const answerArray = [];
+    if ($('input[name="answer"]:visible:checked').length == 0) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please check the correct answers.",
+      });
+    }
+    $('input[name="answer"]:visible:checked').each(function () {
+      answerArray.push($(this).val());
+    });
+    console.log("anserArray", answerArray);
+    const optionA = $(
+      "#edit-component div .options-container .option-a #optionA"
+    ).val();
+    if (!optionA) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option A.",
+      });
+    }
+    const optionB = $(
+      "#edit-component div .options-container .option-b #optionB"
+    ).val();
+    if (!optionB) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option B.",
+      });
+    }
+
+    const optionC = $(
+      "#edit-component div .options-container .option-c #optionC"
+    ).val();
+    if (!optionC) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option C.",
+      });
+    }
+
+    const optionD = $(
+      "#edit-component div .options-container .option-d #optionD"
+    ).val();
+    if (!optionD) {
+      return Toast.fire({
+        icon: "warning",
+        title: "Please enter option D.",
+      });
+    }
+    const quizzObj = {
+      question,
+      options: { A: optionA, B: optionB, C: optionC, D: optionD },
+      answer: answerArray,
+      type,
+      explain,
+    };
+    const data = await generateQuizzData(quizzObj);
+    const quizz = new MultiChoice(
+      data.question,
+      data.answer,
+      data.explain,
+      data.options,
+      data.id,
+      data.type
+    );
+    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
+    const html = quizz.html;
+    html.find(".icon-container").addClass("hide-btn");
+    const controls = html.find(".controls");
+    if (controls.length === 0) {
+      const control = $(`<div class="controls">
+      <span class="position-label"></span>
+      <span class="count-down-text">select time</span>
+      <img class="time-arrow" src="/img/arrow.png" alt="arrow">
+      <input type="number" min="0" max="60" value="10">
+    </div>`);
+      html.prepend(control);
+    }
+    $(".container-right").append(html);
+    $("#edit-component").empty();
+    $("#pop-for-edit").hide();
+    Toast.fire({
+      icon: "success",
+      title: "Quiz generated !",
+    });
+    updatePositionLabels();
   }
 });
 
 $("body").on("click", ".cancel-update", async function () {
   $(this).parent().parent().parent().parent().hide();
+  $("#edit-component").empty();
 });
 
 $("body").on("click", ".quiz-card", async function (e) {

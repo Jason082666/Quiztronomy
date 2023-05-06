@@ -476,7 +476,8 @@ label {
 }
 
 .mcs-options,
-.tf-options {
+.tf-options,
+.mc-options {
   padding: 30px;
   border-radius: 20px;
   border: 2px solid #0e1a3c;
