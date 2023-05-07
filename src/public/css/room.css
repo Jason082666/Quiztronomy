@@ -1,3 +1,7 @@
+html {
+  height: 100vh;
+  overflow: auto;
+}
 body {
   background-image: url("/img/background.jpg");
   color: #ffffff;
@@ -457,7 +461,6 @@ label {
   white-space: normal;
   word-wrap: break-word;
 }
-
 
 #scoreboard {
   display: flex;
