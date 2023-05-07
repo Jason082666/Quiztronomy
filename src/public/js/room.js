@@ -253,6 +253,7 @@ socket.on("showFinalScore", (rank) => {
     socket.disconnect = false;
   }
   $("body").css("background-image", 'url("/img/rankpage.jpg")');
+  $("#quiz").css("justify-content", "flex-start");
   $(".star-container").hide();
   $(".night").show();
   showRank(rank);

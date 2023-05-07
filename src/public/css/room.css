@@ -458,11 +458,6 @@ label {
   word-wrap: break-word;
 }
 
-#quiz > .ranking {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
 
 #scoreboard {
   display: flex;
