@@ -26,6 +26,11 @@ if (dataArray !== "no data") {
     }:${minute}:${second}${ampm}`;
     return { x: index, y: +data.score, date: time };
   });
+} else {
+  const text = $(
+    "<div class='suggesting-text'>Play your very first game now !</div>"
+  );
+  $("section").after(text);
 }
 
 const canvas = $("#canvas")[0];
@@ -67,7 +72,7 @@ animate();
 const { game, score } = totalGameAndScore.data.data;
 $(".game-times").html(`You've played ${game} games.`);
 $(".score-totals").html(`You've earned  ${score}  scores.`);
-
+$(".player-history-btn").css("border", "5px solid white");
 const renderQuiz = (data) => {
   let historyDatahtml = "";
   const dataArray = data.data;
@@ -302,6 +307,8 @@ $("#control-paging-btn-container").on(
 );
 
 $(".host-history-btn").on("click", async () => {
+  $(".player-history-btn").css("border", "none");
+  $(".host-history-btn").css("border", "5px solid white");
   $(".quiz-container").empty();
   $("#control-paging-btn-container").empty();
   const result = await axios.get(
@@ -311,6 +318,8 @@ $(".host-history-btn").on("click", async () => {
 });
 
 $(".player-history-btn").on("click", async () => {
+  $(".player-history-btn").css("border", "5px solid white");
+  $(".host-history-btn").css("border", "none");
   $(".quiz-container").empty();
   $("#control-paging-btn-container").empty();
   const result = await axios.get(

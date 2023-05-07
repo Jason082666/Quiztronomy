@@ -150,6 +150,14 @@ ul a {
   cursor: pointer;
 }
 
+.suggesting-text {
+  font-size: 36px;
+  color: #5edabd;
+  width: 100%;
+  text-align: center;
+  font-family: "KiriFontNormal";
+}
+
 .btn:hover,
 .back-to-first-player:hover,
 .player-history-btn:hover,
