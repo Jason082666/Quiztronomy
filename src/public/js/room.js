@@ -558,7 +558,7 @@ function trueFalseOnClick(quizzObj, $element) {
       });
       const addScore = +result.data.score;
       socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 1000);
+      animateScore($("#player-score"), initvalue, socket.score, 500);
       changeSideBar(socket.score);
     } else {
       $(this).addClass("wrong-answer");
@@ -700,7 +700,7 @@ const calculateScore = (totalTime, remainTime) => {
 function changeSideBar(score) {
   const scoreDivide = (score / socket.fullScore) * 100;
   const scorePercentage = scoreDivide + "%";
-  $("#score-bar").animate({ height: scorePercentage }, 1000);
+  $("#score-bar").animate({ height: scorePercentage }, 500);
   return scorePercentage;
 }
 
