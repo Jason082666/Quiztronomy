@@ -559,7 +559,9 @@ function trueFalseOnClick(quizzObj, $element) {
       const addScore = +result.data.score;
       socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 500);
-      changeSideBar(socket.score);
+      setTimeout(() => {
+        changeSideBar(socket.score);
+      }, 300);
     } else {
       $(this).addClass("wrong-answer");
       $(".t-f").addClass("tf-no-hover");
@@ -614,8 +616,10 @@ function multipleChoicesOnclick(quizzObj, $element) {
       });
       const addScore = +result.data.score;
       socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 1000);
-      changeSideBar(socket.score);
+      animateScore($("#player-score"), initvalue, socket.score, 500);
+      setTimeout(() => {
+        changeSideBar(socket.score);
+      }, 300);
     }
     const optionArray = [];
     $(".mcs-checked")
@@ -643,8 +647,10 @@ function multipleChoiceOnclick(quizzObj, $element) {
       const result = await axios.post("/api/1.0/score/add", { roomId, score });
       const addScore = +result.data.score;
       socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 1000);
-      changeSideBar(socket.score);
+      animateScore($("#player-score"), initvalue, socket.score, 500);
+      setTimeout(() => {
+        changeSideBar(socket.score);
+      }, 300);
     } else {
       $selectedInput.next().addClass("wrong-answer");
     }
