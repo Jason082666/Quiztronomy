@@ -423,7 +423,7 @@ button:hover {
   bottom: 0;
   width: 100%;
   background-color: #dae2ed;
-  height: 0;
+  max-height: 100%;
   border-radius: 20px;
 }
 

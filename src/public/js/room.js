@@ -558,19 +558,19 @@ function trueFalseOnClick(quizzObj, $element) {
       });
       const addScore = +result.data.score;
       socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 500);
-      setTimeout(() => {
-        changeSideBar(socket.score);
-      }, 300);
+      animateScore($("#player-score"), initvalue, socket.score, 700);
+      changeSideBar(socket.score);
     } else {
       $(this).addClass("wrong-answer");
       $(".t-f").addClass("tf-no-hover");
     }
-    socket.emit("getAnswer", {
-      chooseOption: [chooseOption],
-      initvalue,
-      score: socket.score,
-    });
+    setTimeout(() => {
+      socket.emit("getAnswer", {
+        chooseOption: [chooseOption],
+        initvalue,
+        score: socket.score,
+      });
+    }, 500);
   });
 }
 
@@ -616,10 +616,8 @@ function multipleChoicesOnclick(quizzObj, $element) {
       });
       const addScore = +result.data.score;
       socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 500);
-      setTimeout(() => {
-        changeSideBar(socket.score);
-      }, 300);
+      animateScore($("#player-score"), initvalue, socket.score, 700);
+      changeSideBar(socket.score);
     }
     const optionArray = [];
     $(".mcs-checked")
@@ -627,11 +625,13 @@ function multipleChoicesOnclick(quizzObj, $element) {
       .each(function () {
         optionArray.push($(this).val());
       });
-    socket.emit("getAnswer", {
-      chooseOption: optionArray,
-      initvalue,
-      score: socket.score,
-    });
+    setTimeout(() => {
+      socket.emit("getAnswer", {
+        chooseOption: optionArray,
+        initvalue,
+        score: socket.score,
+      });
+    }, 500);
   });
 }
 
@@ -647,18 +647,18 @@ function multipleChoiceOnclick(quizzObj, $element) {
       const result = await axios.post("/api/1.0/score/add", { roomId, score });
       const addScore = +result.data.score;
       socket.score = addScore;
-      animateScore($("#player-score"), initvalue, socket.score, 500);
-      setTimeout(() => {
-        changeSideBar(socket.score);
-      }, 300);
+      animateScore($("#player-score"), initvalue, socket.score, 700);
+      changeSideBar(socket.score);
     } else {
       $selectedInput.next().addClass("wrong-answer");
     }
-    socket.emit("getAnswer", {
-      chooseOption: [chooseOption],
-      initvalue,
-      score: socket.score,
-    });
+    setTimeout(() => {
+      socket.emit("getAnswer", {
+        chooseOption: [chooseOption],
+        initvalue,
+        score: socket.score,
+      });
+    }, 500);
   });
 }
 
@@ -697,7 +697,7 @@ function clearCountDown(timeIdArray) {
 }
 
 const calculateScore = (totalTime, remainTime) => {
-  const baseScore = 0;
+  const baseScore = 100;
   const timeBonus = Math.round(500 * Math.pow(remainTime / totalTime, 2));
   const score = baseScore + timeBonus;
   return score;
