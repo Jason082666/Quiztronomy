@@ -71,8 +71,8 @@ export const socketio = async function (server) {
       }
     });
 
-    socket.on("disconnect", async () => {
-      console.log("A user disconnected");
+    socket.on("disconnect", async (reason) => {
+      console.log(`A user disconnected due to ${reason}`);
       const roomId = socket.roomId;
       console.log("hostId", socket.hostId);
       if (socket.hostId) {
