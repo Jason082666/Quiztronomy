@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Game Room</title>
+    <link rel="shortcut icon" href="/img/logo.ico" />
+    <link rel="bookmark" href="/img/logo.ico" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+      src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+      integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"
+      integrity="sha512-nnNHpffPSgINrsR8ZAIgFUIMexORL5tPwsfktOTxVYSv+AUAILuFYWES8IHl+hhIhpFGlKvWFiz9ZEusrPcSBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.min.js"
+      integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script src="/js/clickboard.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="https://fontlibrary.org//face/kirifont"
+      type="text/css"
+    />
+    <link rel="preload" href="/img/rankpage.jpg" as="image" />
+    <link rel="stylesheet" href="/css/room.css" />
+  </head>
+  <canvas id="canvas"> </canvas>
+  <div class="load-main" id="entering">
+    <div class="load">
+      <div class="load-container">
+        <div class="load-component">
+          <h3>Entering room ....</h3>
+          <div class="loadingio-spinner-ellipsis-gu8eyywcq5n">
+            <div class="ldio-7tmnvxp6os">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <button class="entering">cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="load-main" id="reconnect">
+    <div class="load">
+      <div class="load-container">
+        <div class="load-component">
+          <h3>Reconnecting ...</h3>
+          <div class="loadingio-spinner-ellipsis-gu8eyywcq5n">
+            <div class="ldio-7tmnvxp6os">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <button class="cancel-reconnecting">cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="block"></div>
+  <body>
+    <div class="star-container">
+      <ul class="star">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="night">
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+      <div class="shooting_star"></div>
+    </div>
+    <div id="controller">
+      <div class="container">
+        <div class="planet-container">
+          <img src="/img/planet.png" alt="planet" class="planet" />
+        </div>
+        <div class="box_astronaut">
+          <img class="astronaut" src="/img/astronauts2.png" width="200px" />
+        </div>
+        <h1 id="room-name"></h1>
+        <h2></h2>
+        <div class="host-container"><div id="host"></div></div>
+        <div class="url-container">
+          <div class="url-content">
+            <div class="room-link">Room link</div>
+            <input id="copy-url" value="" readonly />
+            <button class="click-btn" data-clipboard-target="#copy-url">
+              <img src="/img/copy.png" alt="Copy to clipboard" />
+            </button>
+          </div>
+        </div>
+        <div id="player-list"></div>
+      </div>
+      <div class="footer-container">
+        <div class="leave-game-btn">Leave the game</div>
+      </div>
+      <div class="popup-none" id="leave-room-popup">
+        <div class="popup-container">
+          <div class="popup">
+            <div class="popup-decro"></div>
+            <h3 class="popout-text">Leave room now ?</h3>
+            <div class="popout-button-container">
+              <button class="pop-yes-button">Yes</button>
+              <button class="pop-no-button">No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-none" id="host-leave-room-popup">
+        <div class="popup-container">
+          <div class="popup">
+            <div class="popup-decro"></div>
+            <h3 class="popout-text">Host has left the game ...</h3>
+            <div class="popout-button-container">
+              <button class="back-to-main-btn">Back to main</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/room.js" type="module"></script>
+  </body>
+</html>

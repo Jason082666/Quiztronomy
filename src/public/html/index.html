@@ -1,0 +1,284 @@
+<html>
+  <head>
+    <link rel="shortcut icon" href="/img/logo.ico" />
+    <link rel="bookmark" href="/img/logo.ico" />
+    <title>Enter the Game</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.min.js"
+      integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"
+      integrity="sha512-nnNHpffPSgINrsR8ZAIgFUIMexORL5tPwsfktOTxVYSv+AUAILuFYWES8IHl+hhIhpFGlKvWFiz9ZEusrPcSBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="https://fontlibrary.org//face/kirifont"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+
+  <body>
+    <canvas id="canvas-info"></canvas>
+    <div class="nav-bar">
+      <div class="header-container">
+        <div class="header">
+          <div class="nav-left-container">
+            <img class="logo" src="/img/logo.png" alt="logo" />
+            <ul>
+              <li><a class="home-page" href="/">Home</a></li>
+              <li><a href="/landing.html">About Us</a></li>
+            </ul>
+          </div>
+          <div class="nav-right-container">
+            <button class="signup-login">Get start !</button>
+            <button class="back-to-main">Back to main</button>
+            <button class="logout-btn">Log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <canvas id="canvas"> </canvas>
+    <div class="middle-container">
+      <div class="logo-container">
+        <img src="/img/astronaut.png" alt="" />
+        <h1>Quiztronomy</h1>
+        <h4>Infinitize your knowledge.</h4>
+      </div>
+      <div class="container">
+        <h2 class="quick-enter">Quick enter</h2>
+        <!-- <h2>Infinitize your knowledge!</h2> -->
+        <div class="enter-container">
+          <label for="room-name">Room number :</label>
+          <input type="text" id="room-name" name="room-name" />
+          <label for="user-name">Your name :</label>
+          <input
+            type="text"
+            id="user-name"
+            name="user-name"
+            placeholder="Up to 10 characters"
+          />
+          <button class="enter-btn">Enter</button>
+        </div>
+      </div>
+    </div>
+    <div class="sign-component">
+      <div class="sign-container">
+        <div class="sign-container-left">
+          <div class="signup-container">
+            <h2>Don't have an account ?</h2>
+            <p>Join Quiztronomy now and explore your knowledge!</p>
+            <button class="sign-up">Sign up</button>
+          </div>
+        </div>
+        <div class="sign-container-right">
+          <div class="login-container">
+            <h2>Have an account ?</h2>
+            <p>Click the button to start today's journey!</p>
+            <button class="log-in">Log in</button>
+          </div>
+        </div>
+        <div class="move-component" id="move-component-login">
+          <div class="login-form">
+            <div class="log-in-text-container">
+              <h2 class="log-in-text">Log in</h2>
+            </div>
+            <div class="input-container">
+              <input
+                type="email"
+                id="email"
+                class="input"
+                name="email"
+                placeholder="Email"
+              />
+              <input
+                type="password"
+                id="password"
+                class="input"
+                name="password"
+                placeholder="Password"
+              />
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="log-in-btn">Log in</button>
+          </div>
+        </div>
+        <div class="move-component" id="move-component-signup">
+          <div class="signup-form">
+            <div class="sign-up-text-container">
+              <h2 class="sign-up-text">Sign up</h2>
+            </div>
+            <div class="input-container">
+              <input
+                type="text"
+                id="signup-name"
+                class="input"
+                name="name"
+                placeholder="Name    (up to 10 characters)"
+              />
+              <input
+                type="email"
+                id="signup-email"
+                class="input"
+                name="email"
+                placeholder="Email   (xxx@xxx.xx)"
+              />
+              <input
+                type="password"
+                id="signup-password"
+                class="input"
+                name="password"
+                placeholder="Password   (6~20 nums or letters)"
+              />
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="sign-up-btn">Sign up</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="user-info-container">
+      <div class="user-info-component">
+        <div class="welcome-container">
+          <div class="welcome"><h2 id="welcome-message"></h2></div>
+        </div>
+        <div class="user-info-middle-component">
+          <div class="corousel-container">
+            <div
+              id="carouselExampleCaptions"
+              class="carousel slide"
+              data-bs-ride="carousel"
+            >
+              <div class="carousel-indicators">
+                <button
+                  type="button"
+                  data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide-to="0"
+                  class="active"
+                  aria-current="true"
+                  aria-label="Slide 1"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide-to="1"
+                  aria-label="Slide 2"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide-to="2"
+                  aria-label="Slide 3"
+                ></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img
+                    src="/img/astronaut.jpg"
+                    class="d-block w-100"
+                    alt="/img/astronaut.png"
+                  />
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Do you know ...</h5>
+                    <p>A full NASA space suit costs $12,000,000.</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img
+                    src="/img/comet.jpg"
+                    class="d-block w-100"
+                    alt="/img/astronaut.png"
+                  />
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Do you know ...</h5>
+                    <p>Halleys Comet won't orbit past Earth again until 2061</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img
+                    src="/img/universe.jpg"
+                    class="d-block w-100"
+                    alt="/img/astronaut.png"
+                  />
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Do you know ...</h5>
+                    <p>Space is completely silent.</p>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev"
+              >
+                <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next"
+              >
+                <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+          <div class="user-info-options-container">
+            <div class="enter-room-container">
+              <label class="label-for-roomId" for="roomId"
+                >Enter a Room :</label
+              >
+              <div class="join-room-component">
+                <input
+                  class="input-for-roomId"
+                  type="text"
+                  id="roomId"
+                  placeholder="Enter room ID"
+                />
+                <button id="join">Join</button>
+              </div>
+            </div>
+            <div class="create-room-container">
+              <div id="create">Create Room</div>
+            </div>
+            <div class="user-dashboard-container">
+              <div id="user-dashboard">See my game history</div>
+            </div>
+          </div>
+          <div class="star-container">
+            <img src="/img/shining.png" alt="star" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/index.js" type="module"></script>
+  </body>
+</html>

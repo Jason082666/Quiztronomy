@@ -1,0 +1,235 @@
+/* @import "https://code.highcharts.com/css/highcharts.css"; */
+body {
+  font-family: "Barlow", sans-serif;
+  font-size: 24px;
+  background-color: #0e1a3c;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+canvas {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: -20;
+}
+.chart-container {
+  width: 60%;
+  height: 400px;
+  margin-left: 40px;
+  display: flex;
+  justify-content: flex-end;
+}
+.body {
+  font-size: 30px;
+}
+
+.quiz-big-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  border-bottom: 1px solid rgb(169, 162, 162);
+}
+
+
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-intro-container {
+  display: flex;
+  flex-grow: 1;
+  margin-top: 30px;
+  justify-content: space-between;
+  padding: 10px;
+  width: 90%;
+
+  padding: 16px;
+}
+
+.game-intro-left,
+.game-intro-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.game-intro-right {
+  width: 30%;
+  align-items: flex-end;
+}
+.game-detail-intro,
+.rank-intro {
+  font-size: 32px;
+  width: 80%;
+  font-family: "KiriFontNormal";
+  color: #5edabd;
+}
+.rank-intro {
+  display: flex;
+  justify-content: center;
+}
+
+.game-detail-content {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  height: 70%;
+  flex-grow: 1;
+}
+.game-detail-content div {
+  height: 33%;
+}
+.game-intro-left {
+  width: 50%;
+}
+
+.rank-container {
+  height: 100%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+#navbar-example2 {
+  background-color: #0e1a3c;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.game-detail {
+  font-family: "KiriFontNormal";
+  margin-left: 50px;
+  font-size: 32px;
+}
+.game-name,
+.create-time,
+.game-host {
+  height: 33%;
+  font-size: 32px;
+}
+.navbar-brand {
+  font-size: 30px;
+  color: #5edabd;
+}
+
+.nav-color {
+  color: #5edabd;
+}
+
+.nav-color:hover {
+  color: white;
+}
+.leave-room {
+  font-size: 24px;
+  border: none;
+  border-radius: 10px;
+  color: #0e1a3c;
+  background-color: #5edabd;
+  font-weight: bold;
+  cursor: pointer;
+}
+.leave-room-color {
+  color: #0e1a3c;
+}
+.navbar-brand:hover {
+  color: white;
+}
+
+.back-to-top {
+  text-decoration: none;
+  font-size: 24px;
+  border: none;
+  padding: 5px;
+  border-radius: 10px;
+  color: #0e1a3c;
+  background-color: #5edabd;
+  font-weight: bold;
+  /* width: 30%; */
+  cursor: pointer;
+}
+
+.scrollspy-example {
+  width: 90%;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.3);
+  margin-top: 30px;
+  flex-direction: column;
+  font-size: 32px;
+}
+.quiz-container h4 {
+  font-size: 32px;
+  color: #5edabd;
+  font-weight: bold;
+}
+img {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+}
+.rank-item {
+  display: flex;
+  margin-top: 30px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  background-color: white;
+  font-weight: bold;
+  color: #0e1a3c;
+  padding: 5px;
+  width: 100%;
+  box-shadow: 2px 2px #5edabd;
+}
+.rank-item:hover {
+  transform: scale(1.1);
+  box-shadow: 3px 3px 5px white;
+}
+.player-name {
+  vertical-align: middle;
+}
+.player-score {
+  margin-left: auto;
+}
+
+.game-explain {
+  font-size: 32px;
+  color: #5edabd;
+  font-family: "KiriFontNormal";
+  margin-top: 100px;
+}
+.hr {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 95%;
+  margin-top: 30px;
+}
+
+.quiz-text {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+.option-container {
+  margin-top: 20px;
+}
+
+.explaination {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  margin-top: 30px;
+}
+.chart-item {
+  border-radius: 20px;
+  background-color: transparent;
+}
+
+.your-answer {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  margin-top: 20px;
+  margin-bottom: 40px;
+}

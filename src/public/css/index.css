@@ -1,0 +1,538 @@
+body {
+  /* overflow: auto; */
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  background-color: #0e1a3c;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: "KiriFontNormal";
+  font-weight: normal;
+  font-style: normal;
+}
+.enter-btn {
+  font-family: "KiriFontNormal";
+}
+.header,
+button,
+.sign-container {
+  font-family: "Barlow", sans-serif;
+}
+
+/* nav設計 */
+.nav-bar {
+  width: 100vw;
+  height: 50px;
+}
+
+.logo {
+  height: 40px;
+  width: 40px;
+}
+
+.header {
+  margin-left: 30px;
+  margin-right: 30px;
+  display: flex;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+
+  color: #e5f6eb;
+}
+.header-container {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.nav-left-container ul {
+  display: flex;
+  height: 100%;
+  justify-content: space-around;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+ul li {
+  margin: 0 10px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+}
+
+ul a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-left-container {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-right-container {
+  width: 30%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-right-container button {
+  border: none;
+  padding: 5px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 24px;
+  color: #ffffff;
+  background-color: #5edabd;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px #ffffff;
+}
+
+.nav-right-container button:hover {
+  background-color: #fff;
+  color: #0e1a3c;
+}
+
+.back-to-main {
+  display: none;
+}
+
+/* 中間區塊 */
+img {
+  width: 250px;
+  height: 250px;
+}
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+h1 {
+  font-size: 50px;
+  color: #5edabd;
+  /* line-height: 172px;
+  vertical-align: middle; */
+}
+h2 {
+  color: white;
+}
+h4 {
+  font-size: 20px;
+  color: white;
+  margin-top: 10px;
+}
+.middle-container {
+  width: 100vw;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logo-container {
+  width: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.container {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  display: flex;
+  width: 45%;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.enter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 30px;
+  padding-bottom: 20px;
+  width: 100%;
+  height: 100%;
+}
+.enter-container input {
+  width: 60%;
+}
+
+.enter-btn {
+  padding: 15px 10px 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 32px;
+  color: #ffffff;
+  background-color: #5edabd;
+  cursor: pointer;
+  box-shadow: 0px 0px 3px 0px #ffffff;
+}
+
+.enter-btn:hover {
+  background-color: #e5f6eb;
+  color: #0e1a3c;
+}
+
+canvas {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: -20;
+}
+#canvas-info {
+  display: none;
+}
+
+.sign-component {
+  display: none;
+  margin-top: 10%;
+}
+.sign-container {
+  display: flex;
+  color: whitesmoke;
+  position: relative;
+  justify-content: space-around;
+  width: 800px;
+  margin: 100px auto 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+#move-component-login {
+  display: none;
+}
+.sign-container-left,
+.sign-container-right {
+  height: 350px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container,
+.signup-container {
+  height: 100%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.move-component {
+  position: absolute;
+  box-shadow: 2px 2px rgb(34, 33, 33);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+  left: 40px;
+  bottom: -25px;
+  top: -25px;
+  height: 400px;
+  width: 400px;
+  z-index: 2;
+  background-color: #ffffff;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+#user-name,
+#room-name {
+  font-family: "Barlow", sans-serif;
+  height: 60px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: #292929;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 2px #282828;
+}
+
+#user-name::placeholder {
+  color: #cad1cd;
+}
+
+.input {
+  border: none;
+  border-bottom: 1px solid #143665;
+  background-color: #ffffff;
+  padding: 10px;
+  box-sizing: border-box;
+  height: 25%;
+}
+
+.log-in-text,
+.sign-up-text {
+  color: #5edabd;
+  height: 10%;
+  font-weight: bold;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  width: 80%;
+}
+.sign-up-text-container,
+.log-in-text-container {
+  display: flex;
+  width: 80%;
+}
+.login-form,
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 80%;
+}
+.login-form {
+  margin-left: 50px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 20%;
+  width: 80%;
+}
+.log-in-btn,
+.sign-up-btn {
+  border: none;
+  width: 80px;
+  padding: 10px;
+  border-radius: 20px;
+  outline: 1px solid whitesmoke;
+  background-color: #5edabd;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.log-in-btn:hover,
+.sign-up-btn:hover {
+  background-color: #fff;
+  color: #0e1a3c;
+  outline: 1px solid #0e1a3c;
+}
+
+.log-in:hover,
+.sign-up:hover,
+.log-in-btn:hover,
+.sign-up-btn:hover {
+  cursor: pointer;
+}
+h2 {
+  margin-top: 40px;
+}
+.sign-up,
+.log-in {
+  border: none;
+  background-color: transparent;
+  padding: 10px;
+  outline: 1px solid whitesmoke;
+  border-radius: 20px;
+  color: #ffffff;
+}
+
+/* 登入後頁面 */
+.user-info-container {
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.welcome-container {
+  display: flex;
+  width: 100%;
+  height: 20%;
+  justify-content: center;
+}
+
+.user-info-component {
+  height: 80vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#welcome-message {
+  margin-top: 0px;
+  color: #5edabd;
+}
+
+.corousel-container {
+  width: 400px;
+  height: 400px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#carouselExampleCaptions {
+  height: 100%;
+}
+.carousel-inner {
+  border-radius: 20px;
+}
+.user-info-middle-component {
+  display: flex;
+  justify-content: space-around;
+  width: 90%;
+  height: 80vh;
+  margin-top: 6vh;
+}
+
+.user-info-options-container {
+  width: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin-left: 40px;
+  display: flex;
+  height: 400px;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.enter-room-container {
+  display: flex;
+  width: 80%;
+  margin-top: 20px;
+  flex-direction: column;
+  justify-content: center;
+}
+#roomId {
+  font-family: "Barlow", sans-serif;
+  font-size: 24px;
+  width: 80%;
+  height: 60px;
+  padding: 5px;
+  border: none;
+  text-align: center;
+  box-shadow: 2px 2px #5edabd;
+  border-radius: 20px;
+  color: #0e1a3c;
+}
+#roomId::placeholder {
+  font-family: "Barlow", sans-serif;
+  font-size: 24px;
+  color: #c6c7d4;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.join-room-component {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+#join {
+  width: 15%;
+  padding-top: 10px;
+  margin-left: 10px;
+  font-family: "KiriFontNormal";
+  border: none;
+  color: #5edabd;
+  border-radius: 20px;
+  font-size: 16px;
+  color: #0e1a3c;
+  background-color: #5edabd;
+  cursor: pointer;
+  box-shadow: 3px 3px #ffffff;
+}
+#join:hover {
+  background-color: white;
+  color: #5edabd;
+  box-shadow: 0px 0px 5px 0px #777889;
+}
+
+.label-for-roomId {
+  text-align: center;
+  font-size: 20px;
+}
+.create-room-container,
+.user-dashboard-container {
+  width: 80%;
+}
+#create,
+#user-dashboard {
+  width: 100%;
+  height: 60px;
+  border-radius: 20px;
+  font-size: 20px;
+  background-color: #5edabd;
+  color: #0e1a3c;
+  align-items: center;
+  box-shadow: 3px 3px #ffffff;
+  text-align: center;
+  padding-top: 20px;
+}
+
+#create:hover,
+#user-dashboard:hover {
+  background-color: white;
+  color: #5edabd;
+  cursor: pointer;
+}
+
+/* decoration */
+.star-container {
+  position: fixed;
+  bottom: 5vh;
+  right: 5vh;
+}
+
+.star-container img {
+  width: 100px;
+  height: 100px;
+}
+
+.carousel-item img {
+  height: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.carousel-caption {
+  font-family: "Barlow", sans-serif;
+
+  background-color: rgba(255, 253, 253, 0.7);
+  border-radius: 10px;
+  color: black;
+}
+
+.carousel-caption h5 {
+  font-family: "KiriFontNormal";
+  color: #0e1a3c;
+}
+
+.swal2-container {
+  z-index: 10000;
+  font-family: "Barlow", sans-serif;
+}

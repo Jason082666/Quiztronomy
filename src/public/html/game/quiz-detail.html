@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quiz review</title>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"
+      integrity="sha512-nnNHpffPSgINrsR8ZAIgFUIMexORL5tPwsfktOTxVYSv+AUAILuFYWES8IHl+hhIhpFGlKvWFiz9ZEusrPcSBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.min.js"
+      integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="shortcut icon" href="/img/logo.ico" />
+    <link rel="bookmark" href="/img/logo.ico" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"
+    />
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="https://fontlibrary.org//face/kirifont"
+      type="text/css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/highchart.css" />
+    <link rel="stylesheet" href="/css/quiz-detail.css" />
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <nav id="navbar-example2" class="navbar px-3 mb-3">
+      <a class="navbar-brand game-detail" href="#">Game Detail</a>
+      <ul class="nav">
+        <li class="nav-item leave-room">
+          <a
+            class="nav-link nav-color leave-room-color"
+            href="/game/history.html"
+            >Leave</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-color" href="#scrollspyHeading1">Quiz 1</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-color" href="#scrollspyHeading2">Quiz 2</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link nav-color dropdown-toggle"
+            data-bs-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-expanded="false"
+            >Dropdown</a
+          >
+          <ul class="dropdown-menu"></ul>
+        </li>
+      </ul>
+    </nav>
+    <div class="game-intro-container">
+      <div class="game-intro-left">
+        <div class="game-detail-intro">Game Info</div>
+        <div class="game-detail-content">
+          <div class="game-name"></div>
+          <div class="game-host"></div>
+          <div class="create-time"></div>
+        </div>
+      </div>
+      <div class="game-intro-right">
+        <div class="rank-intro"><div>Leaderboard</div></div>
+        <div class="rank-container">
+          <div class="rank-1 rank-item">
+            <img src="/img/gold.png" alt="gold" />
+            <div class="player-name player1-name"></div>
+            <div class="player-score player1-score"></div>
+          </div>
+          <div class="rank-2 rank-item">
+            <img src="/img/silver.png" alt="silver" />
+            <div class="player-name player2-name"></div>
+            <div class="player-score player2-score"></div>
+          </div>
+          <div class="rank-3 rank-item">
+            <img src="/img/bronze.png" alt="bronze" />
+            <div class="player-name player3-name"></div>
+            <div class="player-score player3-score"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <div class="game-explain">Game Explaination</div>
+    <div
+      data-bs-spy="scroll"
+      data-bs-target="#navbar-example2"
+      data-bs-root-margin="0px 0px -40%"
+      data-bs-smooth-scroll="true"
+      class="scrollspy-example p-3 rounded-2"
+      tabindex="0"
+    ></div>
+
+    <footer>
+      <div class="footer-container">
+        <p class="float-end mb-1">
+          <a class="back-to-top" href="#">Back to top</a>
+        </p>
+      </div>
+    </footer>
+    <script src="/js/quiz-detail.js" type="module"></script>
+  </body>
+</html>
