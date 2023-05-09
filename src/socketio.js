@@ -44,10 +44,7 @@ export const socketio = async function (server) {
         io.score[roomId] = [];
         if (!io.data) io.data = {};
         io.data[roomId] = [];
-        if (!io.quizNum) io.quizNum = {};
-        io.quizNum[roomId] = 1;
-        if (!io.quizLength) io.quizLength = {};
-        io.quizLength[roomId] = "";
+        socket.quizNum = 1;
         socket.emit("welcomeMessage");
       } else {
         const welcomeString = `Welcome to the game room, ${userName} !`;
@@ -84,8 +81,6 @@ export const socketio = async function (server) {
         await terminateRoom(roomId);
         delete io.score[roomId];
         delete io.data[roomId];
-        delete io.quizNum[roomId];
-        delete io.quizLength[roomId];
         const message = JSON.stringify({
           event: "hostLeave",
         });
@@ -108,7 +103,7 @@ export const socketio = async function (server) {
       const { roomId, hostId } = socket;
       const { firstQuizz, length } = await startRoom(roomId, hostId);
       if (!firstQuizz || !length) return;
-      io.quizLength[roomId] = length;
+      socket.length = length;
       firstQuizz.num = 1;
       const rankResult = await showRank(roomId, Infinity);
       const message = JSON.stringify({
@@ -120,7 +115,7 @@ export const socketio = async function (server) {
 
     socket.on("nextQuiz", async (quizNum) => {
       const { roomId } = socket;
-      io.quizNum[roomId] += 1;
+      socket.quizNum += 1;
       const rankResult = await showRank(roomId, Infinity);
       const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
       if (quiz) {
@@ -129,7 +124,7 @@ export const socketio = async function (server) {
           data: {
             quiz,
             quizNum,
-            quizLength: io.quizLength[roomId],
+            quizLength: socket.length,
             rankResult,
           },
         });
@@ -141,7 +136,7 @@ export const socketio = async function (server) {
           data: {
             quiz,
             quizNum,
-            quizLength: io.quizLength[roomId],
+            quizLength: socket.length,
             rankResult,
           },
         });
@@ -167,7 +162,7 @@ export const socketio = async function (server) {
     // 只有host會接到timeout
     socket.on("timeout", async () => {
       const { roomId } = socket;
-      const index = io.quizNum[roomId] - 1;
+      const index = socket.quizNum - 1;
       const scoreObj = io.data[roomId][index];
       const message = JSON.stringify({
         event: "showQuizExplain",
@@ -178,7 +173,7 @@ export const socketio = async function (server) {
 
     socket.on("earlyTimeout", async () => {
       const { roomId } = socket;
-      const index = io.quizNum[roomId] - 1;
+      const index = socket.quizNum - 1;
       const scoreObj = io.data[roomId][index];
       const message = JSON.stringify({
         event: "clearCountdown",
@@ -230,10 +225,9 @@ export const socketio = async function (server) {
       }
       if (dataObject.event === "saveOptions") {
         if (socket.hostId) {
-          const index = io.quizNum[roomId] - 1;
+          const index = socket.quizNum - 1;
           if (!io.score[roomId][index]) io.score[roomId][index] = {};
           if (!io.data[roomId][index]) io.data[roomId][index] = {};
-          // 最後用來留紀錄給mongo db 的，用來存歷史資料
           const dataArray = dataObject.data;
           io.score[roomId][index][dataObject.userId] = dataArray;
           dataArray.forEach((option) => {
