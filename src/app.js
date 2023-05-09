@@ -80,11 +80,13 @@ app.use((err, req, res, next) => {
   const type = err.type || "system error";
   const statusCode = err.statusCode || 500;
   const status = err.status || "error";
+  const isOperational = err.isOperational || false;
   return res.status(statusCode).json({
     status,
     statusCode,
     error: err.message,
     type,
+    isOperational,
   });
 });
 
