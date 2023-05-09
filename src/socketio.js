@@ -9,6 +9,8 @@ import {
   playerDisconnect,
   findHostAndUsers,
   setupDisconnectHash,
+  writePlayerAnswerIntoRedisList,
+  getPlayerAnswerFromRedisList,
 } from "./server/models/game.js";
 import { redisClient } from "./server/models/redis.js";
 import { gameHostValidation } from "./server/models/user.js";
@@ -40,8 +42,6 @@ export const socketio = async function (server) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
         await setupDisconnectHash(roomId);
-        if (!io.score) io.score = {};
-        io.score[roomId] = [];
         if (!io.data) io.data = {};
         io.data[roomId] = [];
         socket.quizNum = 1;
@@ -78,8 +78,8 @@ export const socketio = async function (server) {
         await deleteKey(`${roomId}`);
         await deleteKey(`${roomId}-connected`);
         await deleteKey(`${roomId}-disconnect`);
+        await deleteKey(`${roomId}-player-answer`);
         await terminateRoom(roomId);
-        delete io.score[roomId];
         delete io.data[roomId];
         const message = JSON.stringify({
           event: "hostLeave",
@@ -144,20 +144,31 @@ export const socketio = async function (server) {
       }
     });
 
-    socket.on("getAnswer", async ({ chooseOption, initvalue, score }) => {
-      const { roomId, userId } = socket;
-      const message = JSON.stringify({
-        event: "saveOptions",
-        data: chooseOption,
-        userId,
-      });
-      const dataMessage = JSON.stringify({
-        event: "updateRankAndScore",
-        data: { initvalue, score, userId },
-      });
-      await pubClient.publish(roomId, dataMessage);
-      await pubClient.publish(roomId, message);
-    });
+    socket.on(
+      "getAnswer",
+      async ({ chooseOption, initvalue, score, quizNum }) => {
+        const { roomId, userId } = socket;
+
+        await writePlayerAnswerIntoRedisList(
+          roomId,
+          userId,
+          quizNum - 2,
+          chooseOption
+        );
+        const message = JSON.stringify({
+          event: "saveOptions",
+          data: chooseOption,
+          userId,
+          quizNum,
+        });
+        const dataMessage = JSON.stringify({
+          event: "updateRankAndScore",
+          data: { initvalue, score, userId },
+        });
+        await pubClient.publish(roomId, dataMessage);
+        await pubClient.publish(roomId, message);
+      }
+    );
 
     // 只有host會接到timeout
     socket.on("timeout", async () => {
@@ -188,7 +199,9 @@ export const socketio = async function (server) {
     socket.on("showFinal", async () => {
       const { roomId } = socket;
       const rankResult = await showRank(roomId, 5);
-      const gameRoom = await addGameHistory(roomId, io.score[roomId]);
+      const playerAnswerArray = await getPlayerAnswerFromRedisList(roomId);
+      console.log("answerArray", playerAnswerArray);
+      const gameRoom = await addGameHistory(roomId, playerAnswerArray);
       await redisClient.del(`${roomId}-room`);
       await addGameHistoryToHost(
         gameRoom.founder.id,
@@ -203,7 +216,7 @@ export const socketio = async function (server) {
       });
       await pubClient.publish(roomId, message);
     });
-    subClient.on("message", (roomId, message) => {
+    subClient.on("message", async (roomId, message) => {
       if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
       if (dataObject.event === "userJoined") {
@@ -224,20 +237,16 @@ export const socketio = async function (server) {
         socket.emit("showQuiz", dataObject.data);
       }
       if (dataObject.event === "saveOptions") {
-        if (socket.hostId) {
-          const index = socket.quizNum - 1;
-          if (!io.score[roomId][index]) io.score[roomId][index] = {};
-          if (!io.data[roomId][index]) io.data[roomId][index] = {};
-          const dataArray = dataObject.data;
-          io.score[roomId][index][dataObject.userId] = dataArray;
-          dataArray.forEach((option) => {
-            if (!io.data[roomId][index][option]) {
-              io.data[roomId][index][option] = 1;
-            } else {
-              io.data[roomId][index][option] += 1;
-            }
-          });
-        }
+        const index = +dataObject.quizNum - 1;
+        if (!io.data[roomId][index]) io.data[roomId][index] = {};
+        const playerAnswerArray = dataObject.data;
+        playerAnswerArray.forEach((option) => {
+          if (!io.data[roomId][index][option]) {
+            io.data[roomId][index][option] = 1;
+          } else {
+            io.data[roomId][index][option] += 1;
+          }
+        });
       }
       if (dataObject.event === "updateRankAndScore") {
         socket.emit("updateRankAndScore", dataObject.data);

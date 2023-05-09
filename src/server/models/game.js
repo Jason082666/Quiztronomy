@@ -10,7 +10,6 @@ export const gameRoomExistence = async function (id) {
   return true;
 };
 
-
 export const createRoom = async function (id, name, gameRoomName) {
   let roomId;
   do {
@@ -179,6 +178,64 @@ export const terminateRoom = async function (id) {
     return false;
   }
   return true;
+};
+
+export const writePlayerAnswerIntoRedisList = async function (
+  roomId,
+  userId,
+  index,
+  answerArray
+) {
+  const lockKey = `${roomId}-player-answer-lock`;
+  const lockAcquired = await redisClient.setnx(lockKey, "1");
+  if (!lockAcquired) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return await writePlayerAnswerIntoRedisList(
+      roomId,
+      userId,
+      index,
+      answerArray
+    );
+  }
+
+  try {
+    const answerObject = await redisClient.lindex(
+      `${roomId}-player-answer`,
+      index
+    );
+    const stringifyNewAnswerObject = JSON.stringify({
+      ...JSON.parse(answerObject ?? "{}"),
+      ...{ [userId]: answerArray },
+    });
+    const listExists = await redisClient.exists(`${roomId}-player-answer`);
+    if (
+      listExists == 0 ||
+      (await redisClient.llen(`${roomId}-player-answer`)) <= index
+    ) {
+      return await redisClient.rpush(
+        `${roomId}-player-answer`,
+        stringifyNewAnswerObject
+      );
+    }
+    console.log("index to lset", index);
+    await redisClient.lset(
+      `${roomId}-player-answer`,
+      index,
+      stringifyNewAnswerObject
+    );
+  } finally {
+    await redisClient.del(lockKey);
+  }
+};
+export const getPlayerAnswerFromRedisList = async function (roomId) {
+  const playerAnswerList = await redisClient.lrange(
+    `${roomId}-player-answer`,
+    0,
+    -1
+  );
+  console.log(playerAnswerList);
+  if (!playerAnswerList[0]) return [];
+  return playerAnswerList;
 };
 
 export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {

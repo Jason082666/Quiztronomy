@@ -188,7 +188,7 @@ socket.on("loadFirstQuizz", ({ firstQuizz, length, rankResult }) => {
         $(".star-container").show();
         renderHostQuizzPage(firstQuizz, rankResult);
       }
-      if (socket.host) socket.quiz = 2;
+      socket.quizNum = 2;
     }
   }, 1000);
 });
@@ -224,7 +224,7 @@ socket.on("showQuiz", ({ quiz, quizNum, quizLength, rankResult }) => {
   $("#show-answer").show();
   $("#quiz-intro").text(`Question${quizNum}`);
   $("#quiz-type").text(quizTypeTransform[quiz.type]);
-  if (socket.host) socket.quiz += 1;
+  socket.quizNum += 1;
 });
 
 socket.on("showFinalScore", (rank) => {
@@ -320,7 +320,7 @@ $(".pop-no-button").on("click", () => {
 });
 
 $(".container").on("click", "#next-game-btn", () => {
-  const quizNum = socket.quiz;
+  const { quizNum } = socket;
   socket.emit("nextQuiz", quizNum);
 });
 
@@ -569,6 +569,7 @@ function trueFalseOnClick(quizzObj, $element) {
         chooseOption: [chooseOption],
         initvalue,
         score: socket.score,
+        quizNum: socket.quizNum,
       });
     }, 500);
   });
@@ -630,6 +631,7 @@ function multipleChoicesOnclick(quizzObj, $element) {
         chooseOption: optionArray,
         initvalue,
         score: socket.score,
+        quizNum: socket.quizNum,
       });
     }, 500);
   });
@@ -657,6 +659,7 @@ function multipleChoiceOnclick(quizzObj, $element) {
         chooseOption: [chooseOption],
         initvalue,
         score: socket.score,
+        quizNum: socket.quizNum,
       });
     }, 500);
   });
