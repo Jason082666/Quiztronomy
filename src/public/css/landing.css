@@ -100,7 +100,7 @@
 
 body {
   margin: 0;
-  font-family: var(--bs-body-font-family);
+  font-family: "Barlow", sans-serif;
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
@@ -110,7 +110,10 @@ body {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-
+#logo {
+  color: #5edabd;
+  font-weight: bold;
+}
 hr {
   margin: 1rem 0;
   color: inherit;
@@ -7973,7 +7976,7 @@ fieldset:disabled .btn {
 
 .mb-4 {
   margin-bottom: 1.5rem !important;
-  color:black;
+  color: black;
 }
 
 .mb-5 {
