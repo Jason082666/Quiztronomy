@@ -1,4 +1,3 @@
-import { findHostOnRedis } from "../controller/game.js";
 import { MyGameRoom } from "../models/mongodb.js";
 import { redisClient } from "../models/redis.js";
 //TODO:之後可以用CRONTAB來刪掉建立太久的房間
@@ -11,7 +10,7 @@ export const gameRoomExistence = async function (id) {
   return true;
 };
 
-// 當一場遊戲結束後founder的頁面會出現back to room 或是leave的按鈕，若是按下back to room其實就是再創一個新的房間號碼。(同一個api再發一次)(id,name,limitPlayers都應該在local storage中，其中預設的limitplayer可在個人設定中更改)
+
 export const createRoom = async function (id, name, gameRoomName) {
   let roomId;
   do {
@@ -76,10 +75,8 @@ export const searchGameName = async function (roomId) {
 export const checkDisconnectList = async function (roomId, userId) {
   const exists = await redisClient.hexists(`${roomId}-disconnect`, userId);
   if (!exists) return false;
-  // 代表這個玩家是新的玩家，第一次來
   await redisClient.hdel(`${roomId}-disconnect`, userId);
   return true;
-  // 代表這是段線的玩家重新連線
 };
 
 export const saveQuizzIntoRoom = async function (array, roomId, founderId) {

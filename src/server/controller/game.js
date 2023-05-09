@@ -38,7 +38,7 @@ export const checkDisconnection = async (req, res) => {
   if (!result) return res.json({ data: "newPlayer" });
   return res.json({ data: "disconnection" });
 };
-// TODO: 這個前面要身分驗證
+
 export const saveQuizzIntoGameRoom = async (req, res, next) => {
   const { array, roomId, founderId } = req.body;
   if (!array || !roomId || !founderId)
@@ -130,26 +130,6 @@ export const terminateGameRoom = async (req, res, next) => {
   return res.json({ message: `Terminated room ${roomId}` });
 };
 
-// export const getCurrentQuizz = async (req, res, next) => {
-//   const { roomId, currentQuizz } = req.query;
-//   if (!roomId || !currentQuizz)
-//     return next(new errors.ParameterError(["roomId,currentQuizz"], 400));
-//   if (typeof roomId !== "string" || typeof currentQuizz !== "string")
-//     return next(
-//       new errors.TypeError({ roomId: "string", currentQuizz: "string" }, 400)
-//     );
-//   if (redisClient.status === "reconnecting") {
-//     const data = await getCurrentQuizzFromMongo(roomId, currentQuizz);
-//     if (!data)
-//       return next(new errors.CustomError("No this room or no this quizz", 400));
-//     return res.json({ data });
-//   }
-//   const data = await getCurrentQuizzFromRedis(roomId, currentQuizz);
-//   if (!data)
-//     return next(new errors.CustomError("No this room or no this quizz", 400));
-//   return res.json({ data });
-// };
-//TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 export const createGameRoomOnRedis = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { roomId } = req.body;
