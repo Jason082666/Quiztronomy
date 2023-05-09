@@ -92,7 +92,6 @@
   box-sizing: border-box;
 }
 
-
 body {
   margin: 0;
   font-family: "Barlow", sans-serif;
@@ -108,7 +107,7 @@ body {
 #logo {
   color: #5edabd;
   font-weight: bold;
-  margin
+  margin-left: 50px;
 }
 hr {
   margin: 1rem 0;
@@ -170,7 +169,6 @@ h4,
 .h4 {
   font-size: calc(1.275rem + 0.3vw);
 }
-
 
 h5,
 .h5 {
@@ -441,7 +439,6 @@ legend {
   line-height: inherit;
 }
 
-
 ::-webkit-inner-spin-button {
   height: auto;
 }
@@ -515,7 +512,6 @@ progress {
   line-height: 1.2;
 }
 
-
 .display-4 {
   font-size: calc(1.475rem + 2.7vw);
   font-weight: 300;
@@ -528,13 +524,11 @@ progress {
   line-height: 1.2;
 }
 
-
 .display-6 {
   font-size: calc(1.375rem + 1.5vw);
   font-weight: 300;
   line-height: 1.2;
 }
-
 
 .list-unstyled {
   padding-left: 0;
@@ -847,7 +841,6 @@ progress {
 .gy-5 {
   --bs-gutter-y: 3rem;
 }
-
 
 @media (min-width: 992px) {
   .col-lg {
