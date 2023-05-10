@@ -1,6 +1,7 @@
 import { client } from "./elasticsearch.js";
 import { calculatePopularity } from "./gaussain.js";
 import { redisClient } from "./redis.js";
+
 export const searchCertainId = async function (id) {
   const body = await client.get({
     index: "questiontext",
@@ -20,8 +21,7 @@ export const insertQuestionIntoES = async function (body) {
   if (addIntoResponse.errors) {
     console.error("存入 Elasticsearch 發生錯誤：", addIntoResponse.errors);
   }
-  const result = await searchCertainId(addIntoResponse._id);
-  return result;
+  return await searchCertainId(addIntoResponse._id);
 };
 
 export const searchQuestionText = async function (text, type, excludeIds) {
@@ -166,8 +166,6 @@ export const searchQuestionSortByTime = async function (
 };
 
 export const updatePopToQueque = async function (object) {
-  if (redisClient.status === "reconnecting") return false;
   const data = JSON.stringify(object);
   await redisClient.lpush("updatePopToES", data);
-  return true;
 };

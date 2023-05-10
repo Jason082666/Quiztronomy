@@ -17,11 +17,7 @@ export const insertQuestionByPlayerIntoES = async (req, res) => {
 export const updateNewPop = async (req, res, next) => {
   if (!req.body.popObj) return next(new errors.ParameterError(["popObj"], 400));
   const { popObj } = req.body;
-  const result = await updatePopToQueque(popObj);
-  if (!result)
-    return next(
-      new errors.CustomError("Add to queque for updating pop failed", 400)
-    );
+  await updatePopToQueque(popObj);
   res.json({ message: "success" });
 };
 

@@ -40,7 +40,6 @@ export const createRoomOnRedis = async function (roomId, hostId, hostName) {
     hostId,
     "true"
   );
-  return true;
 };
 
 export const playerDisconnect = async function (roomId, userId, name) {
@@ -217,7 +216,6 @@ export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
   }
   return data;
 };
-
 
 export const findHostAndUsers = async function (roomId) {
   const result = await redisClient.hgetall(`${roomId}-room`);

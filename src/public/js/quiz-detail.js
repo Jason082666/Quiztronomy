@@ -168,6 +168,7 @@ historyArray.forEach((data, index) => {
   generateChart(index);
 });
 
+
 function generateChart(index) {
   const dataArray = historyArray[index];
   const charArray = countOptions(dataArray);

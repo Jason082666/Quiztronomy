@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
 import path from "path";
 import * as url from "url";
+import Redis from "ioredis";
+
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
-import Redis from "ioredis";
 const tlsOptions = process.env.MY_REDIS_TLS
   ? JSON.parse(process.env.MY_REDIS_TLS)
   : {};
@@ -31,6 +32,5 @@ redisClient.on("error", (error) => {
 });
 
 export const deleteKey = async (key) => {
-  const result = redisClient.del(key);
-  return result;
+  return redisClient.del(key);
 };

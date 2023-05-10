@@ -1,24 +1,17 @@
-import {redisClient} from "./redis.js";
-import {MyGameRoom} from "./mongodb.js";
+import { redisClient } from "./redis.js";
+import { MyGameRoom } from "./mongodb.js";
 
 export const addScore = async function (roomId, score, object) {
-  if (redisClient.status === "reconnecting") return false;
   const data = JSON.stringify(object);
   const roomExist = await redisClient.exists(`${roomId} -score`);
   if (!roomExist) return false;
   const playerExist = await redisClient.zscore(`${roomId} -score`, data);
   if (!playerExist) return false;
-  await redisClient.zadd(
-    `${roomId} -score`,
-    "INCR",
-    +score,
-    data
-  );
+  await redisClient.zadd(`${roomId} -score`, "INCR", +score, data);
   return await redisClient.zscore(`${roomId} -score`, data);
 };
 
 export const showRank = async function (roomId, ranknum) {
-  if (redisClient.status === "reconnecting") return [];
   const rank = await redisClient.zrevrange(
     `${roomId} -score`,
     0,
@@ -42,14 +35,11 @@ export const addToQuequeAndUpdateMongo = async function (roomId) {
     id: roomId,
     roomStatus: "started",
   });
-  if (!gameRoom) return null;
+  if (!gameRoom) return false;
   const uniqueId = gameRoom._id;
   gameRoom.roomStatus = "closed";
   await gameRoom.save();
-  if (redisClient.status === "reconnecting") return false;
   await redisClient.del(`${roomId}`);
-  const roomExist = await redisClient.exists(`${roomId} -score`);
-  if (!roomExist) return false;
   const uniqueObject = JSON.stringify({ uniqueId, roomId });
   await redisClient.lpush("saveScoreToMongo", uniqueObject);
   return true;

@@ -1,11 +1,9 @@
-// 设置衰减常数和衰减时间窗口
 const decayFactor = 0.5;
 const decayWindow = 604800000;
 
 function gaussian(x, sigma) {
   return Math.exp(-(x ** 2) / (2 * sigma ** 2));
 }
-
 
 export function calculatePopularity(
   currentLikes,
