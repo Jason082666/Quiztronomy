@@ -4,6 +4,7 @@ import {
   terminateRoom,
   leaveRoom,
   startRoom,
+  addPlayerIntoRedisSortedSet,
   getCurrentQuizzFromRedis,
   playerDisconnect,
   findHostAndUsers,
@@ -97,7 +98,8 @@ export const socketio = async function (server) {
 
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
-      await startRoom(roomId, hostId);
+      const gameRoomResult = await startRoom(roomId, hostId);
+      await addPlayerIntoRedisSortedSet(gameRoomResult);
       const firstQuizz = await getCurrentQuizzFromRedis(roomId, 1);
       const length = await countQuizLength(roomId);
       if (!firstQuizz || !length) return;

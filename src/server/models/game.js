@@ -42,8 +42,6 @@ export const createRoomOnRedis = async function (roomId, hostId, hostName) {
   );
 };
 
-
-
 export const searchGameName = async function (roomId) {
   const result = await MyGameRoom.findOne({
     id: roomId,
@@ -52,9 +50,6 @@ export const searchGameName = async function (roomId) {
   if (!result) return "";
   return result.name;
 };
-
-
-
 
 export const setupDisconnectHash = async function (roomId) {
   await redisClient.hset(`${roomId}-disconnect`, "", "");
@@ -68,23 +63,6 @@ export const playerDisconnect = async function (roomId, userId, name) {
   const result = await redisClient.hset(`${roomId}-disconnect`, userId, name);
   return result;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export const checkDisconnectList = async function (roomId, userId) {
   const exists = await redisClient.hexists(`${roomId}-disconnect`, userId);
@@ -152,7 +130,11 @@ export const startRoom = async function (roomId, founderId) {
   delete players.host;
   delete players.status;
   gameRoom.players = players;
-  await gameRoom.save();
+  return await gameRoom.save();
+};
+
+export const addPlayerIntoRedisSortedSet = async function (gameRoom) {
+  const { players } = gameRoom;
   for (let player in players) {
     const playerObj = {};
     playerObj[player] = players[player];
