@@ -8,7 +8,7 @@ import {
 import {
   createGameRoom,
   terminateGameRoom,
-  checkRoomAvailability,
+  checkRoomAvailabilityAndEnter,
   saveQuizzIntoGameRoom,
   searchGameNameofGame,
   startGameRoom,
@@ -24,8 +24,8 @@ router.route("/game/name").get(catchError(searchGameNameofGame));
 router.route("/game/room").get(catchError(findHostOnRedis));
 router.route("/game/disconnect").get(catchError(checkDisconnection));
 router
-  .route("/game/search")
-  .post(catchError(autheticationForPlaying), catchError(checkRoomAvailability));
+  .route("/game/entryPreparing")
+  .post(catchError(autheticationForPlaying), catchError(checkRoomAvailabilityAndEnter));
 router
   .route("/game/start")
   .post(catchError(authetication), catchError(startGameRoom));

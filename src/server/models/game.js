@@ -1,6 +1,6 @@
-import { MyGameRoom } from "../models/mongodb.js";
-import { redisClient } from "../models/redis.js";
-//TODO:之後可以用CRONTAB來刪掉建立太久的房間
+import {MyGameRoom} from "./mongodb.js";
+import {redisClient} from "./redis.js";
+
 export const gameRoomExistence = async function (id) {
   const result = await MyGameRoom.findOne({
     id,
@@ -28,9 +28,6 @@ export const createRoom = async function (id, name, gameRoomName) {
 };
 
 export const createRoomOnRedis = async function (roomId, hostId, hostName) {
-  if (redisClient.status === "reconnecting") {
-    return false;
-  }
   const obj = {};
   obj[hostId] = hostName;
   const hostObj = JSON.stringify(obj);
@@ -58,8 +55,7 @@ export const playerDisconnect = async function (roomId, userId, name) {
   if (exists == 0) {
     return false;
   }
-  const result = await redisClient.hset(`${roomId}-disconnect`, userId, name);
-  return result;
+  return await redisClient.hset(`${roomId}-disconnect`, userId, name);
 };
 
 export const searchGameName = async function (roomId) {
@@ -79,7 +75,7 @@ export const checkDisconnectList = async function (roomId, userId) {
 };
 
 export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
-  if (array.length > 40) return undefined;
+  if (array.length > 40) return false;
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
     roomStatus: "preparing",
@@ -88,9 +84,6 @@ export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
   if (!gameRoom) return null;
   gameRoom.quizz = array;
   await gameRoom.save();
-  if (redisClient.status === "reconnecting") {
-    return;
-  }
   await redisClient.rpush(
     gameRoom.id,
     ...array.map((item) => JSON.stringify(item))
@@ -99,26 +92,31 @@ export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
 };
 
 export const checkRoomStatus = async function (roomId, id, name) {
-  if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
-  if (result == 0) return null;
+  if (result == 0) return false;
   const status = await redisClient.hget(`${roomId}-room`, "status");
   if (status === "prepared") {
     const hostId = await redisClient.hget(`${roomId}-room`, "host");
-    if (hostId === id) return undefined;
-    const respond = await redisClient.hset(`${roomId}-room`, id, name);
-    if (respond == 0) return undefined;
+    if (hostId === id) return false;
     return true;
   }
   return false;
 };
+export const enterRedisRoom = async function (roomId,id,name) {
+  const respond = await redisClient.hset(`${roomId}-room`, id, name);
+  if (respond == 0) return false;
+  return true;
+}
+
+
+
 
 export const enterRoom = async function (roomId, id) {
   if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
   if (result == 0) return null;
   const enterTimes = await redisClient.zincrby(`${roomId}-connected`, 1, id);
-  console.log("entertines", enterTimes);
+  console.log("entertimes", enterTimes);
   if (+enterTimes > 1) return false;
   return true;
 };
@@ -153,8 +151,7 @@ export const startRoom = async function (roomId, founderId) {
   await gameRoom.save();
   for (let player in players) {
     const playerObj = {};
-    const name = players[player];
-    playerObj[player] = name;
+    playerObj[player] = players[player];
     const playerData = JSON.stringify(playerObj);
     await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
   }

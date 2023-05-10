@@ -37,7 +37,7 @@ import questionRoute from "./server/routes/question_route.js";
 import gameRoute from "./server/routes/game_route.js";
 import scoreRoute from "./server/routes/score_route.js";
 import userRoute from "./server/routes/user_route.js";
-import historyRoute from "./server/routes/historydata.js";
+import historyRoute from "./server/routes/historydata_route.js";
 app.use("/api/" + APIVERSION, [
   questionRoute,
   gameRoute,

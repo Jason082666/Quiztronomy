@@ -102,7 +102,7 @@ $(".enter-btn").on("click", async () => {
   }
 
   try {
-    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const enterResult = await axios.post("/api/1.0/game/entryPreparing", { roomId });
     const { data } = enterResult.data;
     localStorage.setItem("userName", data.userName);
     localStorage.setItem("userId", data.userId);
@@ -119,7 +119,7 @@ $(".enter-btn").on("click", async () => {
 $(".login-enter").on("click", async (e) => {
   e.preventDefault();
   try {
-    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const enterResult = await axios.post("/api/1.0/game/entryPreparing", { roomId });
     const { data } = enterResult.data;
     localStorage.setItem("userName", data.userName);
     localStorage.setItem("userId", data.userId);

@@ -1,5 +1,5 @@
-import { MyUser, MyGameRoom } from "../models/mongodb.js";
-import { redisClient } from "../models/redis.js";
+import {MyGameRoom, MyUser} from "../models/mongodb.js";
+import {redisClient} from "../models/redis.js";
 
 export const userHistory = async function (userId, page) {
   const user = await MyUser.findOne({ _id: userId });
@@ -103,8 +103,7 @@ export const addGameInfoToRedis = async function (
 export const searchGameRoomData = async function (roomUniqueId) {
   // 如果redis連線異常，則從mongo db拿
   if (redisClient.status === "reconnecting") {
-    const gameRoomObject = await MyGameRoom.findOne({ _id: roomUniqueId });
-    return gameRoomObject;
+    return await MyGameRoom.findOne({_id: roomUniqueId});
   }
   // 檢查redis中是否有這個key，如果沒有則從mongo db 拿，且把資料傳上快取，且設定ttl。
   const exists = await redisClient.exists(`${roomUniqueId}-gameRoom`);

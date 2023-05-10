@@ -5,6 +5,7 @@ import {
   saveQuizzIntoRoom,
   startRoom,
   checkRoomStatus,
+    enterRedisRoom,
   checkDisconnectList,
   searchGameName,
   findRoomOnRedis,
@@ -50,9 +51,9 @@ export const saveQuizzIntoGameRoom = async (req, res, next) => {
       new errors.TypeError({ roomId: "string", founderId: "string" }, 400)
     );
   const result = await saveQuizzIntoRoom(array, roomId, founderId);
-  if (result === undefined)
+  if (result === false)
     return next(
-      new errors.CustomError("There sould be at max 40 quizzes in a room", 400)
+      new errors.CustomError("There should be at max 40 quizzes in a room", 400)
     );
   if (result === null)
     return next(
@@ -63,7 +64,7 @@ export const saveQuizzIntoGameRoom = async (req, res, next) => {
     );
   return res.json({ message: "saved" });
 };
-export const checkRoomAvailability = async (req, res, next) => {
+export const checkRoomAvailabilityAndEnter = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { roomId } = req.body;
   if (!roomId || !userId || !name)
@@ -79,13 +80,14 @@ export const checkRoomAvailability = async (req, res, next) => {
         400
       )
     );
-  const result = await checkRoomStatus(roomId, userId, name);
-  if (!result) {
+  const checkResult = await checkRoomStatus(roomId, userId, name);
+  const enterRedisResult = await enterRedisRoom(roomId,userId,name)
+  if (!checkResult || !enterRedisResult) {
     return next(
-      new errors.CustomError(
-        `Room ${roomId} is not existed or the game has started`,
-        400
-      )
+        new errors.CustomError(
+            `Room ${roomId} is not existed or the game has started`,
+            400
+        )
     );
   }
   return res.json({ data: { userId, userName: name } });
@@ -137,10 +139,6 @@ export const createGameRoomOnRedis = async (req, res, next) => {
   if (typeof roomId !== "string")
     return next(new errors.TypeError({ roomId: "string" }, 400));
   const data = await createRoomOnRedis(roomId, userId, name);
-  if (data === undefined)
-    return next(new errors.CustomError("Quizz list is empty", 400));
-  if (data === null)
-    return next(new errors.CustomError(`Room ${roomId} is not available`, 400));
   if (!data) return next(new errors.CustomError(`Fail to create room`, 400));
   return res.json({ message: "success" });
 };
