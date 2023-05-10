@@ -227,11 +227,15 @@ export const writePlayerAnswerIntoRedisList = async function (
     await redisClient.del(lockKey);
   }
 };
-export const getPlayerAnswerFromRedisList = async function (roomId) {
+export const getPlayerAnswerFromRedisList = async function (
+  roomId,
+  startIndex,
+  endIndex
+) {
   const playerAnswerList = await redisClient.lrange(
     `${roomId}-player-answer`,
-    0,
-    -1
+    startIndex,
+    endIndex
   );
   console.log(playerAnswerList);
   if (!playerAnswerList[0]) return [];
