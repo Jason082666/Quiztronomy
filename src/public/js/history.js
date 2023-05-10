@@ -5,7 +5,6 @@ const result = await axios.get(
 const totalGameAndScore = await axios.get(
   `/api/1.0/user/history?userId=${userId}`
 );
-localStorage.removeItem("host");
 const data = result.data;
 const dataArray = data.data;
 let barChartDataArray;

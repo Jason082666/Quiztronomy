@@ -9,6 +9,7 @@ import {
   findHostAndUsers,
   writePlayerAnswerIntoRedisList,
   getPlayerAnswerFromRedisList,
+  setupDisconnectHash,
   countQuizLength,
 } from "./server/models/game.js";
 import { redisClient } from "./server/models/redis.js";
@@ -41,6 +42,7 @@ export const socketio = async function (server) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
         socket.quizNum = 1;
+        setupDisconnectHash(roomId);
         socket.emit("welcomeMessage");
       } else {
         const welcomeString = `Welcome to the game room, ${userName} !`;
@@ -130,7 +132,6 @@ export const socketio = async function (server) {
       "getAnswer",
       async ({ chooseOption, initvalue, score, quizNum }) => {
         const { roomId, userId } = socket;
-        // 這裡不需要await
         await writePlayerAnswerIntoRedisList(
           roomId,
           userId,
@@ -145,7 +146,6 @@ export const socketio = async function (server) {
       }
     );
 
-    // 只有host會接到timeout
     socket.on("timeout", async () => {
       const { roomId } = socket;
       const index = socket.quizNum - 1;

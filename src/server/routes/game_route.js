@@ -7,11 +7,9 @@ import {
 } from "../middleware/authentication.js";
 import {
   createGameRoom,
-  terminateGameRoom,
   checkRoomAvailabilityAndEnter,
   saveQuizIntoGameRoom,
   searchGameNameofGame,
-  startGameRoom,
   createGameRoomOnRedis,
   checkDisconnection,
   findHostOnRedis,
@@ -26,10 +24,6 @@ router.route("/game/disconnect").get(catchError(checkDisconnection));
 router
   .route("/game/entryPreparing")
   .post(catchError(autheticationForPlaying), catchError(checkRoomAvailabilityAndEnter));
-router
-  .route("/game/start")
-  .post(catchError(authetication), catchError(startGameRoom));
-router.route("/game/terminate").post(catchError(terminateGameRoom));
 router.route("/game/quizzes").post(catchError(saveQuizIntoGameRoom));
 router.route("/game/update").post(catchError(createGameRoomOnRedis));
 

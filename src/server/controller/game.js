@@ -1,9 +1,7 @@
 import {
   createRoom,
   createRoomOnRedis,
-  terminateRoom,
   saveQuizIntoRoom,
-  startRoom,
   checkRoomStatus,
   enterRedisRoom,
   checkDisconnectList,
@@ -92,37 +90,6 @@ export const findHostOnRedis = async (req, res, next) => {
   if (!data)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
   res.json({ data });
-};
-export const startGameRoom = async (req, res, next) => {
-  const { userId } = req.session.user;
-  const { roomId } = req.body;
-  if (!roomId || !userId)
-    return next(new errors.ParameterError(["roomId", "userId"], 400));
-  if (typeof roomId !== "string" || typeof userId !== "string")
-    return next(
-      new errors.TypeError({ roomId: "string", userId: "string" }, 400)
-    );
-  const data = await startRoom(roomId, userId);
-  if (data === null)
-    return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
-  if (!data) return next(new errors.CustomError(`Fail to start the game`, 400));
-  return res.json({ data });
-};
-
-export const terminateGameRoom = async (req, res, next) => {
-  const { roomId } = req.body;
-  if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
-  if (typeof roomId !== "string")
-    return next(new errors.TypeError({ roomId: "string" }, 400));
-  const data = await terminateRoom(roomId);
-  if (!data)
-    return next(
-      new errors.CustomError(
-        `Room ${roomId} with roomStatus equals to preparing is not existed`,
-        400
-      )
-    );
-  return res.json({ message: `Terminated room ${roomId}` });
 };
 
 export const createGameRoomOnRedis = async (req, res, next) => {

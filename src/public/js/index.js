@@ -3,11 +3,8 @@ const { data } = userStatus.data;
 if (data.error) {
   localStorage.clear();
 }
-localStorage.removeItem("searchedId");
-localStorage.removeItem("quizzes");
 localStorage.removeItem("roomId");
 localStorage.removeItem("gameName");
-localStorage.removeItem("host");
 const userId = localStorage.getItem("userId");
 const userName = localStorage.getItem("userName");
 const canvasInfo = $("#canvas-info")[0];

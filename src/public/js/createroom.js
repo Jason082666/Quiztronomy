@@ -2,6 +2,10 @@
 import { MultiChoice, TrueFalse } from "./question_module.js";
 localStorage.setItem("searchedId", "[]");
 localStorage.setItem("quizzes", "{}");
+$(window).on("beforeunload", () => {
+  localStorage.removeItem("searchedId");
+  localStorage.removeItem("quizzes");
+});
 const CancelToken = axios.CancelToken;
 let source;
 $("#create-by-system").on("change", function () {
@@ -494,7 +498,7 @@ const search = async () => {
     searchedArray = resultArray;
   }
   const searchObj = { q: query, type, excludeIds: searchedArray };
-  const result = await axios.post(`/api/1.0/question/search`, searchObj);
+  const result = await axios.post("/api/1.0/question/search", searchObj);
   const { data } = result.data;
   return data;
 };

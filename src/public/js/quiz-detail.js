@@ -168,7 +168,10 @@ historyArray.forEach((data, index) => {
   generateChart(index);
 });
 
-
+$(window).on("beforeunload", () => {
+  localStorage.removeItem("host");
+  localStorage.removeItem("dataId");
+});
 function generateChart(index) {
   const dataArray = historyArray[index];
   const charArray = countOptions(dataArray);

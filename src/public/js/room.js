@@ -552,7 +552,7 @@ function trueFalseOnClick(quizzObj, $element) {
       $(this).addClass("correct-answer");
       $(".t-f").addClass("tf-no-hover");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
-      const result = await axios.post("/api/1.0/score/add", {
+      const result = await axios.put("/api/1.0/score/add", {
         roomId,
         score,
       });
@@ -611,7 +611,7 @@ function multipleChoicesOnclick(quizzObj, $element) {
     const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
     if (rightoptions > 0) {
       finalScore = Math.floor((rightoptions / 4) * 1.2 * score);
-      const result = await axios.post("/api/1.0/score/add", {
+      const result = await axios.put("/api/1.0/score/add", {
         roomId,
         score: finalScore,
       });
@@ -646,7 +646,7 @@ function multipleChoiceOnclick(quizzObj, $element) {
     if ($selectedInput.attr("data-state") === "right") {
       $('input[data-state="right"]').next().addClass("correct-answer");
       const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
-      const result = await axios.post("/api/1.0/score/add", { roomId, score });
+      const result = await axios.put("/api/1.0/score/add", { roomId, score });
       const addScore = +result.data.score;
       socket.score = addScore;
       animateScore($("#player-score"), initvalue, socket.score, 700);
