@@ -20,7 +20,7 @@ import {
   addGameHistory,
   addGameHistoryToHost,
 } from "./server/models/historydata.js";
-import { deleteKey } from "./server/models/redis.js";
+import { deleteGroupKey } from "./server/models/redis.js";
 
 export const socketio = async function (server) {
   const io = new Server(server);
@@ -50,20 +50,20 @@ export const socketio = async function (server) {
         socket.emit("message", welcomeString);
         socket.userId = userId;
         socket.userName = userName;
-        const dataArray = await findHostAndUsers(roomId);
-        const hostData = JSON.parse(dataArray[0].userName);
+        const hostAndUserArray = await findHostAndUsers(roomId);
+        const hostData = JSON.parse(hostAndUserArray[0].userName);
         const hostKey = Object.keys(hostData)[0];
         const hostPackage = {
           userId: hostKey,
           userName: hostData[hostKey],
           roomId,
         };
-        const userPackage = dataArray.slice(2);
+        const userPackage = hostAndUserArray.slice(2);
         const message = JSON.stringify({
           event: "userJoined",
           data: [hostPackage, userPackage],
         });
-        await pubClient.publish(roomId, message);
+        pubClient.publish(roomId, message);
       }
     });
 
@@ -71,29 +71,30 @@ export const socketio = async function (server) {
       console.log(`A user disconnected due to ${reason}`);
       const roomId = socket.roomId;
       if (socket.hostId) {
-        await deleteKey(`${roomId}-room`);
-        await deleteKey(`${roomId} -score`);
-        await deleteKey(`${roomId}`);
-        await deleteKey(`${roomId}-connected`);
-        await deleteKey(`${roomId}-disconnect`);
-        await deleteKey(`${roomId}-player-answer`);
-        await terminateRoom(roomId);
+        await deleteGroupKey([
+          `${roomId}-room`,
+          `${roomId} -score`,
+          roomId,
+          `${roomId}-connected`,
+          `${roomId}-disconnect`,
+          `${roomId}-player-answer`,
+        ]);
+        terminateRoom(roomId);
         const message = JSON.stringify({
           event: "hostLeave",
         });
-        await pubClient.publish(roomId, message);
-        return;
+        return await pubClient.publish(roomId, message);
       }
-      await leaveRoom(roomId, socket.userId);
-      await playerDisconnect(roomId, socket.userId, socket.userName);
-      const dataArray = await findHostAndUsers(roomId);
+      leaveRoom(roomId, socket.userId);
+      playerDisconnect(roomId, socket.userId, socket.userName);
+      const hostAndUserArray = await findHostAndUsers(roomId);
       socket.leave(roomId);
-      const userPackage = dataArray.slice(2);
+      const userPackage = hostAndUserArray.slice(2);
       const message = JSON.stringify({
         event: "userLeft",
         data: userPackage,
       });
-      await pubClient.publish(roomId, message);
+      pubClient.publish(roomId, message);
     });
 
     socket.on("startGame", async () => {
@@ -110,7 +111,7 @@ export const socketio = async function (server) {
         event: "loadFirstQuizz",
         data: { firstQuizz, length, rankResult },
       });
-      await pubClient.publish(roomId, message);
+      pubClient.publish(roomId, message);
     });
 
     socket.on("nextQuiz", async (quizNum) => {
@@ -208,8 +209,8 @@ export const socketio = async function (server) {
         event: "showQuizExplain",
         data: newPlayerAnswerAnalysis,
       });
-      await pubClient.publish(roomId, message);
-      await pubClient.publish(roomId, dataMessage);
+      pubClient.publish(roomId, message);
+      pubClient.publish(roomId, dataMessage);
     });
     socket.on("showFinal", async () => {
       const { roomId } = socket;
@@ -221,18 +222,18 @@ export const socketio = async function (server) {
       );
       console.log("answerArray", playerAnswerArray);
       const gameRoom = await addGameHistory(roomId, playerAnswerArray);
-      await addGameHistoryToHost(
+      addGameHistoryToHost(
         gameRoom.founder.id,
         gameRoom._id,
         gameRoom.name,
         gameRoom.date
       );
-      await addToQuequeAndUpdateMongo(roomId);
+      addToQuequeAndUpdateMongo(roomId);
       const message = JSON.stringify({
         event: "showFinalScore",
         data: rankResult,
       });
-      await pubClient.publish(roomId, message);
+      pubClient.publish(roomId, message);
     });
     subClient.on("message", async (roomId, message) => {
       if (roomId !== socket.roomId) return;
