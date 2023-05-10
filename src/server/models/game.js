@@ -1,5 +1,5 @@
-import {MyGameRoom} from "./mongodb.js";
-import {redisClient} from "./redis.js";
+import { MyGameRoom } from "./mongodb.js";
+import { redisClient } from "./redis.js";
 
 export const gameRoomExistence = async function (id) {
   const result = await MyGameRoom.findOne({
@@ -20,7 +20,7 @@ export const createRoom = async function (id, name, gameRoomName) {
     name: gameRoomName,
     founder: { id, name },
   });
-  const result= await game.save();
+  const result = await game.save();
   let dataObj = result.toObject();
   delete dataObj["_id"];
   delete dataObj["__v"];
@@ -42,7 +42,6 @@ export const createRoomOnRedis = async function (roomId, hostId, hostName) {
   );
   return true;
 };
-
 
 export const playerDisconnect = async function (roomId, userId, name) {
   await redisClient.hset(`${roomId}-disconnect`, userId, name);
@@ -71,7 +70,6 @@ export const saveQuizIntoRoom = async function (array, roomId, founderId) {
     roomStatus: "preparing",
     "founder.id": founderId,
   });
-  if (!gameRoom) return null;
   gameRoom.quizz = array;
   await gameRoom.save();
   await redisClient.rpush(
@@ -92,23 +90,22 @@ export const checkRoomStatus = async function (roomId, id) {
   }
   return false;
 };
-export const enterRedisRoom = async function (roomId,id,name) {
+export const enterRedisRoom = async function (roomId, id, name) {
   const respond = await redisClient.hset(`${roomId}-room`, id, name);
   if (respond == 0) return false;
   return true;
-}
+};
 
 export const enterRoom = async function (roomId, id) {
   const result = await redisClient.exists(`${roomId}-room`);
-  if (result == 0) return false
   const enterTimes = await redisClient.zincrby(`${roomId}-connected`, 1, id);
-  if (+enterTimes > 1) return false;
+  if (+enterTimes > 1 || result == 0) return false;
   return true;
 };
 
 export const leaveRoom = async function (roomId, playerId) {
-   redisClient.hdel(`${roomId}-room`, playerId);
-   redisClient.zrem(`${roomId}-connected`, playerId);
+  redisClient.hdel(`${roomId}-room`, playerId);
+  redisClient.zrem(`${roomId}-connected`, playerId);
 };
 
 export const startRoom = async function (roomId, founderId) {
@@ -117,18 +114,13 @@ export const startRoom = async function (roomId, founderId) {
     roomStatus: "preparing",
     "founder.id": founderId,
   });
-  if (!gameRoom) return {};
   gameRoom.roomStatus = "started";
   await gameRoom.save();
-  if (redisClient.status === "reconnecting") {
-    return {};
-  }
   await redisClient.hdel(`${roomId}-room`, founderId);
   await redisClient.hdel(`${roomId}-room`, "status");
   const players = await redisClient.hgetall(`${roomId}-room`);
   delete players.host;
   delete players.status;
-  if (Object.keys(players).length == 0) return {};
   gameRoom.players = players;
   await gameRoom.save();
   for (let player in players) {
@@ -137,15 +129,20 @@ export const startRoom = async function (roomId, founderId) {
     const playerData = JSON.stringify(playerObj);
     await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
   }
-  const firstQuizz = await redisClient.lindex(roomId, 0);
-  const length = await redisClient.llen(roomId);
-  if (length == 1) {
-    const parseFirstQuizz = JSON.parse(firstQuizz);
-    parseFirstQuizz.lastquizz = true;
-    return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
-  }
-  const parseFirstQuizz = JSON.parse(firstQuizz);
-  return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
+  //
+  // const firstQuizz = await redisClient.lindex(roomId, 0);
+  // const length = await redisClient.llen(roomId);
+  // if (length == 1) {
+  //   const parseFirstQuizz = JSON.parse(firstQuizz);
+  //   parseFirstQuizz.lastquizz = true;
+  //   return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
+  // }
+  // const parseFirstQuizz = JSON.parse(firstQuizz);
+  // return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
+};
+
+export const countQuizLength = async function (roomId) {
+  return await redisClient.llen(roomId);
 };
 
 export const terminateRoom = async function (id) {
@@ -222,9 +219,6 @@ export const getPlayerAnswerFromRedisList = async function (
 };
 
 export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
-  if (redisClient.status === "reconnecting") {
-    return undefined;
-  }
   const length = await redisClient.llen(roomId);
   const result = await redisClient.lindex(roomId, +currentQuizz - 1);
   const data = JSON.parse(result);

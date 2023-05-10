@@ -51,16 +51,9 @@ export const saveQuizIntoGameRoom = async (req, res, next) => {
       new errors.TypeError({ roomId: "string", founderId: "string" }, 400)
     );
   const result = await saveQuizIntoRoom(array, roomId, founderId);
-  if (result === false)
+  if (!result)
     return next(
       new errors.CustomError("There should be at max 40 quizzes in a room", 400)
-    );
-  if (result === null)
-    return next(
-      new errors.CustomError(
-        `Room ${roomId} is not existed or host validation failed`,
-        400
-      )
     );
   return res.json({ message: "saved" });
 };

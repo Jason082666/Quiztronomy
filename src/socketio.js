@@ -10,6 +10,7 @@ import {
   findHostAndUsers,
   writePlayerAnswerIntoRedisList,
   getPlayerAnswerFromRedisList,
+  countQuizLength,
 } from "./server/models/game.js";
 import { redisClient } from "./server/models/redis.js";
 import { gameHostValidation } from "./server/models/user.js";
@@ -95,7 +96,9 @@ export const socketio = async function (server) {
 
     socket.on("startGame", async () => {
       const { roomId, hostId } = socket;
-      const { firstQuizz, length } = await startRoom(roomId, hostId);
+      await startRoom(roomId, hostId);
+      const firstQuizz = await getCurrentQuizzFromRedis(roomId, 1);
+      const length = await countQuizLength(roomId);
       if (!firstQuizz || !length) return;
       socket.length = length;
       firstQuizz.num = 1;
