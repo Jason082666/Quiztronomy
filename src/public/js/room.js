@@ -610,7 +610,7 @@ function multipleChoicesOnclick(quizzObj, $element) {
     });
     const score = calculateScore(quizzObj.timeLimits, socket.remainTime);
     if (rightoptions > 0) {
-      finalScore = Math.floor((rightoptions / 4) * 1.2 * score);
+      finalScore = rightoptions * score * 0.8;
       const result = await axios.put("/api/1.0/score/add", {
         roomId,
         score: finalScore,
