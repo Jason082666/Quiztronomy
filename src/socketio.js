@@ -4,7 +4,6 @@ import {
   terminateRoom,
   leaveRoom,
   startRoom,
-  getCurrentQuizzFromMongo,
   getCurrentQuizzFromRedis,
   playerDisconnect,
   findHostAndUsers,
@@ -115,7 +114,6 @@ export const socketio = async function (server) {
       socket.quizNum += 1;
       const rankResult = await showRank(roomId, Infinity);
       const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
-      if (quiz) {
         const message = JSON.stringify({
           event: "showQuiz",
           data: {
@@ -126,19 +124,6 @@ export const socketio = async function (server) {
           },
         });
         pubClient.publish(roomId, message);
-      } else {
-        const quiz = await getCurrentQuizzFromMongo(roomId, quizNum);
-        const message = JSON.stringify({
-          event: "showQuiz",
-          data: {
-            quiz,
-            quizNum,
-            quizLength: socket.length,
-            rankResult,
-          },
-        });
-        pubClient.publish(roomId, message);
-      }
     });
 
     socket.on(

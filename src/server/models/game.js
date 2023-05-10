@@ -129,16 +129,6 @@ export const startRoom = async function (roomId, founderId) {
     const playerData = JSON.stringify(playerObj);
     await redisClient.zadd(`${gameRoom.id} -score`, 0, playerData);
   }
-  //
-  // const firstQuizz = await redisClient.lindex(roomId, 0);
-  // const length = await redisClient.llen(roomId);
-  // if (length == 1) {
-  //   const parseFirstQuizz = JSON.parse(firstQuizz);
-  //   parseFirstQuizz.lastquizz = true;
-  //   return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
-  // }
-  // const parseFirstQuizz = JSON.parse(firstQuizz);
-  // return { firstQuizz: parseFirstQuizz, length: gameRoom.quizz.length };
 };
 
 export const countQuizLength = async function (roomId) {
@@ -193,7 +183,6 @@ export const writePlayerAnswerIntoRedisList = async function (
         stringifyNewAnswerObject
       );
     }
-    console.log("index to lset", index);
     await redisClient.lset(
       `${roomId}-player-answer`,
       index,
@@ -229,23 +218,6 @@ export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
   return data;
 };
 
-export const getCurrentQuizzFromMongo = async function (roomId, currentQuizz) {
-  const gameRoom = await MyGameRoom.findOne({
-    id: roomId,
-    roomStatus: "started",
-  });
-  if (!gameRoom) return null;
-  const { quizz } = gameRoom;
-  const length = quizz.length;
-  const data = quizz[+currentQuizz - 1];
-  if (!data) return null;
-  if (length === +currentQuizz) {
-    const newData = data.toObject();
-    newData.lastquizz = true;
-    return newData;
-  }
-  return data;
-};
 
 export const findHostAndUsers = async function (roomId) {
   const result = await redisClient.hgetall(`${roomId}-room`);
@@ -260,7 +232,7 @@ export const findHostAndUsers = async function (roomId) {
 
 export const findRoomOnRedis = async function (roomId) {
   const result = await redisClient.hget(`${roomId}-room`, "host");
-  if (!result) return undefined;
+  if (!result) return null;
   const hostObj = JSON.parse(result);
   return Object.values(hostObj)[0];
 };

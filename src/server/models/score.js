@@ -1,5 +1,6 @@
-import { redisClient } from "../models/redis.js";
-import { MyGameRoom } from "../models/mongodb.js";
+import {redisClient} from "./redis.js";
+import {MyGameRoom} from "./mongodb.js";
+
 export const addScore = async function (roomId, score, object) {
   if (redisClient.status === "reconnecting") return false;
   const data = JSON.stringify(object);
@@ -7,15 +8,13 @@ export const addScore = async function (roomId, score, object) {
   if (!roomExist) return false;
   const playerExist = await redisClient.zscore(`${roomId} -score`, data);
   if (!playerExist) return false;
-  const result = await redisClient.zadd(
+  await redisClient.zadd(
     `${roomId} -score`,
     "INCR",
     +score,
     data
   );
-  console.log(result);
-  const finalscore = await redisClient.zscore(`${roomId} -score`, data);
-  return finalscore;
+  return await redisClient.zscore(`${roomId} -score`, data);
 };
 
 export const showRank = async function (roomId, ranknum) {
