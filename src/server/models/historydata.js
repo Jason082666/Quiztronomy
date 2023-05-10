@@ -39,7 +39,13 @@ export const addGameHistory = async function (roomId, historyArray) {
     roomStatus: "started",
   });
   if (!gameRoom) return null;
-  gameRoom.history = historyArray;
+  const parsedHistoryArray = historyArray.map((historyObject) => {
+    console.log("historyObject", historyObject);
+    console.log("parseObject", JSON.parse(historyObject));
+    return JSON.parse(historyObject);
+  });
+  console.log(parsedHistoryArray);
+  gameRoom.history = parsedHistoryArray;
   await gameRoom.save();
   return gameRoom;
 };

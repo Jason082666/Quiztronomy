@@ -69,7 +69,6 @@ export const socketio = async function (server) {
     socket.on("disconnect", async (reason) => {
       console.log(`A user disconnected due to ${reason}`);
       const roomId = socket.roomId;
-      console.log("hostId", socket.hostId);
       if (socket.hostId) {
         await deleteKey(`${roomId}-room`);
         await deleteKey(`${roomId} -score`);
@@ -169,7 +168,6 @@ export const socketio = async function (server) {
         index,
         index
       );
-      console.log("playerAnalysis", playerAnswerAnalysis);
       const newPlayerAnswerAnalysis = {};
       if (playerAnswerAnalysis[0]) {
         const parsedPlayerAnswerAnalysis = JSON.parse(playerAnswerAnalysis);
@@ -185,7 +183,6 @@ export const socketio = async function (server) {
           }
         );
       }
-      console.log("newPlayerAnswerAnalysis", newPlayerAnswerAnalysis);
       const message = JSON.stringify({
         event: "showQuizExplain",
         data: newPlayerAnswerAnalysis,
@@ -236,7 +233,6 @@ export const socketio = async function (server) {
       );
       console.log("answerArray", playerAnswerArray);
       const gameRoom = await addGameHistory(roomId, playerAnswerArray);
-      await redisClient.del(`${roomId}-room`);
       await addGameHistoryToHost(
         gameRoom.founder.id,
         gameRoom._id,
