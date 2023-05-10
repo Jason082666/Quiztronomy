@@ -2,7 +2,7 @@ import {
   createRoom,
   createRoomOnRedis,
   terminateRoom,
-  saveQuizzIntoRoom,
+  saveQuizIntoRoom,
   startRoom,
   checkRoomStatus,
     enterRedisRoom,
@@ -40,7 +40,7 @@ export const checkDisconnection = async (req, res) => {
   return res.json({ data: "disconnection" });
 };
 
-export const saveQuizzIntoGameRoom = async (req, res, next) => {
+export const saveQuizIntoGameRoom = async (req, res, next) => {
   const { array, roomId, founderId } = req.body;
   if (!array || !roomId || !founderId)
     return next(
@@ -50,7 +50,7 @@ export const saveQuizzIntoGameRoom = async (req, res, next) => {
     return next(
       new errors.TypeError({ roomId: "string", founderId: "string" }, 400)
     );
-  const result = await saveQuizzIntoRoom(array, roomId, founderId);
+  const result = await saveQuizIntoRoom(array, roomId, founderId);
   if (result === false)
     return next(
       new errors.CustomError("There should be at max 40 quizzes in a room", 400)
@@ -80,7 +80,7 @@ export const checkRoomAvailabilityAndEnter = async (req, res, next) => {
         400
       )
     );
-  const checkResult = await checkRoomStatus(roomId, userId, name);
+  const checkResult = await checkRoomStatus(roomId, userId);
   const enterRedisResult = await enterRedisRoom(roomId,userId,name)
   if (!checkResult || !enterRedisResult) {
     return next(

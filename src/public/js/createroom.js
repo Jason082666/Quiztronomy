@@ -730,7 +730,7 @@ $("body").on("click", ".room-ready-btn", async () => {
     const createResult = createRoomOnMongo.data.data;
     if (createResult.error) return console.log(createResult.error);
     localStorage.setItem("roomId", createResult.id);
-    const createRoomOnRedis = await axios.post("/api/1.0/game/roomupdate", {
+    const createRoomOnRedis = await axios.post("/api/1.0/game/update", {
       roomId: createResult.id,
     });
     if (createRoomOnRedis.error) return console.log(createRoomOnRedis.error);
@@ -748,7 +748,7 @@ $("body").on("click", ".room-ready-btn", async () => {
     });
     const founderId = localStorage.getItem("userId");
     const roomId = localStorage.getItem("roomId");
-    await axios.post("/api/1.0/game/savequizz", {
+    await axios.post("/api/1.0/game/quizzes", {
       array: readyQuizzesArray,
       roomId,
       founderId,

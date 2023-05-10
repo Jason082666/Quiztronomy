@@ -8,7 +8,6 @@ import {
   getCurrentQuizzFromRedis,
   playerDisconnect,
   findHostAndUsers,
-  setupDisconnectHash,
   writePlayerAnswerIntoRedisList,
   getPlayerAnswerFromRedisList,
 } from "./server/models/game.js";
@@ -41,7 +40,6 @@ export const socketio = async function (server) {
       if (validationUser) {
         socket.emit("showControllerInterface", { userName, userId, roomId });
         socket.hostId = userId;
-        await setupDisconnectHash(roomId);
         socket.quizNum = 1;
         socket.emit("welcomeMessage");
       } else {

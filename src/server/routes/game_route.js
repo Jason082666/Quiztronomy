@@ -9,7 +9,7 @@ import {
   createGameRoom,
   terminateGameRoom,
   checkRoomAvailabilityAndEnter,
-  saveQuizzIntoGameRoom,
+  saveQuizIntoGameRoom,
   searchGameNameofGame,
   startGameRoom,
   createGameRoomOnRedis,
@@ -30,7 +30,7 @@ router
   .route("/game/start")
   .post(catchError(authetication), catchError(startGameRoom));
 router.route("/game/terminate").post(catchError(terminateGameRoom));
-router.route("/game/savequizz").post(catchError(saveQuizzIntoGameRoom));
-router.route("/game/roomupdate").post(catchError(createGameRoomOnRedis));
+router.route("/game/quizzes").post(catchError(saveQuizIntoGameRoom));
+router.route("/game/update").post(catchError(createGameRoomOnRedis));
 
 export default router;

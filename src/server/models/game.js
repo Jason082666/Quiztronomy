@@ -20,7 +20,7 @@ export const createRoom = async function (id, name, gameRoomName) {
     name: gameRoomName,
     founder: { id, name },
   });
-  const result = await game.save();
+  const result= await game.save();
   let dataObj = result.toObject();
   delete dataObj["_id"];
   delete dataObj["__v"];
@@ -43,19 +43,9 @@ export const createRoomOnRedis = async function (roomId, hostId, hostName) {
   return true;
 };
 
-export const setupDisconnectHash = async function (roomId) {
-  await redisClient.hset(`${roomId}-disconnect`, "", "");
-};
 
 export const playerDisconnect = async function (roomId, userId, name) {
-  if (redisClient.status === "reconnecting") {
-    return false;
-  }
-  const exists = await redisClient.exists(`${roomId}-disconnect`);
-  if (exists == 0) {
-    return false;
-  }
-  return await redisClient.hset(`${roomId}-disconnect`, userId, name);
+  await redisClient.hset(`${roomId}-disconnect`, userId, name);
 };
 
 export const searchGameName = async function (roomId) {
@@ -74,7 +64,7 @@ export const checkDisconnectList = async function (roomId, userId) {
   return true;
 };
 
-export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
+export const saveQuizIntoRoom = async function (array, roomId, founderId) {
   if (array.length > 40) return false;
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
@@ -91,7 +81,7 @@ export const saveQuizzIntoRoom = async function (array, roomId, founderId) {
   return true;
 };
 
-export const checkRoomStatus = async function (roomId, id, name) {
+export const checkRoomStatus = async function (roomId, id) {
   const result = await redisClient.exists(`${roomId}-room`);
   if (result == 0) return false;
   const status = await redisClient.hget(`${roomId}-room`, "status");
@@ -108,25 +98,17 @@ export const enterRedisRoom = async function (roomId,id,name) {
   return true;
 }
 
-
-
-
 export const enterRoom = async function (roomId, id) {
-  if (redisClient.status === "reconnecting") return null;
   const result = await redisClient.exists(`${roomId}-room`);
-  if (result == 0) return null;
+  if (result == 0) return false
   const enterTimes = await redisClient.zincrby(`${roomId}-connected`, 1, id);
-  console.log("entertimes", enterTimes);
   if (+enterTimes > 1) return false;
   return true;
 };
 
 export const leaveRoom = async function (roomId, playerId) {
-  if (redisClient.status === "reconnecting") return null;
-  const roomExist = await redisClient.exists(`${roomId}-room`);
-  if (roomExist == 0) return null;
-  await redisClient.hdel(`${roomId}-room`, playerId);
-  await redisClient.zrem(`${roomId}-connected`, playerId);
+   redisClient.hdel(`${roomId}-room`, playerId);
+   redisClient.zrem(`${roomId}-connected`, playerId);
 };
 
 export const startRoom = async function (roomId, founderId) {
