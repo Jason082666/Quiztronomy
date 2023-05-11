@@ -23,8 +23,11 @@ router.route("/game/room").get(catchError(findHostOnRedis));
 router.route("/game/disconnect").get(catchError(checkDisconnection));
 router
   .route("/game/entryPreparing")
-  .post(catchError(autheticationForPlaying), catchError(checkRoomAvailabilityAndEnter));
-router.route("/game/quizzes").post(catchError(saveQuizIntoGameRoom));
+  .post(
+    catchError(autheticationForPlaying),
+    catchError(checkRoomAvailabilityAndEnter)
+  );
+router.route("/game/quizes").post(catchError(saveQuizIntoGameRoom));
 router.route("/game/update").post(catchError(createGameRoomOnRedis));
 
 export default router;

@@ -21,7 +21,7 @@ export const updateNewPop = async (req, res, next) => {
   res.json({ message: "success" });
 };
 
-export const searchRelatedQuizz = async (req, res, next) => {
+export const searchRelatedQuiz = async (req, res, next) => {
   if (!req.body.q || !req.body.type || !req.body.excludeIds)
     return next(new errors.ParameterError(["q", "type", "excludeIds"], 400));
   const { q, type, excludeIds } = req.body;

@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 import { catchError } from "../../util/catcherror.js";
 import {
-  searchRelatedQuizz,
+  searchRelatedQuiz,
   insertQuestionByPlayerIntoES,
   updateNewPop,
 } from "../controller/question.js";
@@ -11,7 +11,7 @@ import {
   generateQuestionManually,
 } from "../middleware/question.js";
 
-router.route("/question/search").post(catchError(searchRelatedQuizz));
+router.route("/question/search").post(catchError(searchRelatedQuiz));
 router
   .route("/question/create")
   .post(

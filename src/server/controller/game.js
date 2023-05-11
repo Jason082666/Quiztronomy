@@ -51,7 +51,7 @@ export const saveQuizIntoGameRoom = async (req, res, next) => {
   const result = await saveQuizIntoRoom(array, roomId, founderId);
   if (!result)
     return next(
-      new errors.CustomError("There should be at max 40 quizzes in a room", 400)
+      new errors.CustomError("There should be at max 40 quizes in a room", 400)
     );
   return res.json({ message: "saved" });
 };

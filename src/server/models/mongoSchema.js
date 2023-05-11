@@ -8,7 +8,7 @@ const MyGameRoomSchema = new mongoose.Schema({
   },
   roomStatus: { type: String, default: "preparing", required: true },
   date: { type: Date, default: Date.now },
-  quizz: [
+  quiz: [
     {
       question: { type: String },
       answer: [],

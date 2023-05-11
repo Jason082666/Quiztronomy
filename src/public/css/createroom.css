@@ -198,7 +198,7 @@ p {
   font-size: 24px;
 }
 
-.container-right .quizz-question {
+.container-right .quiz-question {
   font-family: "Barlow", sans-serif;
   color: #0e1a3c;
 }
@@ -446,7 +446,7 @@ label {
   background-size: cover;
 }
 
-.quizz-handy-container {
+.quiz-handy-container {
   margin-top: 30px;
   display: flex;
   flex-direction: column;
@@ -560,7 +560,7 @@ textarea {
   justify-content: center;
   align-items: center;
 }
-.create-quizz-btn {
+.create-quiz-btn {
   font-family: "Barlow", sans-serif;
   font-weight: bold;
   font-size: 24px;
@@ -587,7 +587,7 @@ textarea {
   margin-right: 20px;
 }
 
-.quizz {
+.quiz {
   margin-top: 30px;
   display: none;
 }

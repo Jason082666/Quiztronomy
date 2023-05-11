@@ -4,14 +4,8 @@ import {
   addGameHistoryToPlayer,
   addGameInfoToRedis,
 } from "../src/server/models/historydata.js";
-redisClient.on("connect", () => {
-  console.log("Connected to Redis");
-});
-
-redisClient.on("error", (error) => {
-  console.error("Error connecting to Redis", error);
-});
-
+import { Database } from "../src/util/mongoConnection.js";
+Database.connection;
 const funct = async () => {
   while (redisClient.status !== "reconnecting") {
     const object = await redisClient.brpop("saveScoreToMongo", 1);
@@ -36,7 +30,8 @@ const funct = async () => {
           const name = Object.values(playerInfo)[0];
           const score = rank[i + 1];
           const ranking = i / 2 + 1;
-          if (id.length !== 36) {
+          const visitorUUIDLength = 36;
+          if (id.length !== visitorUUIDLength) {
             await addGameHistoryToPlayer(
               id,
               uniqueId,
@@ -52,7 +47,6 @@ const funct = async () => {
         gameRoom.score = result;
         const gameRoomData = await gameRoom.save();
         await addGameInfoToRedis(uniqueId, gameRoomData);
-        await redisClient.zremrangebyrank(`${roomId} -score`, 0, -1);
       } catch (e) {
         console.error(e);
       }

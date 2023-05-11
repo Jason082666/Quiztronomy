@@ -78,7 +78,7 @@ export const saveQuizIntoRoom = async function (array, roomId, founderId) {
     roomStatus: "preparing",
     "founder.id": founderId,
   });
-  gameRoom.quizz = array;
+  gameRoom.quiz = array;
   await gameRoom.save();
   await redisClient.rpush(
     gameRoom.id,
@@ -123,7 +123,6 @@ export const startRoom = async function (roomId, founderId) {
     "founder.id": founderId,
   });
   gameRoom.roomStatus = "started";
-  await gameRoom.save();
   await redisClient.hdel(`${roomId}-room`, founderId);
   await redisClient.hdel(`${roomId}-room`, "status");
   const players = await redisClient.hgetall(`${roomId}-room`);
@@ -218,12 +217,12 @@ export const getPlayerAnswerFromRedisList = async function (
   return playerAnswerList;
 };
 
-export const getCurrentQuizzFromRedis = async function (roomId, currentQuizz) {
+export const getCurrentQuizFromRedis = async function (roomId, currentQuiz) {
   const length = await redisClient.llen(roomId);
-  const result = await redisClient.lindex(roomId, +currentQuizz - 1);
+  const result = await redisClient.lindex(roomId, +currentQuiz - 1);
   const data = JSON.parse(result);
-  if (+currentQuizz === length) {
-    data.lastquizz = true;
+  if (+currentQuiz === length) {
+    data.lastquiz = true;
     return data;
   }
   return data;

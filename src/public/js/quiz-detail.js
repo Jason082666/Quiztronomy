@@ -19,7 +19,7 @@ const minute = ("0" + targetDate.getMinutes()).slice(-2);
 const second = ("0" + targetDate.getSeconds()).slice(-2);
 const ampm = hour >= 12 ? "pm" : "am";
 const time = `${year}-${month}-${day} ${hour % 12}:${minute}:${second}${ampm}`;
-const quizArrray = data.quizz;
+const quizArrray = data.quiz;
 const rankArray = data.score;
 const historyArray = data.history;
 $(".game-name").text(`Game name: ${gameName}`);

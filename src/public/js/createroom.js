@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
 import { MultiChoice, TrueFalse } from "./question_module.js";
 localStorage.setItem("searchedId", "[]");
-localStorage.setItem("quizzes", "{}");
+localStorage.setItem("quizes", "{}");
 $(window).on("beforeunload", () => {
   localStorage.removeItem("searchedId");
-  localStorage.removeItem("quizzes");
+  localStorage.removeItem("quizes");
 });
 const CancelToken = axios.CancelToken;
 let source;
@@ -12,8 +12,8 @@ $("#create-by-system").on("change", function () {
   if ($(this).is(":checked")) {
     $(".search-component").show();
     $("#search-result").show();
-    $(".quizz-handy-container").hide();
-    $(".quizz").show();
+    $(".quiz-handy-container").hide();
+    $(".quiz").show();
   }
 });
 
@@ -21,13 +21,13 @@ $("#create-by-hand").on("change", function () {
   if ($(this).is(":checked")) {
     $(".search-component").hide();
     $("#search-result").hide();
-    $(".quizz-handy-container").show();
-    $(".quizz").hide();
+    $(".quiz-handy-container").show();
+    $(".quiz").hide();
   }
 });
 
 $(".create-container").on("click", ".MC-handy", function () {
-  $(".quizz-handy-container").html(`<div class="mcs-options">
+  $(".quiz-handy-container").html(`<div class="mcs-options">
   <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
   <div class="options-container">
@@ -55,7 +55,7 @@ $(".create-container").on("click", ".MC-handy", function () {
     <label>Answer Explaination :</label>
     <textarea class= "explain-text"></textarea>
     <div class="submit-btn-container">
-    <button type="submit" class="create-quizz-btn">Confirm</button>
+    <button type="submit" class="create-quiz-btn">Confirm</button>
     </div>
   </div>
   </div>
@@ -63,7 +63,7 @@ $(".create-container").on("click", ".MC-handy", function () {
 });
 
 $(".create-container").on("click", ".MCS-handy", function () {
-  $(".quizz-handy-container").html(`<div class="mcs-options">
+  $(".quiz-handy-container").html(`<div class="mcs-options">
   <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
   <div class="options-container">
@@ -91,14 +91,14 @@ $(".create-container").on("click", ".MCS-handy", function () {
   <label>Answer Explaination :</label>
   <textarea class= "explain-text"></textarea>
   <div class="submit-btn-container">
-  <button type="submit" class="create-quizz-btn">Confrim</button>
+  <button type="submit" class="create-quiz-btn">Confrim</button>
   </div>
   </div>
 </div>`);
 });
 
 $(".create-container").on("click", ".TF-handy", function () {
-  $(".quizz-handy-container").html(`<div class="tf-options">
+  $(".quiz-handy-container").html(`<div class="tf-options">
   <label>Enter Quiz Question:</label>
   <input type="text" class="question-text">
   <div class="options-container">
@@ -114,115 +114,115 @@ $(".create-container").on("click", ".TF-handy", function () {
   <label>Answer Explaination :</label>
   <textarea class= "explain-text"></textarea>
   <div class="submit-btn-container">
-  <button type="submit" class="create-quizz-btn">Confirm</button>
+  <button type="submit" class="create-quiz-btn">Confirm</button>
   </div>
   </div>
 </div>`);
 });
 
 $(".create-container").on("click", "#search-submit", async function () {
-  const quizzes = await search();
-  if (quizzes === null) {
+  const quizes = await search();
+  if (quizes === null) {
     return Toast.fire({
       icon: "warning",
       title: "Please select a quiz type you want.",
     });
   }
-  if (quizzes === undefined) {
+  if (quizes === undefined) {
     return Toast.fire({
       icon: "warning",
       title: "Please enter the quiz title you want to search.",
     });
   }
-  if (!quizzes[0]) {
+  if (!quizes[0]) {
     return Toast.fire({
       icon: "warning",
       title: "No quiz found",
     });
   }
-  quizzes.forEach((quizz) => {
+  quizes.forEach((quiz) => {
     const searched = JSON.parse(localStorage.getItem("searchedId"));
-    if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quizz.type)) {
+    if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quiz.type)) {
       const question = new MultiChoice(
-        quizz.question,
-        quizz.answer,
-        quizz.explain,
-        quizz.options,
-        quizz.id,
-        quizz.type
+        quiz.question,
+        quiz.answer,
+        quiz.explain,
+        quiz.options,
+        quiz.id,
+        quiz.type
       );
-      searched.push(quizz.id);
+      searched.push(quiz.id);
       localStorage.setItem("searchedId", JSON.stringify(searched));
       const html = question.html;
       $("#search-result").append(html);
-    } else if (["TF-CH", "TF-EN"].includes(quizz.type)) {
+    } else if (["TF-CH", "TF-EN"].includes(quiz.type)) {
       const question = new TrueFalse(
-        quizz.question,
-        quizz.answer,
-        quizz.explain,
-        quizz.id,
-        quizz.type
+        quiz.question,
+        quiz.answer,
+        quiz.explain,
+        quiz.id,
+        quiz.type
       );
-      searched.push(quizz.id);
+      searched.push(quiz.id);
       localStorage.setItem("searchedId", JSON.stringify(searched));
       const html = question.html;
       $("#search-result").append(html);
     }
   });
-  saveQuizzArrayToLocal(quizzes);
+  saveQuizArrayToLocal(quizes);
 });
 
 $(".create-container").on("keydown", "#search-input", async function (e) {
   if (e.keyCode == 13) {
-    const quizzes = await search();
-    if (quizzes === null) {
+    const quizes = await search();
+    if (quizes === null) {
       return Toast.fire({
         icon: "warning",
         title: "Please select a quiz type.",
       });
     }
-    if (quizzes === undefined) {
+    if (quizes === undefined) {
       return Toast.fire({
         icon: "warning",
         title: "Please enter the quiz title you want to search.",
       });
     }
-    if (!quizzes[0]) {
+    if (!quizes[0]) {
       return Toast.fire({
         icon: "warning",
         title: "No quiz found",
       });
     }
-    quizzes.forEach((quizz) => {
+    quizes.forEach((quiz) => {
       const searched = JSON.parse(localStorage.getItem("searchedId"));
-      if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quizz.type)) {
+      if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(quiz.type)) {
         const question = new MultiChoice(
-          quizz.question,
-          quizz.answer,
-          quizz.explain,
-          quizz.options,
-          quizz.id,
-          quizz.type
+          quiz.question,
+          quiz.answer,
+          quiz.explain,
+          quiz.options,
+          quiz.id,
+          quiz.type
         );
-        searched.push(quizz.id);
+        searched.push(quiz.id);
         localStorage.setItem("searchedId", JSON.stringify(searched));
         const html = question.html;
         $("#search-result").append(html);
-      } else if (["TF-CH", "TF-EN"].includes(quizz.type)) {
+      } else if (["TF-CH", "TF-EN"].includes(quiz.type)) {
         const question = new TrueFalse(
-          quizz.question,
-          quizz.answer,
-          quizz.explain,
-          quizz.id,
-          quizz.type
+          quiz.question,
+          quiz.answer,
+          quiz.explain,
+          quiz.id,
+          quiz.type
         );
-        searched.push(quizz.id);
+        searched.push(quiz.id);
         localStorage.setItem("searchedId", JSON.stringify(searched));
         const html = question.html;
         $("#search-result").append(html);
       }
     });
-    saveQuizzArrayToLocal(quizzes);
+    saveQuizArrayToLocal(quizes);
   }
 });
 
@@ -234,21 +234,21 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
   console.log("data", data);
   if (!data) return;
   if (["TF-CH", "TF-EN"].includes(data.type)) {
-    const quizz = new TrueFalse(
+    const quiz = new TrueFalse(
       data.question,
       data.answer,
       data.explain,
       data.id,
       data.type
     );
-    const html = quizz.html;
+    const html = quiz.html;
     html.prepend(
       `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai" width="30" height="30"></div>`
     );
     $("#search-result").append(html);
   }
   if (["MC-CH", "MC-EN", "MCS-CH", "MCS-EN"].includes(data.type)) {
-    const quizz = new MultiChoice(
+    const quiz = new MultiChoice(
       data.question,
       data.answer,
       data.explain,
@@ -256,17 +256,17 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
       data.id,
       data.type
     );
-    const html = quizz.html;
+    const html = quiz.html;
     html.prepend(
       `<div class="ai-icon-container"><img src="/img/ai.png" alt="ai" width="30" height="30"></div>`
     );
     $("#search-result").append(html);
   }
   $("#fetch-ai-loading").hide();
-  saveQuizzItemToLocal(data);
+  saveQuizItemToLocal(data);
 });
 
-$(".create-container").on("click", ".create-quizz-btn", async () => {
+$(".create-container").on("click", ".create-quiz-btn", async () => {
   const language = $("#search-language").val();
   const create = $("input[name='question-type']:checked").val();
   const type = `${create}-${language}`;
@@ -292,22 +292,22 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
         title: "Please check the correct answer.",
       });
     }
-    const quizzObj = {
+    const quizObj = {
       question,
       answer: [transToBoolean(answer)],
       type,
       explain,
     };
-    const data = await generateQuizzData(quizzObj);
-    const quizz = new TrueFalse(
+    const data = await generateQuizData(quizObj);
+    const quiz = new TrueFalse(
       data.question,
       data.answer,
       data.explain,
       data.id,
       data.type
     );
-    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
-    const html = quizz.html;
+    saveQuizItemToLocal({ ...quizObj, id: data.id });
+    const html = quiz.html;
     html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls");
     if (controls.length === 0) {
@@ -363,15 +363,15 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
         title: "Please enter option D.",
       });
     }
-    const quizzObj = {
+    const quizObj = {
       question,
       options: { A: optionA, B: optionB, C: optionC, D: optionD },
       answer: [answer],
       type,
       explain,
     };
-    const data = await generateQuizzData(quizzObj);
-    const quizz = new MultiChoice(
+    const data = await generateQuizData(quizObj);
+    const quiz = new MultiChoice(
       data.question,
       data.answer,
       data.explain,
@@ -379,8 +379,8 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.id,
       data.type
     );
-    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
-    const html = quizz.html;
+    saveQuizItemToLocal({ ...quizObj, id: data.id });
+    const html = quiz.html;
     html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls");
     if (controls.length === 0) {
@@ -439,15 +439,15 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
         title: "Please enter option D.",
       });
     }
-    const quizzObj = {
+    const quizObj = {
       question,
       options: { A: optionA, B: optionB, C: optionC, D: optionD },
       answer: answerArray,
       type,
       explain,
     };
-    const data = await generateQuizzData(quizzObj);
-    const quizz = new MultiChoice(
+    const data = await generateQuizData(quizObj);
+    const quiz = new MultiChoice(
       data.question,
       data.answer,
       data.explain,
@@ -455,8 +455,8 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
       data.id,
       data.type
     );
-    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
-    const html = quizz.html;
+    saveQuizItemToLocal({ ...quizObj, id: data.id });
+    const html = quiz.html;
     html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls"); // 檢查是否已經存在 controls
     if (controls.length === 0) {
@@ -477,8 +477,8 @@ $(".create-container").on("click", ".create-quizz-btn", async () => {
   }
 });
 
-const generateQuizzData = async (quizzObj) => {
-  const result = await axios.post("/api/1.0/question/createmanual", quizzObj);
+const generateQuizData = async (quizObj) => {
+  const result = await axios.post("/api/1.0/question/createmanual", quizObj);
   const { data } = result.data;
   return data;
 };
@@ -738,39 +738,39 @@ $("body").on("click", ".room-ready-btn", async () => {
       roomId: createResult.id,
     });
     if (createRoomOnRedis.error) return console.log(createRoomOnRedis.error);
-    const quizzes = localStorage.getItem("quizzes");
-    const parseQuizz = JSON.parse(quizzes);
-    const readyQuizzesArray = [];
-    const readyQuizzesObject = {};
-    const unusedQuizzesObject = {};
+    const quizes = localStorage.getItem("quizes");
+    const parseQuiz = JSON.parse(quizes);
+    const readyQuizesArray = [];
+    const readyQuizesObject = {};
+    const unusedQuizesObject = {};
     $(".container-right .quiz-card").each(function () {
       const id = $(this).attr("data-id");
       const timeLimits = $(this).find('input[type="number"]').val();
-      const quizzObject = parseQuizz[id];
-      quizzObject.timeLimits = timeLimits;
-      readyQuizzesArray.push(quizzObject);
+      const quizObject = parseQuiz[id];
+      quizObject.timeLimits = timeLimits;
+      readyQuizesArray.push(quizObject);
     });
     const founderId = localStorage.getItem("userId");
     const roomId = localStorage.getItem("roomId");
-    await axios.post("/api/1.0/game/quizzes", {
-      array: readyQuizzesArray,
+    await axios.post("/api/1.0/game/quizes", {
+      array: readyQuizesArray,
       roomId,
       founderId,
     });
     $("#search-result .quiz-card").each(function () {
       const id = $(this).attr("data-id");
-      unusedQuizzesObject[id] = -0.5;
+      unusedQuizesObject[id] = -0.5;
     });
     $(".container-right .quiz-card").each(function () {
       const id = $(this).attr("data-id");
-      readyQuizzesObject[id] = 1.5;
+      readyQuizesObject[id] = 1.5;
     });
-    const addPopObj = { popObj: readyQuizzesObject };
-    const deletePopObj = { popObj: unusedQuizzesObject };
+    const addPopObj = { popObj: readyQuizesObject };
+    const deletePopObj = { popObj: unusedQuizesObject };
     await axios.post("/api/1.0/question/update", addPopObj);
     await axios.post("/api/1.0/question/update", deletePopObj);
     localStorage.removeItem("searcheId");
-    localStorage.removeItem("quizzes");
+    localStorage.removeItem("quizes");
     window.location.href = `/game/room/${roomId}`;
   } catch (error) {
     console.log(error);
@@ -790,38 +790,38 @@ function updatePositionLabels() {
   });
 }
 
-const saveQuizzArrayToLocal = (quizArray) => {
-  const quizzes = localStorage.getItem("quizzes");
-  const parseQuizzes = JSON.parse(quizzes);
+const saveQuizArrayToLocal = (quizArray) => {
+  const quizes = localStorage.getItem("quizes");
+  const parseQuizes = JSON.parse(quizes);
   quizArray.forEach((quizObj) => {
     delete quizObj.timestamp;
     delete quizObj.createTime;
     delete quizObj.popularity;
-    parseQuizzes[quizObj.id] = quizObj;
+    parseQuizes[quizObj.id] = quizObj;
   });
-  const stringifyQuizzes = JSON.stringify(parseQuizzes);
-  localStorage.setItem("quizzes", stringifyQuizzes);
+  const stringifyQuizes = JSON.stringify(parseQuizes);
+  localStorage.setItem("quizes", stringifyQuizes);
 };
 
-const saveQuizzItemToLocal = (quizObj) => {
-  const quizzes = localStorage.getItem("quizzes");
-  const parseQuizzes = JSON.parse(quizzes);
+const saveQuizItemToLocal = (quizObj) => {
+  const quizes = localStorage.getItem("quizes");
+  const parseQuizes = JSON.parse(quizes);
   delete quizObj.timestamp;
   delete quizObj.createTime;
   delete quizObj.popularity;
-  parseQuizzes[quizObj.id] = quizObj;
-  const stringifyQuizzes = JSON.stringify(parseQuizzes);
-  localStorage.setItem("quizzes", stringifyQuizzes);
+  parseQuizes[quizObj.id] = quizObj;
+  const stringifyQuizes = JSON.stringify(parseQuizes);
+  localStorage.setItem("quizes", stringifyQuizes);
 };
 
 $("body").on("click", "#cancel", async function (e) {
   e.stopPropagation();
   const id = $(this).parent().parent().attr("data-id");
-  const quizzes = localStorage.getItem("quizzes");
-  const parseQuizz = JSON.parse(quizzes);
-  delete parseQuizz[id];
-  const stringifyObj = JSON.stringify(parseQuizz);
-  localStorage.setItem("quizzes", stringifyObj);
+  const quizes = localStorage.getItem("quizes");
+  const parseQuiz = JSON.parse(quizes);
+  delete parseQuiz[id];
+  const stringifyObj = JSON.stringify(parseQuiz);
+  localStorage.setItem("quizes", stringifyObj);
   const obj = {};
   obj[id] = -0.5;
   const popObj = { popObj: obj };
@@ -863,7 +863,7 @@ $("body").on("click", "#edit", async function (e) {
   <label>Answer Explaination :</label>
   <textarea class= "explain-text"></textarea>
   <div class="submit-btn-container">
-  <button type="submit" class="create-quizz-btn" id="update">update</button>
+  <button type="submit" class="create-quiz-btn" id="update">update</button>
   </div>
   </div>
 </div>`);
@@ -920,7 +920,7 @@ $("body").on("click", "#edit", async function (e) {
     <label>Answer Explaination :</label>
     <textarea class= "explain-text"></textarea>
     <div class="submit-btn-container">
-    <button type="submit" class="create-quizz-btn" id="update">Update</button>
+    <button type="submit" class="create-quiz-btn" id="update">Update</button>
     </div>
   </div>
   </div>
@@ -967,7 +967,7 @@ $("body").on("click", "#edit", async function (e) {
   <label>Answer Explaination :</label>
   <textarea class= "explain-text"></textarea>
   <div class="submit-btn-container">
-  <button type="submit" class="create-quizz-btn" id="update">Update</button>
+  <button type="submit" class="create-quiz-btn" id="update">Update</button>
   </div>
   </div>
 </div>
@@ -1010,22 +1010,22 @@ $("#edit-component").on("click", "#update", async function () {
         title: "Please check the correct answer.",
       });
     }
-    const quizzObj = {
+    const quizObj = {
       question,
       answer: [transToBoolean(answer)],
       type,
       explain,
     };
-    const data = await generateQuizzData(quizzObj);
-    const quizz = new TrueFalse(
+    const data = await generateQuizData(quizObj);
+    const quiz = new TrueFalse(
       data.question,
       data.answer,
       data.explain,
       data.id,
       data.type
     );
-    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
-    const html = quizz.html;
+    saveQuizItemToLocal({ ...quizObj, id: data.id });
+    const html = quiz.html;
     html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls");
     if (controls.length === 0) {
@@ -1091,15 +1091,15 @@ $("#edit-component").on("click", "#update", async function () {
         title: "Please enter option D.",
       });
     }
-    const quizzObj = {
+    const quizObj = {
       question,
       options: { A: optionA, B: optionB, C: optionC, D: optionD },
       answer: [answer],
       type,
       explain,
     };
-    const data = await generateQuizzData(quizzObj);
-    const quizz = new MultiChoice(
+    const data = await generateQuizData(quizObj);
+    const quiz = new MultiChoice(
       data.question,
       data.answer,
       data.explain,
@@ -1107,8 +1107,8 @@ $("#edit-component").on("click", "#update", async function () {
       data.id,
       data.type
     );
-    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
-    const html = quizz.html;
+    saveQuizItemToLocal({ ...quizObj, id: data.id });
+    const html = quiz.html;
     html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls");
     if (controls.length === 0) {
@@ -1180,15 +1180,15 @@ $("#edit-component").on("click", "#update", async function () {
         title: "Please enter option D.",
       });
     }
-    const quizzObj = {
+    const quizObj = {
       question,
       options: { A: optionA, B: optionB, C: optionC, D: optionD },
       answer: answerArray,
       type,
       explain,
     };
-    const data = await generateQuizzData(quizzObj);
-    const quizz = new MultiChoice(
+    const data = await generateQuizData(quizObj);
+    const quiz = new MultiChoice(
       data.question,
       data.answer,
       data.explain,
@@ -1196,8 +1196,8 @@ $("#edit-component").on("click", "#update", async function () {
       data.id,
       data.type
     );
-    saveQuizzItemToLocal({ ...quizzObj, id: data.id });
-    const html = quizz.html;
+    saveQuizItemToLocal({ ...quizObj, id: data.id });
+    const html = quiz.html;
     html.find(".icon-container").addClass("hide-btn");
     const controls = html.find(".controls");
     if (controls.length === 0) {

@@ -5,7 +5,7 @@ import {
   leaveRoom,
   startRoom,
   addPlayerIntoRedisSortedSet,
-  getCurrentQuizzFromRedis,
+  getCurrentQuizFromRedis,
   playerDisconnect,
   findHostAndUsers,
   writePlayerAnswerIntoRedisList,
@@ -15,7 +15,7 @@ import {
 } from "./server/models/game.js";
 import { redisClient } from "./util/cacheConnection.js";
 import { gameHostValidation } from "./server/models/user.js";
-import { showRank, addToQuequeAndUpdateMongo } from "./server/models/score.js";
+import { showRank, addToQueueAndUpdateMongo } from "./server/models/score.js";
 import {
   addGameHistory,
   addGameHistoryToHost,
@@ -101,15 +101,15 @@ export const socketio = async function (server) {
       const { roomId, hostId } = socket;
       const gameRoomResult = await startRoom(roomId, hostId);
       await addPlayerIntoRedisSortedSet(gameRoomResult);
-      const firstQuizz = await getCurrentQuizzFromRedis(roomId, 1);
+      const firstQuiz = await getCurrentQuizFromRedis(roomId, 1);
       const length = await countQuizLength(roomId);
-      if (!firstQuizz || !length) return;
+      if (!firstQuiz || !length) return;
       socket.length = length;
-      firstQuizz.num = 1;
+      firstQuiz.num = 1;
       const rankResult = await showRank(roomId, Infinity);
       const message = JSON.stringify({
-        event: "loadFirstQuizz",
-        data: { firstQuizz, length, rankResult },
+        event: "loadFirstQuiz",
+        data: { firstQuiz, length, rankResult },
       });
       pubClient.publish(roomId, message);
     });
@@ -118,7 +118,7 @@ export const socketio = async function (server) {
       const { roomId } = socket;
       socket.quizNum += 1;
       const rankResult = await showRank(roomId, Infinity);
-      const quiz = await getCurrentQuizzFromRedis(roomId, quizNum);
+      const quiz = await getCurrentQuizFromRedis(roomId, quizNum);
       const message = JSON.stringify({
         event: "showQuiz",
         data: {
@@ -228,7 +228,7 @@ export const socketio = async function (server) {
         gameRoom.name,
         gameRoom.date
       );
-      addToQuequeAndUpdateMongo(roomId);
+      addToQueueAndUpdateMongo(roomId);
       const message = JSON.stringify({
         event: "showFinalScore",
         data: rankResult,
@@ -249,8 +249,8 @@ export const socketio = async function (server) {
       if (dataObject.event === "userLeft") {
         socket.emit("userLeft", dataObject.data);
       }
-      if (dataObject.event === "loadFirstQuizz") {
-        socket.emit("loadFirstQuizz", dataObject.data);
+      if (dataObject.event === "loadFirstQuiz") {
+        socket.emit("loadFirstQuiz", dataObject.data);
       }
       if (dataObject.event === "showQuiz") {
         socket.emit("showQuiz", dataObject.data);

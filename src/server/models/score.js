@@ -30,7 +30,7 @@ export const showRank = async function (roomId, ranknum) {
   return result;
 };
 
-export const addToQuequeAndUpdateMongo = async function (roomId) {
+export const addToQueueAndUpdateMongo = async function (roomId) {
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
     roomStatus: "started",
@@ -41,6 +41,7 @@ export const addToQuequeAndUpdateMongo = async function (roomId) {
   await gameRoom.save();
   await redisClient.del(`${roomId}`);
   const uniqueObject = JSON.stringify({ uniqueId, roomId });
-  await redisClient.lpush("saveScoreToMongo", uniqueObject);
+  const result = await redisClient.lpush("saveScoreToMongo", uniqueObject);
+  console.log("pushResult", result);
   return true;
 };
