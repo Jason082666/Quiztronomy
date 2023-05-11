@@ -13,14 +13,14 @@ import {
   setupDisconnectHash,
   countQuizLength,
 } from "./server/models/game.js";
-import { redisClient } from "./server/models/redis.js";
+import { redisClient } from "./util/cacheConnection.js";
 import { gameHostValidation } from "./server/models/user.js";
 import { showRank, addToQuequeAndUpdateMongo } from "./server/models/score.js";
 import {
   addGameHistory,
   addGameHistoryToHost,
 } from "./server/models/historydata.js";
-import { deleteGroupKey } from "./server/models/redis.js";
+import { deleteGroupKey } from "./service/cache.js";
 
 export const socketio = async function (server) {
   const io = new Server(server);

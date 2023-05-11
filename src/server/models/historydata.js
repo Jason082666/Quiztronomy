@@ -1,5 +1,5 @@
-import { MyGameRoom, MyUser } from "./mongodb.js";
-import { redisClient } from "./redis.js";
+import { MyGameRoom, MyUser } from "./mongoSchema.js";
+import { redisClient } from "../../util/cacheConnection.js";
 
 export const userHistory = async function (userId, page) {
   const user = await MyUser.findOne({ _id: userId });

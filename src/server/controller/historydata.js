@@ -6,7 +6,7 @@ import {
   hostHistory,
   findTotalScoreAndGame,
 } from "../models/historydata.js";
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 
 export const findUserHistory = async (req, res, next) => {
   const { userId, paging } = req.query;

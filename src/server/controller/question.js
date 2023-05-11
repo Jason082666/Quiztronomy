@@ -4,7 +4,7 @@ import {
   searchQuestionSortByTime,
   updatePopToQueque,
 } from "../models/question.js";
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 
 export const insertQuestionByPlayerIntoES = async (req, res) => {
   const { question } = req;

@@ -1,4 +1,4 @@
-import { MyGameRoom, MyUser } from "./mongodb.js";
+import { MyGameRoom, MyUser } from "./mongoSchema.js";
 import dotenv from "dotenv";
 import path from "path";
 import * as url from "url";

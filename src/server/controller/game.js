@@ -9,7 +9,7 @@ import {
   findRoomOnRedis,
 } from "../models/game.js";
 
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 
 export const createGameRoom = async (req, res, next) => {
   const { userId, name } = req.session.user;

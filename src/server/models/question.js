@@ -1,6 +1,6 @@
 import { client } from "./elasticsearch.js";
 import { calculatePopularity } from "./gaussain.js";
-import { redisClient } from "./redis.js";
+import { redisClient } from "../../util/cacheConnection.js";
 
 export const searchCertainId = async function (id) {
   const body = await client.get({

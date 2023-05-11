@@ -1,12 +1,12 @@
 import { createUser, validationUser } from "../models/user.js";
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
 
 export const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
   const check = await validationUser(email, password);
-  if (check.error) return next(new errors.CustomError(check.error, 403));
+  if (check.error) return next(new errors.CustomError(check.error, 401));
   const normObject = check.toObject();
   const userId = normObject._id;
   const name = normObject.name;

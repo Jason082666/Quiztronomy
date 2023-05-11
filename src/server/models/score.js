@@ -1,5 +1,5 @@
-import { redisClient } from "./redis.js";
-import { MyGameRoom } from "./mongodb.js";
+import { redisClient } from "../../util/cacheConnection.js";
+import { MyGameRoom } from "./mongoSchema.js";
 
 export const addScore = async function (roomId, score, object) {
   const data = JSON.stringify(object);

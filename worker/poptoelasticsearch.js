@@ -1,4 +1,4 @@
-import { redisClient } from "../src/server/models/redis.js";
+import { redisClient } from "../src/util/cacheConnection.js";
 import { updateNewPopById } from "../src/server/models/question.js";
 redisClient.on("connect", () => {
   console.log("Connected to Redis");

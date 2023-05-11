@@ -1,5 +1,5 @@
-import { MyGameRoom } from "../src/server/models/mongodb.js";
-import { redisClient } from "../src/server/models/redis.js";
+import { MyGameRoom } from "../src/server/models/mongoSchema.js";
+import { redisClient } from "../src/util/cacheConnection.js";
 import {
   addGameHistoryToPlayer,
   addGameInfoToRedis,

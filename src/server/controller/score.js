@@ -1,5 +1,5 @@
 import { addScore } from "../models/score.js";
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 export const addPlayerScore = async (req, res, next) => {
   const { roomId, score } = req.body;
   const { userId, name } = req.session.user;

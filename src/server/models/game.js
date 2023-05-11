@@ -1,5 +1,5 @@
-import { MyGameRoom } from "./mongodb.js";
-import { redisClient } from "./redis.js";
+import { MyGameRoom } from "./mongoSchema.js";
+import { redisClient } from "../../util/cacheConnection.js";
 
 export const gameRoomExistence = async function (id) {
   const result = await MyGameRoom.findOne({

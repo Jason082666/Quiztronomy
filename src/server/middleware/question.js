@@ -1,5 +1,5 @@
 import { generateQuestionByAI } from "../models/openai.js";
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 export const generateQuestionByPlayer = async (req, res, next) => {
   if (!req.body.q || !req.body.type)
     return next(new errors.ParameterError(["q", "type"], 400));

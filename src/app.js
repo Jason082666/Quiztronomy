@@ -4,11 +4,13 @@ import path from "path";
 import session from "express-session";
 import RedisStore from "connect-redis";
 import { socketio } from "./socketio.js";
-import { redisClient } from "./server/models/redis.js";
+import { redisClient } from "./util/cacheConnection.js";
+import { Database } from "./util/mongoConnection.js";
 import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 const app = express();
 const server = http.createServer(app);
+Database.connection;
 const PORT = process.env.PORT || 3000;
 const APIVERSION = "1.0";
 let redisStore = new RedisStore({
