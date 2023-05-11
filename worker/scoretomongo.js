@@ -24,6 +24,7 @@ const funct = async () => {
         const date = gameRoom.date;
         const host = gameRoom.founder.name;
         const result = [];
+        // Add this game data to all the players in the room. Update rank and score data to this game's history.
         for (let i = 0; i < rank.length; i += 2) {
           const playerInfo = JSON.parse(rank[i]);
           const id = Object.keys(playerInfo)[0];
@@ -46,6 +47,7 @@ const funct = async () => {
         }
         gameRoom.score = result;
         const gameRoomData = await gameRoom.save();
+        // Add this game history into Cache
         await addGameInfoToRedis(uniqueId, gameRoomData);
       } catch (e) {
         console.error(e);

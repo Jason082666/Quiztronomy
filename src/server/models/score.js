@@ -18,6 +18,7 @@ export const showRank = async function (roomId, ranknum) {
     -1,
     "WITHSCORES"
   );
+  // to extract only data from sorted set
   const newRank = rank.slice(0, +ranknum * 2);
   const result = [];
   for (let i = 0; i < newRank.length; i += 2) {

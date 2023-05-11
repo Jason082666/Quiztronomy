@@ -133,7 +133,7 @@ export const socketio = async function (server) {
 
     socket.on(
       "getAnswer",
-      async ({ chooseOption, initvalue, score, quizNum }) => {
+      async ({ chooseOption, score, quizNum }) => {
         const { roomId, userId } = socket;
         await writePlayerAnswerIntoRedisList(
           roomId,
@@ -143,7 +143,7 @@ export const socketio = async function (server) {
         );
         const message = JSON.stringify({
           event: "updateRankAndScore",
-          data: { initvalue, score, userId },
+          data: { score, userId },
         });
         await pubClient.publish(roomId, message);
       }
@@ -220,7 +220,6 @@ export const socketio = async function (server) {
         0,
         -1
       );
-      console.log("answerArray", playerAnswerArray);
       const gameRoom = await addGameHistory(roomId, playerAnswerArray);
       addGameHistoryToHost(
         gameRoom.founder.id,

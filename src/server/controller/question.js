@@ -2,7 +2,7 @@ import {
   insertQuestionIntoES,
   searchQuestionText,
   searchQuestionSortByTime,
-  updatePopToQueque,
+  updatePopToQueue,
 } from "../models/question.js";
 import errors from "../../util/errorhandler.js";
 
@@ -17,7 +17,7 @@ export const insertQuestionByPlayerIntoES = async (req, res) => {
 export const updateNewPop = async (req, res, next) => {
   if (!req.body.popObj) return next(new errors.ParameterError(["popObj"], 400));
   const { popObj } = req.body;
-  await updatePopToQueque(popObj);
+  await updatePopToQueue(popObj);
   res.json({ message: "success" });
 };
 

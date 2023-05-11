@@ -86,20 +86,22 @@ export const addGameInfoToRedis = async function (
   roomUniqueId,
   gameRoomObject
 ) {
+  const cacheValidDuration = 86400;
   const stringifyRoomObject = JSON.stringify(gameRoomObject);
   await redisClient.set(`${roomUniqueId}-gameRoom`, stringifyRoomObject);
-  await redisClient.expire(`${roomUniqueId}-gameRoom`, 86400);
+  await redisClient.expire(`${roomUniqueId}-gameRoom`, cacheValidDuration);
 };
 
 export const searchGameRoomData = async function (roomUniqueId) {
-  // 檢查redis中是否有這個key，如果沒有則從mongo db 拿，且把資料傳上快取，且設定ttl。
+  const cacheValidDuration = 86400;
   const exists = await redisClient.exists(`${roomUniqueId}-gameRoom`);
+  // if the room history is not in Cache, get it from DB and set it in Cache.
   if (!exists) {
     const gameRoomObject = await MyGameRoom.findOne({ _id: roomUniqueId });
     if (!gameRoomObject) return null;
     const stringifyRoomObject = JSON.stringify(gameRoomObject);
     await redisClient.set(`${roomUniqueId}-gameRoom`, stringifyRoomObject);
-    await redisClient.expire(`${roomUniqueId}-gameRoom`, 86400);
+    await redisClient.expire(`${roomUniqueId}-gameRoom`, cacheValidDuration);
     return gameRoomObject;
   }
   const gameRoomData = await redisClient.get(`${roomUniqueId}-gameRoom`);

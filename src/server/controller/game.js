@@ -6,7 +6,7 @@ import {
   enterRedisRoom,
   checkDisconnectList,
   searchGameName,
-  findRoomOnRedis,
+  hostOnRedis,
 } from "../models/game.js";
 
 import errors from "../../util/errorhandler.js";
@@ -86,7 +86,7 @@ export const checkRoomAvailabilityAndEnter = async (req, res, next) => {
 export const findHostOnRedis = async (req, res, next) => {
   const { roomId } = req.query;
   if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
-  const data = await findRoomOnRedis(roomId);
+  const data = await hostOnRedis(roomId);
   if (!data)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
   res.json({ data });

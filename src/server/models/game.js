@@ -2,11 +2,11 @@ import { MyGameRoom } from "./mongoSchema.js";
 import { redisClient } from "../../util/cacheConnection.js";
 
 export const gameRoomExistence = async function (id) {
-  const result = await MyGameRoom.findOne({
+  const gameRoomResult = await MyGameRoom.findOne({
     id,
     roomStatus: { $ne: "closed" },
   });
-  if (!result) return false;
+  if (!gameRoomResult) return false;
   return true;
 };
 
@@ -20,11 +20,7 @@ export const createRoom = async function (id, name, gameRoomName) {
     name: gameRoomName,
     founder: { id, name },
   });
-  const result = await game.save();
-  let dataObj = result.toObject();
-  delete dataObj["_id"];
-  delete dataObj["__v"];
-  return dataObj;
+  return await game.save();
 };
 
 export const createRoomOnRedis = async function (roomId, hostId, hostName) {
@@ -60,8 +56,7 @@ export const playerDisconnect = async function (roomId, userId, name) {
   if (exists == 0) {
     return false;
   }
-  const result = await redisClient.hset(`${roomId}-disconnect`, userId, name);
-  return result;
+  return await redisClient.hset(`${roomId}-disconnect`, userId, name);
 };
 
 export const checkDisconnectList = async function (roomId, userId) {
@@ -72,7 +67,8 @@ export const checkDisconnectList = async function (roomId, userId) {
 };
 
 export const saveQuizIntoRoom = async function (array, roomId, founderId) {
-  if (array.length > 40) return false;
+  const maxQuizNumber = 40;
+  if (array.length > maxQuizNumber) return false;
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
     roomStatus: "preparing",
@@ -80,6 +76,7 @@ export const saveQuizIntoRoom = async function (array, roomId, founderId) {
   });
   gameRoom.quiz = array;
   await gameRoom.save();
+  // Add quizData into Cache
   await redisClient.rpush(
     gameRoom.id,
     ...array.map((item) => JSON.stringify(item))
@@ -93,6 +90,7 @@ export const checkRoomStatus = async function (roomId, id) {
   const status = await redisClient.hget(`${roomId}-room`, "status");
   if (status === "prepared") {
     const hostId = await redisClient.hget(`${roomId}-room`, "host");
+    // Prevent host from reentering the game room when in game-preparing stage.
     if (hostId === id) return false;
     return true;
   }
@@ -107,6 +105,7 @@ export const enterRedisRoom = async function (roomId, id, name) {
 export const enterRoom = async function (roomId, id) {
   const result = await redisClient.exists(`${roomId}-room`);
   const enterTimes = await redisClient.zincrby(`${roomId}-connected`, 1, id);
+  // To prevent single account uses different browser log in same game room.
   if (+enterTimes > 1 || result == 0) return false;
   return true;
 };
@@ -117,19 +116,33 @@ export const leaveRoom = async function (roomId, playerId) {
 };
 
 export const startRoom = async function (roomId, founderId) {
-  const gameRoom = await MyGameRoom.findOne({
-    id: roomId,
-    roomStatus: "preparing",
-    "founder.id": founderId,
-  });
-  gameRoom.roomStatus = "started";
+  // delete status from Hash so that the other player cannot enter this room by directly paste this url due to the "checkRoomStatus function"
+  // delete founderId so that founder data will not be transfer into Redis sorted set
   await redisClient.hdel(`${roomId}-room`, founderId);
   await redisClient.hdel(`${roomId}-room`, "status");
   const players = await redisClient.hgetall(`${roomId}-room`);
   delete players.host;
   delete players.status;
+  const gameRoom = await MyGameRoom.findOne({
+    id: roomId,
+    roomStatus: "preparing",
+    "founder.id": founderId,
+  });
+  // Add player data into game history
+  gameRoom.roomStatus = "started";
   gameRoom.players = players;
   return await gameRoom.save();
+};
+
+export const findHostAndUsers = async function (roomId) {
+  const result = await redisClient.hgetall(`${roomId}-room`);
+  const dataArray = [];
+  for (const data in result) {
+    if (data !== "status") {
+      dataArray.push({ userId: data, userName: result[data] });
+    }
+  }
+  return dataArray;
 };
 
 export const addPlayerIntoRedisSortedSet = async function (gameRoom) {
@@ -228,18 +241,7 @@ export const getCurrentQuizFromRedis = async function (roomId, currentQuiz) {
   return data;
 };
 
-export const findHostAndUsers = async function (roomId) {
-  const result = await redisClient.hgetall(`${roomId}-room`);
-  const dataArray = [];
-  for (const data in result) {
-    if (data !== "status") {
-      dataArray.push({ userId: data, userName: result[data] });
-    }
-  }
-  return dataArray;
-};
-
-export const findRoomOnRedis = async function (roomId) {
+export const hostOnRedis = async function (roomId) {
   const result = await redisClient.hget(`${roomId}-room`, "host");
   if (!result) return null;
   const hostObj = JSON.parse(result);

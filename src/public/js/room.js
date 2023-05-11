@@ -196,6 +196,7 @@ socket.on("loadFirstQuiz", ({ firstQuiz, length, rankResult }) => {
 socket.on("showQuiz", ({ quiz, quizNum, quizLength, rankResult }) => {
   if (socket.disconnect) {
     socket.score = 0;
+    socket.quizNum = quizNum;
     socket.fullScore = quizLength * 500;
     $(".container").html(`<div id="quiz-container">
   <div id="left-bar">
@@ -340,14 +341,8 @@ const $countdown = $(
 );
 $(".container").after($countdown);
 
-socket.on("updateRankAndScore", ({ initvalue, score, userId }) => {
+socket.on("updateRankAndScore", ({ score, userId }) => {
   const sortPlayerRank = function (callback) {
-    // animateScore(
-    //   $(`.sort-player-score[data-id=${userId}]`),
-    //   initvalue,
-    //   score,
-    //   500
-    // );
     $(`.sort-player-score[data-id=${userId}]`).text(score);
     sortScores();
     setTimeout(() => {
@@ -567,7 +562,6 @@ function trueFalseOnClick(quizObj, $element) {
     setTimeout(() => {
       socket.emit("getAnswer", {
         chooseOption: [chooseOption],
-        initvalue,
         score: socket.score,
         quizNum: socket.quizNum,
       });
@@ -629,7 +623,6 @@ function multipleChoicesOnclick(quizObj, $element) {
     setTimeout(() => {
       socket.emit("getAnswer", {
         chooseOption: optionArray,
-        initvalue,
         score: socket.score,
         quizNum: socket.quizNum,
       });
@@ -657,7 +650,6 @@ function multipleChoiceOnclick(quizObj, $element) {
     setTimeout(() => {
       socket.emit("getAnswer", {
         chooseOption: [chooseOption],
-        initvalue,
         score: socket.score,
         quizNum: socket.quizNum,
       });
