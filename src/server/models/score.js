@@ -42,7 +42,6 @@ export const addToQueueAndUpdateMongo = async function (roomId) {
   await gameRoom.save();
   await redisClient.del(`${roomId}`);
   const uniqueObject = JSON.stringify({ uniqueId, roomId });
-  const result = await redisClient.lpush("saveScoreToMongo", uniqueObject);
-  console.log("pushResult", result);
+  await redisClient.lpush("saveScoreToMongo", uniqueObject);
   return true;
 };

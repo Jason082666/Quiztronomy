@@ -48,28 +48,8 @@ app.use("/api/" + APIVERSION, [
   historyRoute,
 ]);
 
-import { enterRoom } from "./server/models/game.js";
-app.get("/game/room/:roomId", async (req, res, next) => {
-  const roomId = req.params.roomId;
-  if (!req.session.user) {
-    return next();
-  }
-  const { userId, name } = req.session.user;
-  const enter = await enterRoom(roomId, userId);
-  if (!enter) {
-    return next();
-  }
-  await redisClient.hset(`${roomId}-room`, userId, name);
-  return res.sendFile(
-    path.join(__dirname, ".", "public", "html", "game", "room.html")
-  );
-});
-
-app.get("/game/fastenter/:roomId", async (req, res) => {
-  return res.sendFile(
-    path.join(__dirname, ".", "public", "html", "game", "fastenter.html")
-  );
-});
+import roomRoute from "./server/routes/room_route.js";
+app.use("/", roomRoute);
 
 app.use((req, res) => {
   return res

@@ -1,5 +1,6 @@
 import {
   createRoom,
+  enterRoom,
   createRoomOnRedis,
   saveQuizIntoRoom,
   checkRoomStatus,
@@ -8,9 +9,10 @@ import {
   searchGameName,
   hostOnRedis,
 } from "../models/game.js";
-
+import path from "path";
+import * as url from "url";
 import errors from "../../util/errorhandler.js";
-
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 export const createGameRoom = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { gameRoomName } = req.body;
@@ -100,4 +102,23 @@ export const createGameRoomOnRedis = async (req, res, next) => {
     return next(new errors.TypeError({ roomId: "string" }, 400));
   await createRoomOnRedis(roomId, userId, name);
   return res.json({ message: "success" });
+};
+
+export const enterGameRoom = async (req, res, next) => {
+  const roomId = req.params.roomId;
+  const { userId, name } = req.session.user;
+  const enter = await enterRoom(roomId, userId);
+  if (!enter) {
+    return next();
+  }
+  await enterRedisRoom(`${roomId}-room`, userId, name);
+  return res.sendFile(
+    path.join(__dirname, "..", "..", "public", "html", "game", "room.html")
+  );
+};
+
+export const fastEnterGameRoom = async (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "..", "public", "html", "game", "fastenter.html")
+  );
 };
