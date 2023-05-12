@@ -15,7 +15,7 @@ const createQuestionText = async function () {
     index: "questiontext",
     ignore_unavailable: true,
   });
-  const response = await client.indices.create({
+  await client.indices.create({
     index: "questiontext",
     body: {
       mappings: {

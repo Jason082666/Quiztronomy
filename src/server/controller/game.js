@@ -1,17 +1,18 @@
 import {
   createRoom,
+  enterRoom,
   createRoomOnRedis,
-  terminateRoom,
-  saveQuizzIntoRoom,
-  startRoom,
+  saveQuizIntoRoom,
   checkRoomStatus,
+  enterRedisRoom,
   checkDisconnectList,
   searchGameName,
-  findRoomOnRedis,
+  hostOnRedis,
 } from "../models/game.js";
-
-import errors from "../models/errorhandler.js";
-
+import path from "path";
+import * as url from "url";
+import errors from "../../util/errorhandler.js";
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 export const createGameRoom = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { gameRoomName } = req.body;
@@ -38,8 +39,8 @@ export const checkDisconnection = async (req, res) => {
   if (!result) return res.json({ data: "newPlayer" });
   return res.json({ data: "disconnection" });
 };
-// TODO: 這個前面要身分驗證
-export const saveQuizzIntoGameRoom = async (req, res, next) => {
+
+export const saveQuizIntoGameRoom = async (req, res, next) => {
   const { array, roomId, founderId } = req.body;
   if (!array || !roomId || !founderId)
     return next(
@@ -49,21 +50,14 @@ export const saveQuizzIntoGameRoom = async (req, res, next) => {
     return next(
       new errors.TypeError({ roomId: "string", founderId: "string" }, 400)
     );
-  const result = await saveQuizzIntoRoom(array, roomId, founderId);
-  if (result === undefined)
+  const result = await saveQuizIntoRoom(array, roomId, founderId);
+  if (!result)
     return next(
-      new errors.CustomError("There sould be at max 40 quizzes in a room", 400)
-    );
-  if (result === null)
-    return next(
-      new errors.CustomError(
-        `Room ${roomId} is not existed or host validation failed`,
-        400
-      )
+      new errors.CustomError("There should be at max 40 quizes in a room", 400)
     );
   return res.json({ message: "saved" });
 };
-export const checkRoomAvailability = async (req, res, next) => {
+export const checkRoomAvailabilityAndEnter = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { roomId } = req.body;
   if (!roomId || !userId || !name)
@@ -79,8 +73,9 @@ export const checkRoomAvailability = async (req, res, next) => {
         400
       )
     );
-  const result = await checkRoomStatus(roomId, userId, name);
-  if (!result) {
+  const checkResult = await checkRoomStatus(roomId, userId);
+  const enterRedisResult = await enterRedisRoom(roomId, userId, name);
+  if (!checkResult || !enterRedisResult) {
     return next(
       new errors.CustomError(
         `Room ${roomId} is not existed or the game has started`,
@@ -93,74 +88,37 @@ export const checkRoomAvailability = async (req, res, next) => {
 export const findHostOnRedis = async (req, res, next) => {
   const { roomId } = req.query;
   if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
-  const data = await findRoomOnRedis(roomId);
+  const data = await hostOnRedis(roomId);
   if (!data)
     return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
   res.json({ data });
 };
-export const startGameRoom = async (req, res, next) => {
-  const { userId } = req.session.user;
-  const { roomId } = req.body;
-  if (!roomId || !userId)
-    return next(new errors.ParameterError(["roomId", "userId"], 400));
-  if (typeof roomId !== "string" || typeof userId !== "string")
-    return next(
-      new errors.TypeError({ roomId: "string", userId: "string" }, 400)
-    );
-  const data = await startRoom(roomId, userId);
-  if (data === null)
-    return next(new errors.CustomError(`Room ${roomId} is not existed`, 400));
-  if (!data) return next(new errors.CustomError(`Fail to start the game`, 400));
-  return res.json({ data });
-};
 
-export const terminateGameRoom = async (req, res, next) => {
-  const { roomId } = req.body;
-  if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
-  if (typeof roomId !== "string")
-    return next(new errors.TypeError({ roomId: "string" }, 400));
-  const data = await terminateRoom(roomId);
-  if (!data)
-    return next(
-      new errors.CustomError(
-        `Room ${roomId} with roomStatus equals to preparing is not existed`,
-        400
-      )
-    );
-  return res.json({ message: `Terminated room ${roomId}` });
-};
-
-// export const getCurrentQuizz = async (req, res, next) => {
-//   const { roomId, currentQuizz } = req.query;
-//   if (!roomId || !currentQuizz)
-//     return next(new errors.ParameterError(["roomId,currentQuizz"], 400));
-//   if (typeof roomId !== "string" || typeof currentQuizz !== "string")
-//     return next(
-//       new errors.TypeError({ roomId: "string", currentQuizz: "string" }, 400)
-//     );
-//   if (redisClient.status === "reconnecting") {
-//     const data = await getCurrentQuizzFromMongo(roomId, currentQuizz);
-//     if (!data)
-//       return next(new errors.CustomError("No this room or no this quizz", 400));
-//     return res.json({ data });
-//   }
-//   const data = await getCurrentQuizzFromRedis(roomId, currentQuizz);
-//   if (!data)
-//     return next(new errors.CustomError("No this room or no this quizz", 400));
-//   return res.json({ data });
-// };
-//TODO: 把cookie代的資料進行驗證放在id,name中，前面要有一個驗證的middleware
 export const createGameRoomOnRedis = async (req, res, next) => {
   const { userId, name } = req.session.user;
   const { roomId } = req.body;
   if (!roomId) return next(new errors.ParameterError(["roomId"], 400));
   if (typeof roomId !== "string")
     return next(new errors.TypeError({ roomId: "string" }, 400));
-  const data = await createRoomOnRedis(roomId, userId, name);
-  if (data === undefined)
-    return next(new errors.CustomError("Quizz list is empty", 400));
-  if (data === null)
-    return next(new errors.CustomError(`Room ${roomId} is not available`, 400));
-  if (!data) return next(new errors.CustomError(`Fail to create room`, 400));
+  await createRoomOnRedis(roomId, userId, name);
   return res.json({ message: "success" });
+};
+
+export const enterGameRoom = async (req, res, next) => {
+  const roomId = req.params.roomId;
+  const { userId, name } = req.session.user;
+  const enter = await enterRoom(roomId, userId);
+  if (!enter) {
+    return next();
+  }
+  await enterRedisRoom(`${roomId}-room`, userId, name);
+  return res.sendFile(
+    path.join(__dirname, "..", "..", "public", "html", "game", "room.html")
+  );
+};
+
+export const fastEnterGameRoom = async (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "..", "public", "html", "game", "fastenter.html")
+  );
 };

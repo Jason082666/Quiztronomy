@@ -4,11 +4,13 @@ import path from "path";
 import session from "express-session";
 import RedisStore from "connect-redis";
 import { socketio } from "./socketio.js";
-import { redisClient } from "./server/models/redis.js";
+import { redisClient } from "./util/cacheConnection.js";
+import { Database } from "./util/mongoConnection.js";
 import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 const app = express();
 const server = http.createServer(app);
+Database.connection;
 const PORT = process.env.PORT || 3000;
 const APIVERSION = "1.0";
 let redisStore = new RedisStore({
@@ -37,7 +39,7 @@ import questionRoute from "./server/routes/question_route.js";
 import gameRoute from "./server/routes/game_route.js";
 import scoreRoute from "./server/routes/score_route.js";
 import userRoute from "./server/routes/user_route.js";
-import historyRoute from "./server/routes/historydata.js";
+import historyRoute from "./server/routes/historydata_route.js";
 app.use("/api/" + APIVERSION, [
   questionRoute,
   gameRoute,
@@ -46,28 +48,8 @@ app.use("/api/" + APIVERSION, [
   historyRoute,
 ]);
 
-import { enterRoom } from "./server/models/game.js";
-app.get("/game/room/:roomId", async (req, res, next) => {
-  const roomId = req.params.roomId;
-  if (!req.session.user) {
-    return next();
-  }
-  const { userId, name } = req.session.user;
-  const enter = await enterRoom(roomId, userId);
-  if (!enter) {
-    return next();
-  }
-  await redisClient.hset(`${roomId}-room`, userId, name);
-  return res.sendFile(
-    path.join(__dirname, ".", "public", "html", "game", "room.html")
-  );
-});
-
-app.get("/game/fastenter/:roomId", async (req, res) => {
-  return res.sendFile(
-    path.join(__dirname, ".", "public", "html", "game", "fastenter.html")
-  );
-});
+import roomRoute from "./server/routes/room_route.js";
+app.use("/", roomRoute);
 
 app.use((req, res) => {
   return res
@@ -80,11 +62,13 @@ app.use((err, req, res, next) => {
   const type = err.type || "system error";
   const statusCode = err.statusCode || 500;
   const status = err.status || "error";
+  const isOperational = err.isOperational || false;
   return res.status(statusCode).json({
     status,
     statusCode,
     error: err.message,
     type,
+    isOperational,
   });
 });
 

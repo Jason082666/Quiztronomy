@@ -1,12 +1,5 @@
-import { redisClient } from "../src/server/models/redis.js";
+import { redisClient } from "../src/util/cacheConnection.js";
 import { updateNewPopById } from "../src/server/models/question.js";
-redisClient.on("connect", () => {
-  console.log("Connected to Redis");
-});
-
-redisClient.on("error", (error) => {
-  console.error("Error connecting to Redis", error);
-});
 
 const funct = async () => {
   while (redisClient.status !== "reconnecting") {

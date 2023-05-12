@@ -1,4 +1,4 @@
-class Quizz {
+class Quiz {
   constructor(question, answer, explain, id, type) {
     this.question = question;
     this.answer = answer;
@@ -18,16 +18,14 @@ class Quizz {
     <img src="/img/edit.png" id="edit" alt="edit">
     <img src="/img/delete.png" id="cancel" alt="cancel">
   </div>`);
-    const $questionHeader = $(`<h1 class='quizz-question'>`).text(
-      this.question
-    );
+    const $questionHeader = $(`<h1 class='quiz-question'>`).text(this.question);
     $element.append($iconContainer);
     $element.append($questionHeader);
     return $element;
   }
 }
 
-export class TrueFalse extends Quizz {
+export class TrueFalse extends Quiz {
   constructor(question, answer, explain, id, type) {
     super(question, answer, explain, id, type);
   }
@@ -48,7 +46,7 @@ export class TrueFalse extends Quizz {
   }
 }
 
-export class MultiChoice extends Quizz {
+export class MultiChoice extends Quiz {
   constructor(question, answer, explain, options, id, type) {
     super(question, answer, explain, id, type);
     this.options = options;

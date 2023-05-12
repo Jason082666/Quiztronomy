@@ -35,7 +35,6 @@ canvas {
   margin-top: 40px;
   margin-bottom: 40px;
   display: flex;
-  /* width: 45%; */
   height: 70vh;
   display: flex;
   flex-direction: column;
@@ -79,7 +78,7 @@ label,
   color: #ffffff;
   background-color: #5edabd;
   cursor: pointer;
-  box-shadow: 0px 0px 3px 0px #ffffff;
+  box-shadow: 0 0 3px 0 #ffffff;
 }
 .enter-btn:hover,
 .login-enter:hover {

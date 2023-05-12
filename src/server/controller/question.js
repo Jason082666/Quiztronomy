@@ -2,9 +2,9 @@ import {
   insertQuestionIntoES,
   searchQuestionText,
   searchQuestionSortByTime,
-  updatePopToQueque,
+  updatePopToQueue,
 } from "../models/question.js";
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 
 export const insertQuestionByPlayerIntoES = async (req, res) => {
   const { question } = req;
@@ -17,15 +17,11 @@ export const insertQuestionByPlayerIntoES = async (req, res) => {
 export const updateNewPop = async (req, res, next) => {
   if (!req.body.popObj) return next(new errors.ParameterError(["popObj"], 400));
   const { popObj } = req.body;
-  const result = await updatePopToQueque(popObj);
-  if (!result)
-    return next(
-      new errors.CustomError("Add to queque for updating pop failed", 400)
-    );
+  await updatePopToQueue(popObj);
   res.json({ message: "success" });
 };
 
-export const searchRelatedQuizz = async (req, res, next) => {
+export const searchRelatedQuiz = async (req, res, next) => {
   if (!req.body.q || !req.body.type || !req.body.excludeIds)
     return next(new errors.ParameterError(["q", "type", "excludeIds"], 400));
   const { q, type, excludeIds } = req.body;

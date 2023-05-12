@@ -19,7 +19,7 @@ const minute = ("0" + targetDate.getMinutes()).slice(-2);
 const second = ("0" + targetDate.getSeconds()).slice(-2);
 const ampm = hour >= 12 ? "pm" : "am";
 const time = `${year}-${month}-${day} ${hour % 12}:${minute}:${second}${ampm}`;
-const quizArrray = data.quizz;
+const quizArrray = data.quiz;
 const rankArray = data.score;
 const historyArray = data.history;
 $(".game-name").text(`Game name: ${gameName}`);
@@ -168,63 +168,13 @@ historyArray.forEach((data, index) => {
   generateChart(index);
 });
 
+$(window).on("beforeunload", () => {
+  localStorage.removeItem("host");
+  localStorage.removeItem("dataId");
+});
 function generateChart(index) {
   const dataArray = historyArray[index];
   const charArray = countOptions(dataArray);
-  // Highcharts.chart(`chart-${index + 1}`, {
-  //   chart: {
-  //     type: "column",
-  //     width: 400,
-  //     styledMode: true,
-  //     options3d: {
-  //       enabled: true,
-  //       alpha: 15,
-  //       beta: 15,
-  //       depth: 30,
-  //     },
-  //     backgroundColor: "transparent",
-  //   },
-
-  //   credits: {
-  //     enabled: false,
-  //   },
-  //   exporting: {
-  //     enabled: false,
-  //   },
-  //   legend: {
-  //     enabled: false,
-  //   },
-  //   title: {
-  //     text: "Answer Analysis",
-  //   },
-  //   plotOptions: {
-  //     column: {
-  //       depth: 15,
-  //       pointWidth: 30,
-  //     },
-  //   },
-  //   xAxis: {
-  //     categories: Object.keys(charArray),
-  //     title: {
-  //       text: "Options",
-  //       margin: 20,
-  //     },
-  //   },
-  //   yAxis: {
-  //     tickInterval: 1,
-  //     title: {
-  //       text: "Number of people choosed",
-  //       margin: 40,
-  //     },
-  //   },
-  //   series: [
-  //     {
-  //       data: Object.values(charArray),
-  //       colorByPoint: true,
-  //       showInLegend: false,
-  //     },
-  //   ],
-  // });
   Highcharts.chart(`chart-${index + 1}`, {
     chart: {
       type: "column",

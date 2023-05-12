@@ -1,5 +1,4 @@
 body {
-  /* overflow: auto; */
   height: 100vh;
   width: 100vw;
   margin: 0;
@@ -118,8 +117,6 @@ img {
 h1 {
   font-size: 50px;
   color: #5edabd;
-  /* line-height: 172px;
-  vertical-align: middle; */
 }
 h2 {
   color: white;
@@ -326,7 +323,7 @@ label {
 .log-in-btn,
 .sign-up-btn {
   border: none;
-  width: 80px;
+  width: 100px;
   padding: 10px;
   border-radius: 20px;
   outline: 1px solid whitesmoke;
@@ -521,8 +518,8 @@ h2 {
 
 .carousel-caption {
   font-family: "Barlow", sans-serif;
-
-  background-color: rgba(255, 253, 253, 0.7);
+  padding: 10px;
+  background-color: rgba(255, 253, 253, 0.5);
   border-radius: 10px;
   color: black;
 }

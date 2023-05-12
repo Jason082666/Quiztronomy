@@ -1,5 +1,5 @@
-import { MyUser } from "../models/mongodb.js";
-import errors from "../models/errorhandler.js";
+import { MyUser } from "../models/mongoSchema.js";
+import errors from "../../util/errorhandler.js";
 
 export const autheticationForPlaying = async (req, res, next) => {
   if (!req.session.user)

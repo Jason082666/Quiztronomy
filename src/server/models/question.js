@@ -1,14 +1,15 @@
 import { client } from "./elasticsearch.js";
 import { calculatePopularity } from "./gaussain.js";
-import { redisClient } from "./redis.js";
-export const searchCertainId = async function (id) {
+import { redisClient } from "../../util/cacheConnection.js";
+
+const searchByCertainId = async function (id) {
   const body = await client.get({
     index: "questiontext",
     id,
   });
-  const object = body._source;
-  object.id = id;
-  return object;
+  const questionObject = body._source;
+  questionObject.id = id;
+  return questionObject;
 };
 
 export const insertQuestionIntoES = async function (body) {
@@ -20,11 +21,11 @@ export const insertQuestionIntoES = async function (body) {
   if (addIntoResponse.errors) {
     console.error("存入 Elasticsearch 發生錯誤：", addIntoResponse.errors);
   }
-  const result = await searchCertainId(addIntoResponse._id);
-  return result;
+  return await searchByCertainId(addIntoResponse._id);
 };
 
 export const searchQuestionText = async function (text, type, excludeIds) {
+  const quizNum = 3;
   const response = await client.search({
     index: "questiontext",
     body: {
@@ -90,7 +91,7 @@ export const searchQuestionText = async function (text, type, excludeIds) {
     ...hit._source,
     id: hit._id,
   }));
-  return array.splice(0, 3);
+  return array.splice(0, quizNum);
 };
 
 export const updateNewPopById = async function (id, num) {
@@ -158,16 +159,14 @@ export const searchQuestionSortByTime = async function (
       sort: [{ createTime: { order: "desc" } }],
     },
   });
-  const array = response.hits.hits.map((hit) => ({
+  const quizArray = response.hits.hits.map((hit) => ({
     ...hit._source,
     id: hit._id,
   }));
-  return array.splice(0, slice);
+  return quizArray.splice(0, slice);
 };
 
-export const updatePopToQueque = async function (object) {
-  if (redisClient.status === "reconnecting") return false;
+export const updatePopToQueue = async function (object) {
   const data = JSON.stringify(object);
   await redisClient.lpush("updatePopToES", data);
-  return true;
 };
