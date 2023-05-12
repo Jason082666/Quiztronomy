@@ -518,8 +518,8 @@ h2 {
 
 .carousel-caption {
   font-family: "Barlow", sans-serif;
-  padding: 20px;
-  background-color: rgba(255, 253, 253, 0.7);
+  padding: 10px;
+  background-color: rgba(255, 253, 253, 0.5);
   border-radius: 10px;
   color: black;
 }
