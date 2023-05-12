@@ -86,7 +86,7 @@ ul li {
   color: #ffffff;
   background-color: #5edabd;
   cursor: pointer;
-  box-shadow: 0px 0px 5px 0px #ffffff;
+  box-shadow: 0 0 5px 0 #ffffff;
 }
 
 .nav-right-container button:hover {
@@ -365,8 +365,7 @@ label {
   font-family: "Barlow", sans-serif;
   width: 70%;
   font-size: 24px;
-  padding: 10px;
-  padding-left: 15px;
+  padding: 10px 10px 10px 15px;
   margin-left: 10px;
   margin-bottom: 3px;
   border: none;
@@ -418,7 +417,6 @@ label {
 #checkD,
 .tf-option {
   -webkit-appearance: none;
-  padding: 5px;
   border-radius: 5px;
   margin-right: 10px;
   height: 20px;
@@ -465,8 +463,7 @@ label {
   font-family: "Barlow", sans-serif;
   width: 97%;
   font-size: 24px;
-  padding: 5px;
-  padding-left: 15px;
+  padding: 5px 5px 5px 15px;
   margin-top: 30px;
   margin-bottom: 3px;
   border: none;
@@ -513,8 +510,7 @@ label {
 #optionD {
   font-family: "Barlow", sans-serif;
   font-size: 24px;
-  padding: 5px;
-  padding-left: 15px;
+  padding: 5px 5px 5px 15px;
   margin-left: 5px;
   margin-bottom: 3px;
   border: none;
@@ -550,9 +546,7 @@ textarea {
   font-family: "Barlow", sans-serif;
   font-size: 24px;
   height: 150px;
-  padding: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 5px 15px;
   box-shadow: 2px 2px #0e1a3c;
 }
 .submit-btn-container {
@@ -608,8 +602,7 @@ textarea {
 #search-input {
   font-family: "Barlow", sans-serif;
   font-size: 24px;
-  padding: 5px;
-  padding-left: 15px;
+  padding: 5px 5px 5px 15px;
   margin-bottom: 3px;
   border: none;
   height: 30px;
