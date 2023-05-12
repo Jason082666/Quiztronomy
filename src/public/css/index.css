@@ -323,7 +323,7 @@ label {
 .log-in-btn,
 .sign-up-btn {
   border: none;
-  width: 80px;
+  width: 100px;
   padding: 10px;
   border-radius: 20px;
   outline: 1px solid whitesmoke;
