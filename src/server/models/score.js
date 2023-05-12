@@ -1,31 +1,24 @@
-import { redisClient } from "../models/redis.js";
-import { MyGameRoom } from "../models/mongodb.js";
+import { redisClient } from "../../util/cacheConnection.js";
+import { MyGameRoom } from "./mongoSchema.js";
+
 export const addScore = async function (roomId, score, object) {
-  if (redisClient.status === "reconnecting") return false;
   const data = JSON.stringify(object);
   const roomExist = await redisClient.exists(`${roomId} -score`);
   if (!roomExist) return false;
   const playerExist = await redisClient.zscore(`${roomId} -score`, data);
   if (!playerExist) return false;
-  const result = await redisClient.zadd(
-    `${roomId} -score`,
-    "INCR",
-    +score,
-    data
-  );
-  console.log(result);
-  const finalscore = await redisClient.zscore(`${roomId} -score`, data);
-  return finalscore;
+  await redisClient.zadd(`${roomId} -score`, "INCR", +score, data);
+  return await redisClient.zscore(`${roomId} -score`, data);
 };
 
 export const showRank = async function (roomId, ranknum) {
-  if (redisClient.status === "reconnecting") return [];
   const rank = await redisClient.zrevrange(
     `${roomId} -score`,
     0,
     -1,
     "WITHSCORES"
   );
+  // to extract only data from sorted set
   const newRank = rank.slice(0, +ranknum * 2);
   const result = [];
   for (let i = 0; i < newRank.length; i += 2) {
@@ -38,19 +31,16 @@ export const showRank = async function (roomId, ranknum) {
   return result;
 };
 
-export const addToQuequeAndUpdateMongo = async function (roomId) {
+export const addToQueueAndUpdateMongo = async function (roomId) {
   const gameRoom = await MyGameRoom.findOne({
     id: roomId,
     roomStatus: "started",
   });
-  if (!gameRoom) return null;
+  if (!gameRoom) return false;
   const uniqueId = gameRoom._id;
   gameRoom.roomStatus = "closed";
   await gameRoom.save();
-  if (redisClient.status === "reconnecting") return false;
   await redisClient.del(`${roomId}`);
-  const roomExist = await redisClient.exists(`${roomId} -score`);
-  if (!roomExist) return false;
   const uniqueObject = JSON.stringify({ uniqueId, roomId });
   await redisClient.lpush("saveScoreToMongo", uniqueObject);
   return true;

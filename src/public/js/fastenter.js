@@ -74,12 +74,12 @@ const url = window.location.href;
 const regex = /\/(\d+)$/;
 const match = url.match(regex);
 const roomId = match[1];
-console.log(roomId);
 let hostName;
 try {
   const result = await axios.get(`/api/1.0/game/room?roomId=${roomId}`);
   hostName = result.data.data;
 } catch (e) {
+  // That means the game has started, this page should not be shown.
   window.location.href = "/404.html";
 }
 
@@ -102,7 +102,9 @@ $(".enter-btn").on("click", async () => {
   }
 
   try {
-    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const enterResult = await axios.post("/api/1.0/game/entryPreparing", {
+      roomId,
+    });
     const { data } = enterResult.data;
     localStorage.setItem("userName", data.userName);
     localStorage.setItem("userId", data.userId);
@@ -119,7 +121,9 @@ $(".enter-btn").on("click", async () => {
 $(".login-enter").on("click", async (e) => {
   e.preventDefault();
   try {
-    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const enterResult = await axios.post("/api/1.0/game/entryPreparing", {
+      roomId,
+    });
     const { data } = enterResult.data;
     localStorage.setItem("userName", data.userName);
     localStorage.setItem("userId", data.userId);

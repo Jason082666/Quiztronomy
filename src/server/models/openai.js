@@ -28,7 +28,7 @@ export const generateQuestionByAI = async function (text, type) {
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant to generate quizz for me.",
+          content: "You are a helpful assistant to generate quiz for me.",
         },
         {
           role: "user",

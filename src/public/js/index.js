@@ -3,8 +3,6 @@ const { data } = userStatus.data;
 if (data.error) {
   localStorage.clear();
 }
-localStorage.removeItem("searchedId");
-localStorage.removeItem("quizzes");
 localStorage.removeItem("roomId");
 localStorage.removeItem("gameName");
 const userId = localStorage.getItem("userId");
@@ -375,7 +373,9 @@ $("#join").on("click", async (e) => {
     });
   }
   try {
-    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const enterResult = await axios.post("/api/1.0/game/entryPreparing", {
+      roomId,
+    });
     const { data } = enterResult.data;
     localStorage.setItem("userName", data.userName);
     localStorage.setItem("userId", data.userId);
@@ -414,7 +414,9 @@ $(".enter-btn").on("click", async () => {
   }
 
   try {
-    const enterResult = await axios.post("/api/1.0/game/search", { roomId });
+    const enterResult = await axios.post("/api/1.0/game/entryPreparing", {
+      roomId,
+    });
     const { data } = enterResult.data;
     localStorage.setItem("userName", data.userName);
     localStorage.setItem("userId", data.userId);

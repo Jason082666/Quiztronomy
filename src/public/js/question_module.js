@@ -1,9 +1,10 @@
-class Quizz {
-  constructor(question, answer, explain, id) {
+class Quiz {
+  constructor(question, answer, explain, id, type) {
     this.question = question;
     this.answer = answer;
     this.explain = explain;
     this.id = id;
+    this.type = type;
   }
   checkAnswer(selectedOption) {
     return this.answer.includes(selectedOption);
@@ -11,23 +12,22 @@ class Quizz {
 
   get html() {
     const $element = $(
-      `<div data-id='${this.id}' class='quiz-card quiz-card-resize' draggable="true">`
+      `<div data-id='${this.id}' data-type='${this.type}' class='quiz-card quiz-card-resize' draggable="true">`
     );
-    const $cancelBtn = $(`<div class="icon-container">
-    <img src="/img/delete.png" alt="icon">
+    const $iconContainer = $(`<div class="icon-container">
+    <img src="/img/edit.png" id="edit" alt="edit">
+    <img src="/img/delete.png" id="cancel" alt="cancel">
   </div>`);
-    const $questionHeader = $(`<h1 class='quizz-question'>`).text(
-      this.question
-    );
-    $element.append($cancelBtn);
+    const $questionHeader = $(`<h1 class='quiz-question'>`).text(this.question);
+    $element.append($iconContainer);
     $element.append($questionHeader);
     return $element;
   }
 }
 
-export class TrueFalse extends Quizz {
-  constructor(question, answer, explain, id) {
-    super(question, answer, explain, id);
+export class TrueFalse extends Quiz {
+  constructor(question, answer, explain, id, type) {
+    super(question, answer, explain, id, type);
   }
 
   get html() {
@@ -46,9 +46,9 @@ export class TrueFalse extends Quizz {
   }
 }
 
-export class MultiChoice extends Quizz {
-  constructor(question, answer, explain, options, id) {
-    super(question, answer, explain, id);
+export class MultiChoice extends Quiz {
+  constructor(question, answer, explain, options, id, type) {
+    super(question, answer, explain, id, type);
     this.options = options;
   }
   get html() {

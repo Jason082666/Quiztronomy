@@ -5,16 +5,10 @@ import {
 } from "../middleware/authentication.js";
 const router = Router();
 import { catchError } from "../../util/catcherror.js";
-import {
-  addPlayerScore,
-  // showPlayerRank,
-  // addSaveScoreTaskToQueque,
-} from "../controller/score.js";
+import { addPlayerScore } from "../controller/score.js";
 
 router
   .route("/score/add")
-  .post(catchError(autheticationForPlaying), catchError(addPlayerScore));
-// router.route("/score/search").get(catchError(showPlayerRank));
-// router.route("/score/queque").post(catchError(addSaveScoreTaskToQueque));
+  .put(catchError(autheticationForPlaying), catchError(addPlayerScore));
 
 export default router;

@@ -19,8 +19,6 @@ canvas {
 #bar-char {
   width: 50%;
   padding: 20px;
-  /* outline: 1px solid white;
-  border-radius: 20px; */
 }
 .header-container {
   background-color: rgba(0, 0, 0, 0.3);
@@ -150,6 +148,14 @@ ul a {
   cursor: pointer;
 }
 
+.suggesting-text {
+  font-size: 36px;
+  color: #5edabd;
+  width: 100%;
+  text-align: center;
+  font-family: "KiriFontNormal";
+}
+
 .btn:hover,
 .back-to-first-player:hover,
 .player-history-btn:hover,
@@ -228,7 +234,6 @@ svg text {
   color: #0e1a3c;
   background-color: #5edabd;
   font-weight: bold;
-  /* width: 30%; */
   cursor: pointer;
 }
 

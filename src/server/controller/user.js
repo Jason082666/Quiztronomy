@@ -1,19 +1,17 @@
 import { createUser, validationUser } from "../models/user.js";
-import errors from "../models/errorhandler.js";
+import errors from "../../util/errorhandler.js";
 import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
+
 export const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
-  const pass = await validationUser(email, password);
-  if (pass === undefined)
-    return next(new errors.CustomError("Email not found.", 403));
-  if (!pass) return next(new errors.CustomError("Validation failed.", 403));
-  const normObject = pass.toObject();
+  const check = await validationUser(email, password);
+  if (check.error) return next(new errors.CustomError(check.error, 401));
+  const normObject = check.toObject();
   const userId = normObject._id;
   const name = normObject.name;
-  const user = { userId, name };
-  req.session.user = user;
-  return res.json({ data: pass });
+  req.session.user = { userId, name };
+  return res.json({ data: check });
 };
 
 export const visiterLogin = async (req, res) => {
