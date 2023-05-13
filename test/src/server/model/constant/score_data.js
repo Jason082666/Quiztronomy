@@ -1,0 +1,1 @@
+export const mockPlayerObject = {"player-id":300}

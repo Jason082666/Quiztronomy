@@ -1,12 +1,12 @@
 import { redisClient } from "../../util/cacheConnection.js";
 import { MyGameRoom } from "./mongoSchema.js";
 
-export const addScore = async function (roomId, score, object) {
-  const data = JSON.stringify(object);
+export const addScore = async function (roomId, score, playerObject) {
+  const data = JSON.stringify(playerObject);
   const roomExist = await redisClient.exists(`${roomId} -score`);
   if (!roomExist) return false;
-  const playerExist = await redisClient.zscore(`${roomId} -score`, data);
-  if (!playerExist) return false;
+  const addResult = await redisClient.zscore(`${roomId} -score`, data);
+  if (!addResult) return false;
   await redisClient.zadd(`${roomId} -score`, "INCR", +score, data);
   return await redisClient.zscore(`${roomId} -score`, data);
 };
