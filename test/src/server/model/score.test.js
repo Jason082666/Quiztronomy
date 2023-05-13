@@ -5,14 +5,16 @@ import {
 } from "../../../../src/server/models/score";
 import { MyGameRoom } from "../../../../src/server/models/mongoSchema";
 import { redisClient } from "../../../../src/util/cacheConnection";
-import { mockPlayerObject } from "./constant/score_data";
+import {
+  mockPlayerObject,
+  mockRankResult,
+  mockNewRankResult,
+} from "./constant/score_data";
+import { beforeEach } from "node:test";
 
 describe("addScore", () => {
   afterEach(() => {
     jest.restoreAllMocks();
-  });
-  afterAll(async () => {
-    await redisClient.quit();
   });
   it("should return false when game room does not exist", async () => {
     const mockAddResult = true;
@@ -37,5 +39,19 @@ describe("addScore", () => {
     jest.spyOn(redisClient, "zadd").mockResolvedValue(true);
     const result = await addScore("user-id", "user-name", mockPlayerObject);
     expect(result).toBe(mockAddResult);
+  });
+});
+
+describe("showRank", () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+  afterAll(async () => {
+    await redisClient.quit();
+  });
+  it("should return array with user object ranked by their", async () => {
+    jest.spyOn(redisClient, "zrevrange").mockResolvedValue(mockRankResult);
+    const result = await showRank("room-id", 3);
+    expect(result).toEqual(mockNewRankResult);
   });
 });
