@@ -1,9 +1,9 @@
 export const mockRoom = {
   id: "room-id",
-  founder: { id: "user-id", name: "user-name" },
+  founder: { id: "userId", name: "userName" },
 };
 
-export const mockUser = { id: "user-id", name: "user-name" };
+export const mockUser = { id: "userId", name: "userName" };
 
 export const mockSignup = {
   name: "Jaosn",

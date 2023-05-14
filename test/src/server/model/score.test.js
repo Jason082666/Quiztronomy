@@ -57,9 +57,6 @@ describe("addToQueueAndUpdateMongo", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  afterAll(async () => {
-    await redisClient.quit();
-  });
   it("should return false if game room does not exist", async () => {
     const gameRoom = null;
     jest.spyOn(MyGameRoom, "findOne").mockResolvedValue(gameRoom);

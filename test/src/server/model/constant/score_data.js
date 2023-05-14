@@ -1,4 +1,4 @@
-export const mockPlayerObject = { "player-id": 300 };
+export const mockPlayerObject = { "playerId": 300 };
 
 export const mockRankResult = [
   '{"123123": "Jason"}',

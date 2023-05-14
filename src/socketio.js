@@ -257,7 +257,6 @@ export const socketio = async function (server) {
       if (dataObject.event === "updateRankAndScore") {
         socket.emit("updateRankAndScore", dataObject.data);
       }
-
       if (dataObject.event === "showQuizExplain") {
         socket.emit("showQuizExplain", dataObject.data);
       }

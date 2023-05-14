@@ -6,10 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/app.js",
-    "test": "jest"
-  },
-  "jest": {
-    "silent": true
+    "test": "jest --coverage "
   },
   "keywords": [],
   "author": "",

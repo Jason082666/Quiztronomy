@@ -96,6 +96,7 @@ export const checkRoomStatus = async function (roomId, id) {
   }
   return false;
 };
+
 export const enterRedisRoom = async function (roomId, id, name) {
   const respond = await redisClient.hset(`${roomId}-room`, id, name);
   if (respond == 0) return false;
@@ -107,7 +108,7 @@ export const enterRoom = async function (roomId, id) {
   const enterTimes = await redisClient.zincrby(`${roomId}-connected`, 1, id);
   // To prevent single account uses different browser log in same game room.
   if (+enterTimes > 1 || result == 0) return false;
-  return true;
+  return true; 
 };
 
 export const leaveRoom = async function (roomId, playerId) {
