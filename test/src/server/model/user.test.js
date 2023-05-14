@@ -10,12 +10,12 @@ import { mockRoom, mockUser, mockSignup } from "./constant/user_data";
 describe("gameHostValidation", () => {
   it("should return true when the room is found and founder details match", async () => {
     jest.spyOn(MyGameRoom, "findOne").mockResolvedValue(mockRoom);
-    const result = await gameHostValidation("user-id", "user-name", "room-id");
+    const result = await gameHostValidation("userId", "userName", "roomId");
     expect(result).toBe(true);
   });
   it("should return false when the room is not found", async () => {
     jest.spyOn(MyGameRoom, "findOne").mockResolvedValue(null);
-    const result = await gameHostValidation("user-id", "user-name", "room-id");
+    const result = await gameHostValidation("userId", "userName", "roomId");
     expect(result).toBe(false);
   });
 });
@@ -28,21 +28,21 @@ describe("validationUser", () => {
     jest.spyOn(MyUser, "findOne").mockResolvedValue(mockUser);
     const mockValidationResult = true;
     jest.spyOn(bcrypt, "compare").mockResolvedValue(mockValidationResult);
-    const result = await validationUser("user-id", "user-name", "room-id");
+    const result = await validationUser("userId", "userName", "roomId");
     expect(result).toEqual(mockUser);
   });
   it("should return { error:'Email not found!'} when the email validation failed", async () => {
     jest.spyOn(MyUser, "findOne").mockResolvedValue(null);
     const mockValidationResult = true;
     jest.spyOn(bcrypt, "compare").mockResolvedValue(mockValidationResult);
-    const result = await validationUser("user-email", "user-password");
+    const result = await validationUser("userEmail", "userPassword");
     expect(result).toEqual({ error: "Email not found!" });
   });
   it("should return {error:'Validation failed !'} when the email validation passed but password validation failed", async () => {
     jest.spyOn(MyUser, "findOne").mockResolvedValue(mockUser);
     const mockValidationResult = false;
     jest.spyOn(bcrypt, "compare").mockResolvedValue(mockValidationResult);
-    const result = await validationUser("user-email", "user-password");
+    const result = await validationUser("userEmail", "userPassword");
     expect(result).toEqual({ error: "Validation failed !" });
   });
 });
