@@ -54,6 +54,9 @@ describe("showRank", () => {
 });
 
 describe("addToQueueAndUpdateMongo", () => {
+  afterAll(async () => {
+    await redisClient.quit();
+  });
   beforeEach(() => {
     jest.clearAllMocks();
   });

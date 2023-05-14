@@ -1,9 +1,8 @@
-import { createRoom } from "../../../src/server/models/game";
-import { createGameRoom } from "../../../src/server/controller/game";
-import { ParameterError } from "../../../src/util/errorhandler";
-import { redisClient } from "../../../src/util/cacheConnection";
-jest.mock("../../../src/server/models/game");
-jest.mock("../../../src/util/errorhandler", () => {
+import { createRoom } from "../../../../src/server/models/game";
+import { createGameRoom } from "../../../../src/server/controller/game";
+import { ParameterError } from "../../../../src/util/errorhandler";
+jest.mock("../../../../src/server/models/game");
+jest.mock("../../../../src/util/errorhandler", () => {
   return {
     ParameterError: jest.fn().mockImplementation((params, statusCode) => {
       return {

@@ -1,0 +1,57 @@
+
+name: quiztronomy CI
+
+# Controls when the workflow will run
+on: 
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs: 
+      branch_name: ${{ steps.vars.outputs.branch }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Extract branch name
+        id: vars
+        run: echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+      - name: Get branch
+        env:
+          current_branch: ${{ steps.vars.outputs.branch }}
+        run: |
+          echo $current_branch
+          echo ${{ steps.vars.outputs.branch }}
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to ec2
+        uses: appleboy/ssh-action@master
+        with:
+          KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USERNAME: ${{ secrets.EC2_USER }}
+          PORT: ${{ secrets.EC2_PORT }}
+          script: |
+            cd ~/quiztronomy/Quiztronomy/src
+            
+            echo --- git pull origin ${{ needs.build.outputs.branch_name }} --- start
+            
+            git pull origin ${{ needs.build.outputs.branch_name }}
+
+            echo --- git pull origin  ${{ needs.build.outputs.branch_name }} --- done
+
+            echo --- npm install --- start
+            npm install
+            echo --- npm install --- done
+
+            echo ***check if database should be updated***
+            echo ***check if .env should be updated***
+
+            echo --- pm2 restart app.js --- start
+            pm2 restart app.js
+            pm2 save -f
+            echo --- pm2 restart app.js --- done
