@@ -1,16 +1,15 @@
-
 name: quiztronomy CI
 
 # Controls when the workflow will run
-on: 
+on:
   push:
     branches:
-      - 'dev'
-
+      - "dev"
+      - "test"
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs: 
+    outputs:
       branch_name: ${{ steps.vars.outputs.branch }}
     steps:
       - name: Checkout
@@ -37,9 +36,9 @@ jobs:
           PORT: ${{ secrets.EC2_PORT }}
           script: |
             cd ~/quiztronomy/Quiztronomy/src
-            
+
             echo --- git pull origin ${{ needs.build.outputs.branch_name }} --- start
-            
+
             git pull origin ${{ needs.build.outputs.branch_name }}
 
             echo --- git pull origin  ${{ needs.build.outputs.branch_name }} --- done
@@ -48,8 +47,8 @@ jobs:
             npm install
             echo --- npm install --- done
 
-            echo ***check if database should be updated***
-            echo ***check if .env should be updated***
+            npm run test
+            echo --- npm run test --- done
 
             echo --- pm2 restart app.js --- start
             pm2 restart app.js
