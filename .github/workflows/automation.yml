@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - "dev"
-      - "test"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,18 +36,11 @@ jobs:
           script: |
             cd ~/quiztronomy/Quiztronomy/src
 
-            echo --- git pull origin ${{ needs.build.outputs.branch_name }} --- start
+            git pull 
 
-            git pull origin ${{ needs.build.outputs.branch_name }}
-
-            echo --- git pull origin  ${{ needs.build.outputs.branch_name }} --- done
-
-            echo --- npm install --- start
             npm install
-            echo --- npm install --- done
 
             npm run test
-            echo --- npm run test --- done
 
             echo --- pm2 restart app.js --- start
             pm2 restart app.js
