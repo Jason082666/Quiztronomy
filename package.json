@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/app.js",
-    "test": "jest --coverage "
+    "test": "jest --coverage --detectOpenHandles"
   },
   "keywords": [],
   "author": "",

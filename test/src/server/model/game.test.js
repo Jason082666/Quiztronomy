@@ -15,6 +15,17 @@ import {
 } from "./constant/game_data";
 import { MyGameRoom } from "../../../../src/server/models/mongoSchema";
 import { redisClient } from "../../../../src/util/cacheConnection";
+jest.mock("../../../../src/util/cacheConnection", () => ({
+  redisClient: {
+    exists: jest.fn(),
+    hset: jest.fn(),
+    hexists: jest.fn(),
+    hdel: jest.fn(),
+    hget: jest.fn(),
+    rpush: jest.fn(),
+    zincrby: jest.fn(),
+  },
+}));
 
 describe("gameRoomExistence", () => {
   it("should return true when room exists", async () => {
@@ -165,9 +176,6 @@ describe("enterRedisRoom", () => {
 });
 
 describe("enterRoom", () => {
-  afterAll(async () => {
-    await redisClient.quit();
-  });
   it("should return false when room doesn't exist", async () => {
     jest.spyOn(redisClient, "exists").mockResolvedValue(0);
     jest.spyOn(redisClient, "zincrby").mockResolvedValue(1);

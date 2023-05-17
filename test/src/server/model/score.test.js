@@ -11,6 +11,17 @@ import {
   mockNewRankResult,
 } from "./constant/score_data";
 import { beforeEach } from "node:test";
+jest.mock("../../../../src/util/cacheConnection", () => ({
+  redisClient: {
+    exists: jest.fn(),
+    zscore: jest.fn(),
+    zadd: jest.fn(),
+    zrevrange: jest.fn(),
+    del: jest.fn(),
+    lpush: jest.fn(),
+    quit: jest.fn(),
+  },
+}));
 
 describe("addScore", () => {
   afterEach(() => {
@@ -56,9 +67,6 @@ describe("showRank", () => {
 describe("addToQueueAndUpdateMongo", () => {
   afterAll(async () => {
     await redisClient.quit();
-  });
-  beforeEach(() => {
-    jest.clearAllMocks();
   });
   it("should return false if game room does not exist", async () => {
     const gameRoom = null;
