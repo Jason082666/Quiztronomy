@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { MultiChoice, TrueFalse } from "./question_module.js";
+import { MultiChoice, TrueFalse } from "./util/question_module.js";
 localStorage.setItem("searchedId", "[]");
 localStorage.setItem("quizes", "{}");
 $(window).on("beforeunload", () => {
