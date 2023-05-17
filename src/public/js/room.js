@@ -1,7 +1,7 @@
 const socket = io();
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
-import { Queue } from "./queue.js";
+import { Queue } from "./util/queue.js";
 const url = window.location.href;
 const regex = /\/(\d+)$/;
 const match = url.match(regex);
