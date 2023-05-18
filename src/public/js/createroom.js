@@ -232,7 +232,7 @@ $(".create-container").on("click", "#search-submit-by-ai", async function () {
     $(".load-main").hide();
     return Toast.fire({
       icon: "warning",
-      title: "Please retry again.",
+      title: "Please wait fot the cool down and retry again.",
     });
   }
   const searched = JSON.parse(localStorage.getItem("searchedId"));
