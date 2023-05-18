@@ -228,11 +228,17 @@ $(".create-container").on("keydown", "#search-input", async function (e) {
 
 $(".create-container").on("click", "#search-submit-by-ai", async function () {
   const data = await searchByAI();
+  if (data === "fail" || !data) {
+    $(".load-main").hide();
+    return Toast.fire({
+      icon: "warning",
+      title: "Please retry again.",
+    });
+  }
   const searched = JSON.parse(localStorage.getItem("searchedId"));
   searched.push(data.id);
   localStorage.setItem("searchedId", JSON.stringify(searched));
   console.log("data", data);
-  if (!data) return;
   if (["TF-CH", "TF-EN"].includes(data.type)) {
     const quiz = new TrueFalse(
       data.question,
@@ -505,7 +511,6 @@ const search = async () => {
 
 $(".cancel-fetch-ai").on("click", () => {
   cancelFetchOpenAI();
-  $(".load-main").hide();
 });
 
 const searchByAI = async () => {
@@ -542,6 +547,7 @@ const searchByAI = async () => {
     if (axios.isCancel()) {
       return false;
     }
+    return "fail";
   }
 };
 const cancelFetchOpenAI = () => {
