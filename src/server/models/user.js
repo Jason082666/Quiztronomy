@@ -13,6 +13,7 @@ export const createUser = async function (name, email, password) {
   const userData = { name, email, password: hash };
   return await MyUser.create(userData);
 };
+
 export const validationUser = async function (email, password) {
   const user = await MyUser.findOne({
     email,
