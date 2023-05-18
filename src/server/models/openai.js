@@ -16,7 +16,7 @@ export const generateQuestionByAI = async function (text, type) {
   let timer;
   const timeoutPromise = new Promise((resolve, reject) => {
     timer = setTimeout(() => {
-      console.log("Please retry again");
+      console.error("Please retry again");
       reject({ error: "Please retry again!" });
     }, TIMEOUT);
   });

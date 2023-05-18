@@ -58,7 +58,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.error(err);
   const type = err.type || "system error";
   const statusCode = err.statusCode || 500;
   const status = err.status || "error";
