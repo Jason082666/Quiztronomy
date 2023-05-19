@@ -358,7 +358,7 @@ Highcharts.chart("pie-char", {
     enabled: false,
   },
   title: {
-    text: "Your rank records",
+    text: "Last six rank records",
     align: "center",
     style: {
       fontSize: "24px",
