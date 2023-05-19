@@ -30,6 +30,7 @@ As an game host, you can either create your own quiz manually or search from our
   ![image](https://quiztronomy.xyz/img/prepare.gif)
 
 - Host view
+
   ![image](https://quiztronomy.xyz/img/host.gif)
 
 ### Be a game player :
@@ -37,6 +38,7 @@ As an game host, you can either create your own quiz manually or search from our
 You don't need to sign up to play the game, but you can only view the game history with an account !
 
 - Playing view:
+
   ![image](https://quiztronomy.xyz/img/player.gif)
 
 ---
@@ -164,7 +166,7 @@ You don't need to sign up to play the game, but you can only view the game histo
 Reach me if you have further question
 
 - Name: 蔡見昇
-- Email: see89826@gmail.com<span><a href="mailto:see89826@gmail.com">Send email</a></span>
+- Email: <span><a href="mailto:see89826@gmail.com">see89826@gmail.com</a></span>
 - Linkedin: [Jason Tsai](https://www.linkedin.com/in/jason-tsai-812b14200/)
 
 Enjoy your thrilling gaming experience !
