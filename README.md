@@ -24,11 +24,102 @@ Password: 123456789
 - Cached game history data in Redis to optimize loading time of game-record page
 - Established stateless server by leveraging `EC2, Mongo Atlas, ElastiCache, CloudWatch Logs` to achieve scalability
 
-## Structure
+## Back-end Structure
 
 <img src="https://quiztronomy.xyz/img/structure.png">
 
+## Database Schema
+
+### Mongo Atlas
+
+- GameRoom collection:
+
+```js
+{
+  _id: ObjectId;
+  id: string;
+  name: string;
+  founder: {
+    id: string;
+    name: string;
+  }
+  roomStatus: string;
+  history: [
+    {
+      question: string,
+      date: date,
+      answer: [string],
+      explain: string,
+      type: string,
+      id: string,
+      _id: ObjectId,
+    },
+  ];
+  score: [
+    {
+      id: string,
+      name: string,
+      score: number,
+    },
+  ];
+}
+```
+
+- User collection:
+
+```js
+{
+  _id: ObjectId;
+  name: string;
+  email: string;
+  password: string;
+  totalGame: number;
+  totalScore: number;
+  history: [
+    {
+      roomId: string,
+      roomName: string,
+      date: date,
+      host: string,
+      rank: number,
+      score: string,
+    },
+  ];
+  hostHistory: [
+    {
+      roomId: ObjectId,
+      roomName: string,
+      date: date,
+    },
+  ];
+}
+```
+
+### ElasticSearch
+
+- quiz
+
+```js
+{
+  question: string;
+  option: {
+    A: string;
+    B: string;
+    C: string;
+    D: string;
+  }
+  answer: [string];
+  explain: string;
+  type: string;
+  timestamp: date;
+  createTime: date;
+  popularity: number;
+}
+```
+
 ## Roadmap
+
+- Implement RWD on the website, make it prettier on mobile
 
 - Ehance unit test and interation test coverage
 - Use OpenAI API to tag all the users search terms, choose the top 5 terms, and feed OpenAI to generate new quizzes, enrich system quizzes
