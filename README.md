@@ -10,9 +10,34 @@ Quiztronomy is a combination of QA & gaming platform designed for users to creat
 
 ### Player account:
 
-Email: elon@gmail.com
+- `Email: elon@gmail.com `
+- `Password: 123456789 `
 
-Password: 123456789
+![image](https://quiztronomy.xyz/img/login.gif)
+
+### Be a game host :
+
+As an game host, you can either create your own quiz manually or search from our system, furthermore, we offer `quiz-generator` robot to generate the quiz automatically for you !
+
+- Create your own quiz by hand
+  - ![image](https://quiztronomy.xyz/img/manal-generate.gif)
+- Create your own quiz by robot
+
+  - ![image](https://quiztronomy.xyz/img/ai-generate.gif)
+
+- Adjust the quiz order and quiz time
+
+  - ![image](https://quiztronomy.xyz/img/prepare.gif)
+
+- Host view
+  - ![image](https://quiztronomy.xyz/img/host.gif)
+
+### Be a game player :
+
+You don't need to sign up to play the game, but you can only view the game history with an account !
+
+- Playing view:
+  - ![image](https://quiztronomy.xyz/img/player.gif)
 
 ## Feature
 
