@@ -69,9 +69,11 @@ You don't need to sign up to play the game, but you can only view the game histo
         (1 - decayFactor) * currentLikes + decayFactor * decay * previousPopularity
       );
     }
-    "The function starts by defining two constants: decayFactor and decayWindow. decayFactor represents the weight given to the decayed popularity, while decayWindow determines the rate at which the popularity decays. the function computes the estimated popularity by combining the current likes and the decayed previous popularity. The current likes are weighted by 1 - decayFactor, while the decayed previous popularity is weighted by decayFactor * decay. The result is the sum of these two components".
     ```
-  - Step 2: Get total scores by suming up the quiz popularity  score and the fuzzy search score, then limit top six quizzes for recommendation
+
+    ```
+    The function starts by defining two constants: decayFactor and decayWindow. decayFactor represents the weight given to the decayed popularity, while decayWindow determines the rate at which the popularity decays. the function computes the estimated popularity by combining the current likes and the decayed previous popularity. The current likes are weighted by 1 - decayFactor, while the decayed previous popularity is weighted by decayFactor * decay. The result is the sum of these two components.
+  - Step 2: Get total scores by suming up the quiz popularity  score and the fuzzy search score, then limit top five quizzes for recommendation
     ```js
     Total score for recommendation = 0.5 * quiz popularity score + 0.5 * fuzzy search score
     ```    
