@@ -20,24 +20,26 @@ Quiztronomy is a combination of QA & gaming platform designed for users to creat
 As an game host, you can either create your own quiz manually or search from our system, furthermore, we offer `quiz-generator` robot to generate the quiz automatically for you !
 
 - Create your own quiz by hand
-  - ![image](https://quiztronomy.xyz/img/manal-generate.gif)
+  ![image](https://quiztronomy.xyz/img/manal-generate.gif)
 - Create your own quiz by robot
 
-  - ![image](https://quiztronomy.xyz/img/ai-generate.gif)
+  ![image](https://quiztronomy.xyz/img/ai-generate.gif)
 
 - Adjust the quiz order and quiz time
 
-  - ![image](https://quiztronomy.xyz/img/prepare.gif)
+  ![image](https://quiztronomy.xyz/img/prepare.gif)
 
 - Host view
-  - ![image](https://quiztronomy.xyz/img/host.gif)
+  ![image](https://quiztronomy.xyz/img/host.gif)
 
 ### Be a game player :
 
 You don't need to sign up to play the game, but you can only view the game history with an account !
 
 - Playing view:
-  - ![image](https://quiztronomy.xyz/img/player.gif)
+  ![image](https://quiztronomy.xyz/img/player.gif)
+
+---
 
 ## Feature
 
@@ -166,3 +168,11 @@ Reach me if you have further question
 - Linkedin: [Jason Tsai](https://www.linkedin.com/in/jason-tsai-812b14200/)
 
 Enjoy your thrilling gaming experience !
+
+## Contribution
+
+Special thanks to <span><a href="https://www.freepik.com/"> freepik</a></span> for offering free image usage.
+
+## License
+
+Quiztronomy is licensed under <span><a href="https://github.com/Jason082666/Quiztronomy/blob/main/LICENSE">MIT</a></span>
