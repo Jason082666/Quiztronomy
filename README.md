@@ -46,6 +46,36 @@ You don't need to sign up to play the game, but you can only view the game histo
 ## Feature
 
 - Implemented gaussian-based decaying recommendation algorithm on quiz fuzzy search feature via `Elasticsearch`
+
+  - Step 1 : Caculate the popularity `(Decay by time)`, if user pick the quiz for gaming, this quiz's currentLikes + `1.5`, or the currentLikes - `0.5`
+
+    ```js
+    const decayFactor = 0.5;
+    const decayWindow = 604800000;
+
+    function gaussian(x, sigma) {
+      return Math.exp(-(x ** 2) / (2 * sigma ** 2));
+    }
+
+    export function calculatePopularity(
+      currentLikes,
+      previousPopularity,
+      lastUpdate
+    ) {
+      const currentTime = Date.now();
+      const popularityAge = currentTime - lastUpdate;
+      const decay = gaussian(popularityAge, decayWindow);
+      return (
+        (1 - decayFactor) * currentLikes + decayFactor * decay * previousPopularity
+      );
+    }
+    "The function starts by defining two constants: decayFactor and decayWindow. decayFactor represents the weight given to the decayed popularity, while decayWindow determines the rate at which the popularity decays. the function computes the estimated popularity by combining the current likes and the decayed previous popularity. The current likes are weighted by 1 - decayFactor, while the decayed previous popularity is weighted by decayFactor * decay. The result is the sum of these two components".
+    ```
+  - Step 2: Get total scores by suming up the quiz popularity  score and the fuzzy search score, then limit top six quizzes for recommendation
+    ```js
+    Total score for recommendation = 0.5 * quiz popularity score + 0.5 * fuzzy search score
+    ```    
+
 - Integrated `OpenAI API` to fulfill quiz automated-generation feature
 - Created game room segmentation for game host and multiple players by `Socket.IO`
 - Real-time ranking through `Redis sorted sets` for gaming excitement augmentation
