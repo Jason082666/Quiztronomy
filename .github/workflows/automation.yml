@@ -24,25 +24,25 @@ jobs:
           echo ${{ steps.vars.outputs.branch }}
       - name: unit test
         run: npm install && npm run test    
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Deploy to ec2
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         KEY: ${{ secrets.EC2_SSH_KEY }}
-  #         HOST: ${{ secrets.EC2_HOST }}
-  #         USERNAME: ${{ secrets.EC2_USER }}
-  #         PORT: ${{ secrets.EC2_PORT }}
-  #         script: |
-  #           cd ~/quiztronomy/Quiztronomy/src
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to ec2
+        uses: appleboy/ssh-action@master
+        with:
+          KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USERNAME: ${{ secrets.EC2_USER }}
+          PORT: ${{ secrets.EC2_PORT }}
+          script: |
+            cd ~/quiztronomy/Quiztronomy/src
 
-  #           git pull 
+            git pull 
 
-  #           npm install
+            npm install
 
-  #           echo --- pm2 restart app.js --- start
-  #           pm2 restart app.js
-  #           pm2 save -f
-  #           echo --- pm2 restart app.js --- done
+            echo --- pm2 restart app.js --- start
+            pm2 restart app.js
+            pm2 save -f
+            echo --- pm2 restart app.js --- done
