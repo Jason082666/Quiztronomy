@@ -15,7 +15,7 @@ import {
 } from "./constant/game_data";
 import { MyGameRoom } from "../../../../src/server/models/mongoSchema";
 import { redisClient } from "../../../../src/util/cacheConnection";
-jest.mock("../../../../src/util/cacheConnection", () => ({
+jest.molck("../../../../src/util/cacheConnection", () => ({
   redisClient: {
     exists: jest.fn(),
     hset: jest.fn(),

@@ -42,8 +42,6 @@ jobs:
 
   #           npm install
 
-  #           npm run test
-
   #           echo --- pm2 restart app.js --- start
   #           pm2 restart app.js
   #           pm2 save -f
