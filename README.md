@@ -1,8 +1,8 @@
 # Quiztronomy
-<img alt="AppVeyor" src="https://img.shields.io/badge/License-MTI-GREEN">
+<div><img alt="AppVeyor" src="https://img.shields.io/badge/License-MTI-GREEN" display:inine>
 <img alt="AppVeyor" src="https://img.shields.io/badge/laguage-javscript-red">
 <img alt="AppVeyor" src="https://img.shields.io/badge/release-v1.0.0-blue">
-<img alt="AppVeyor" src="https://img.shields.io/badge/author-Jason082666-yellow">
+<img alt="AppVeyor" src="https://img.shields.io/badge/author-Jason082666-yellow"></div>
 
 
 An interactive gaming platform for earning and playing.
