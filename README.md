@@ -100,11 +100,11 @@ You don't need to sign up to play the game, but you can only view the game histo
 
 ## Database Schema
 
-### Mongo Atlas <span><img src="https://quiztronomy.xyz/img/mongo.gif"></span>
+### Mongo Atlas 
 
 <img src="https://quiztronomy.xyz/img/db_structure.png">
 
-### ElasticSearch <span><img src="https://quiztronomy.xyz/img/es.png" ></span>
+### ElasticSearch 
 
 - quiz
 <img src="https://quiztronomy.xyz/img/db_structure2.png">
