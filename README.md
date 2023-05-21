@@ -104,7 +104,7 @@ You don't need to sign up to play the game, but you can only view the game histo
 
 <img src="https://quiztronomy.xyz/img/db_structure.png">
 
-### ElasticSearch 
+### Elasticsearch 
 
 - quiz
 <img src="https://quiztronomy.xyz/img/db_structure2.png">
