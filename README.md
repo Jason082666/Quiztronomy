@@ -120,7 +120,8 @@ See <a href="https://github.com/Jason082666/Quiztronomy/tree/main/pressure_test/
   - Connection duration: 60 sec
   - Socket connected time: 60 sec
   - test the maximum socket connections per second the server can host
-- testing result: \* bottleneck - CPU
+- testing result:
+  - bottleneck - CPU
 <table>
   <tr>
     <th>Number of EC2</th>
