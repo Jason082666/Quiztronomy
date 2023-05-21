@@ -1,0 +1,21 @@
+# my-scenario.yml
+config:
+  target: "https://quiztronomy.xyz/"
+  phases:
+    - duration: 60
+      arrivalRate: 50
+  engines:
+    socketio-v3: {}
+
+scenarios:
+  - name: My sample scenario
+    engine: socketio-v3
+    flow:
+      - emit:
+          channel: "join"
+          data:
+            userId: "123456789012345678901234567890123456"
+            userName: "Jason"
+            roomId: "96472980"
+      - think: 60
+      # do nothing for 30 seconds then disconnect
