@@ -1,9 +1,9 @@
 # Quiztronomy
+
 <div><img alt="AppVeyor" src="https://img.shields.io/badge/License-MIT-GREEN" display:inine>
 <img alt="AppVeyor" src="https://img.shields.io/badge/laguage-javascript-red">
 <img alt="AppVeyor" src="https://img.shields.io/badge/release-v1.0.0-blue">
 <img alt="AppVeyor" src="https://img.shields.io/badge/author-Jason082666-yellow"></div>
-
 
 An interactive gaming platform for earning and playing.
 
@@ -71,21 +71,19 @@ You don't need to sign up to play the game, but you can only view the game histo
       const popularityAge = currentTime - lastUpdate;
       const decay = gaussian(popularityAge, decayWindow);
       return (
-        (1 - decayFactor) * currentLikes + decayFactor * decay * previousPopularity
+        (1 - decayFactor) * currentLikes +
+        decayFactor * decay * previousPopularity
       );
     }
     ```
 
+    > The function starts by defining two constants: decayFactor and decayWindow. decayFactor represents the weight given to the decayed popularity, while decayWindow determines the rate at which the popularity decays. the function computes the estimated popularity by combining the current likes and the decayed previous popularity. The current likes are weighted by 1 - decayFactor, while the decayed previous popularity is weighted by decayFactor \* decay. The result is the sum of these two components.
 
-    >The function starts by defining two constants: decayFactor and decayWindow. decayFactor represents the weight given to the decayed popularity, while decayWindow determines the rate at which the popularity decays. the function computes the estimated popularity by combining the current likes and the decayed previous popularity. The current likes are weighted by 1 - decayFactor, while the decayed previous popularity is weighted by decayFactor * decay. The result is the sum of these two components.
-
-
-  - Step 2: Get total scores by suming up the quiz popularity  score and the fuzzy search score, then limit top five quizzes for recommendation
-
+  - Step 2: Get total scores by suming up the quiz popularity score and the fuzzy search score, then limit top five quizzes for recommendation
 
     ```js
     Total score for recommendation = 0.5 * quiz popularity score + 0.5 * fuzzy search score
-    ```    
+    ```
 
 - Integrated `OpenAI API` to fulfill quiz automated-generation feature
 - Created game room segmentation for game host and multiple players by `Socket.IO`
@@ -100,15 +98,51 @@ You don't need to sign up to play the game, but you can only view the game histo
 
 ## Database Schema
 
-### Mongo Atlas 
+### Mongo Atlas
+
+- gameRoom collection, user collection
 
 <img src="https://quiztronomy.xyz/img/db_structure.png">
 
-### Elasticsearch 
+### Elasticsearch
 
-- quiz
+- quiz index
+
 <img src="https://quiztronomy.xyz/img/db_structure2.png">
 
+## Pressure test result
+
+Use Artillery to mock socket connection for pressure testing
+
+See <a href="https://github.com/Jason082666/Quiztronomy/tree/main/pressure_test/socket">pressure test script </a> for further information
+
+- testing scenario:
+  - Connection duration: 60 sec
+  - Socket connected time: 60 sec
+  - test the maximum socket connections per second the server can host
+- testing result: \* bottleneck - CPU
+<table>
+  <tr>
+    <th>Number of EC2</th>
+     <th>EC2 instance type</th>
+    <th>maximum socket connections</th>
+  </tr>
+  <tr>
+    <td>1</td>
+     <td>t2 micro</td>
+    <td>60 connections per second </td>
+  </tr>
+  <tr>
+    <td>2</td>
+       <td>t2 micro</td>
+    <td>100 connections per second</td>
+  </tr>
+    <tr>
+    <td>3</td>
+       <td>t2 micro</td>
+    <td>150 connections per second</td>
+  </tr>
+</table>
 
 ## Roadmap
 
