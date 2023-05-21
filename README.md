@@ -1,6 +1,6 @@
 # Quiztronomy
-<div><img alt="AppVeyor" src="https://img.shields.io/badge/License-MTI-GREEN" display:inine>
-<img alt="AppVeyor" src="https://img.shields.io/badge/laguage-javscript-red">
+<div><img alt="AppVeyor" src="https://img.shields.io/badge/License-MIT-GREEN" display:inine>
+<img alt="AppVeyor" src="https://img.shields.io/badge/laguage-javascript-red">
 <img alt="AppVeyor" src="https://img.shields.io/badge/release-v1.0.0-blue">
 <img alt="AppVeyor" src="https://img.shields.io/badge/author-Jason082666-yellow"></div>
 
@@ -102,90 +102,13 @@ You don't need to sign up to play the game, but you can only view the game histo
 
 ### Mongo Atlas
 
-- GameRoom collection:
-
-```js
-{
-  _id: ObjectId;
-  id: string;
-  name: string;
-  founder: {
-    id: string;
-    name: string;
-  }
-  roomStatus: string;
-  history: [
-    {
-      question: string,
-      date: date,
-      answer: [string],
-      explain: string,
-      type: string,
-      id: string,
-      _id: ObjectId,
-    },
-  ];
-  score: [
-    {
-      id: string,
-      name: string,
-      score: number,
-    },
-  ];
-}
-```
-
-- User collection:
-
-```js
-{
-  _id: ObjectId;
-  name: string;
-  email: string;
-  password: string;
-  totalGame: number;
-  totalScore: number;
-  history: [
-    {
-      roomId: string,
-      roomName: string,
-      date: date,
-      host: string,
-      rank: number,
-      score: string,
-    },
-  ];
-  hostHistory: [
-    {
-      roomId: ObjectId,
-      roomName: string,
-      date: date,
-    },
-  ];
-}
-```
+<img src="https://quiztronomy.xyz/img/db_structure.png">
 
 ### ElasticSearch
 
 - quiz
+<img src="https://quiztronomy.xyz/img/db_structure2.png">
 
-```js
-{
-  question: string;
-  option: {
-    A: string;
-    B: string;
-    C: string;
-    D: string;
-  }
-  answer: [string];
-  explain: string;
-  type: string;
-  timestamp: date;
-  createTime: date;
-  popularity: number;
-}
-```
 
 ## Roadmap
 
