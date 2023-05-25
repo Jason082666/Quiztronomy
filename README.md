@@ -149,7 +149,7 @@ See <a href="https://github.com/Jason082666/Quiztronomy/tree/main/pressure_test/
 
 - Implement RWD on the website, make it prettier on mobile
 
-- Ehance unit test and interation test coverage
+- Enhance unit test and interation test coverage
 - Use OpenAI API to tag all the users search terms, choose the top 5 terms, and feed OpenAI to generate new quizzes, enrich system quizzes
 
 - Add more quiz type to raise user experience
