@@ -131,23 +131,20 @@ export const socketio = async function (server) {
       pubClient.publish(roomId, message);
     });
 
-    socket.on(
-      "getAnswer",
-      async ({ chooseOption, score, quizNum }) => {
-        const { roomId, userId } = socket;
-        await writePlayerAnswerIntoRedisList(
-          roomId,
-          userId,
-          quizNum - 2,
-          chooseOption
-        );
-        const message = JSON.stringify({
-          event: "updateRankAndScore",
-          data: { score, userId },
-        });
-        await pubClient.publish(roomId, message);
-      }
-    );
+    socket.on("getAnswer", async ({ chooseOption, score, quizNum }) => {
+      const { roomId, userId } = socket;
+      await writePlayerAnswerIntoRedisList(
+        roomId,
+        userId,
+        quizNum - 2,
+        chooseOption
+      );
+      const message = JSON.stringify({
+        event: "updateRankAndScore",
+        data: { score, userId },
+      });
+      await pubClient.publish(roomId, message);
+    });
 
     socket.on("timeout", async () => {
       const { roomId } = socket;
@@ -237,35 +234,39 @@ export const socketio = async function (server) {
     subClient.on("message", async (roomId, message) => {
       if (roomId !== socket.roomId) return;
       const dataObject = JSON.parse(message);
-      if (dataObject.event === "userJoined") {
-        const host = dataObject.data[0];
-        const users = dataObject.data[1];
-        socket.emit("userJoined", [host, users]);
-      }
-      if (dataObject.event === "hostLeave") {
-        socket.emit("hostLeave");
-      }
-      if (dataObject.event === "userLeft") {
-        socket.emit("userLeft", dataObject.data);
-      }
-      if (dataObject.event === "loadFirstQuiz") {
-        socket.emit("loadFirstQuiz", dataObject.data);
-      }
-      if (dataObject.event === "showQuiz") {
-        socket.emit("showQuiz", dataObject.data);
-      }
-      if (dataObject.event === "updateRankAndScore") {
-        socket.emit("updateRankAndScore", dataObject.data);
-      }
-      if (dataObject.event === "showQuizExplain") {
-        socket.emit("showQuizExplain", dataObject.data);
-      }
-      if (dataObject.event === "clearCountdown") {
-        socket.emit("clearCountdown");
-      }
-      if (dataObject.event === "showFinalScore") {
-        socket.emit("showFinalScore", dataObject.data);
-      }
+      subClientObject[dataObject.event](socket, dataObject);
     });
   });
+};
+
+const subClientObject = {
+  hostLeave: (socket, data) => {
+    socket.emit("hostLeave");
+  },
+  userJoined: (socket, data) => {
+    const host = data.data[0];
+    const users = data.data[1];
+    socket.emit("userJoined", [host, users]);
+  },
+  userLeft: (socket, data) => {
+    socket.emit("userLeft", data.data);
+  },
+  loadFirstQuiz: (socket, data) => {
+    socket.emit("loadFirstQuiz", data.data);
+  },
+  showQuiz: (socket, data) => {
+    socket.emit("showQuiz", data.data);
+  },
+  updateRankAndScore: (socket, data) => {
+    socket.emit("updateRankAndScore", data.data);
+  },
+  showQuizExplain: (socket, data) => {
+    socket.emit("showQuizExplain", data.data);
+  },
+  clearCountdown: (socket, data) => {
+    socket.emit("clearCountdown");
+  },
+  showFinalScore: (socket, data) => {
+    socket.emit("showFinalScore", data.data);
+  },
 };
