@@ -25,6 +25,7 @@
     "mongoose": "^7.0.3",
     "nodemon": "^2.0.22",
     "openai": "^3.2.1",
+    "simplesend": "^1.0.10",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
     "uuid": "^9.0.0"

@@ -10,9 +10,9 @@ const funct = async () => {
   while (redisClient.status !== "reconnecting") {
     const object = await redisClient.brpop("saveScoreToMongo", 1);
     if (object) {
+      const parseObject = JSON.parse(object[1]);
+      const { roomId, uniqueId, errorCount } = parseObject;
       try {
-        const parseObject = JSON.parse(object[1]);
-        const { roomId, uniqueId } = parseObject;
         const rank = await redisClient.zrevrange(
           `${roomId} -score`,
           0,
@@ -50,7 +50,18 @@ const funct = async () => {
         // Add this game history into Cache
         await addGameInfoToRedis(uniqueId, gameRoomData);
       } catch (e) {
-        console.error(e);
+        console.log(e);
+        errorCount++;
+        if (errorCount >= 5) {
+          console.error(e);
+          redisClient.lpush("error", JSON.stringify(parseObject));
+        } else {
+          parseObject.errorCount = errorCount;
+          await redisClient.lpush(
+            "saveScoreToMongo",
+            JSON.stringify(parseObject)
+          );
+        }
       }
     }
   }

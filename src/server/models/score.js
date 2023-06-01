@@ -41,7 +41,7 @@ export const addToQueueAndUpdateMongo = async function (roomId) {
   gameRoom.roomStatus = "closed";
   await gameRoom.save();
   await redisClient.del(`${roomId}`);
-  const uniqueObject = JSON.stringify({ uniqueId, roomId });
+  const uniqueObject = JSON.stringify({ uniqueId, roomId, errorCount: 0 });
   await redisClient.lpush("saveScoreToMongo", uniqueObject);
   return true;
 };
