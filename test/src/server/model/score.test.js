@@ -100,7 +100,7 @@ describe("addToQueueAndUpdateMongo", () => {
     expect(redisClient.del).toHaveBeenCalledWith("roomId");
     expect(redisClient.lpush).toHaveBeenCalledWith(
       "saveScoreToMongo",
-      JSON.stringify({ uniqueId: "uniqueId", roomId: "roomId" })
+      JSON.stringify({ uniqueId: "uniqueId", roomId: "roomId", errorCount: 0 })
     );
   });
 });
