@@ -146,19 +146,16 @@ See <a href="https://github.com/Jason082666/Quiztronomy/tree/main/pressure_test/
 </table>
 
 ## Roadmap
+- Use OpenAI API to auto-tag hot quizzes, and feed OPENAI to generate more related quizzes
 
-- Implement RWD on the website, make it prettier on mobile
-
-- Enhance unit test and interation test coverage
-- Use OpenAI API to tag all the users search terms, choose the top 5 terms, and feed OpenAI to generate new quizzes, enrich system quizzes
+- Create social community for players to exchange knowledge
 
 - Add more quiz type to raise user experience
 
-- Offer "change name" functionality for user to change their name
-
 - Add photo uploading functionality, and show the personalized photo during the game
 
-- Add "Forgot Password" functionality
+- Record user's game quiz history, let user to get the quiz from their history easily
+
 
 ## Contact Information
 
