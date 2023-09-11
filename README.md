@@ -25,7 +25,7 @@ Quiztronomy is a combination of QA & gaming platform designed for users to creat
 As an game host, you can either create your own quiz manually or search from our system, furthermore, we offer `quiz-generator` robot to generate the quiz automatically for you !
 
 - Create your own quiz by hand
-  ![image](https://quiztronomy.xyz/img/manal-generate.gif)
+  ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/host.gif)     
 - Create your own quiz by robot
 
   ![image](https://quiztronomy.xyz/img/ai-generate.gif)
