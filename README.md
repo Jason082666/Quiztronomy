@@ -18,25 +18,25 @@ Quiztronomy is a combination of QA & gaming platform designed for users to creat
 - `Email: elon@gmail.com `
 - `Password: 123456789 `
 
-![image](https://quiztronomy.xyz/img/login.gif)
+![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/login.gif)
 
 ### Be a game host :
 
 As an game host, you can either create your own quiz manually or search from our system, furthermore, we offer `quiz-generator` robot to generate the quiz automatically for you !
 
 - Create your own quiz by hand
-  ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/host.gif)     
+  ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/manal-generate.gif)     
 - Create your own quiz by robot
 
   ![image](https://quiztronomy.xyz/img/ai-generate.gif)
 
 - Adjust the quiz order and quiz time
 
-  ![image](https://quiztronomy.xyz/img/prepare.gif)
+  ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/prepare.gif)
 
 - Host view
 
-  ![image](https://quiztronomy.xyz/img/host.gif)
+  ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/host.gif)
 
 ### Be a game player :
 
@@ -44,7 +44,7 @@ You don't need to sign up to play the game, but you can only view the game histo
 
 - Playing view:
 
-  ![image](https://quiztronomy.xyz/img/player.gif)
+  ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/player.gif)
 
 ---
 
@@ -102,13 +102,13 @@ You don't need to sign up to play the game, but you can only view the game histo
 
 - gameRoom collection, user collection
 
-<img src="https://quiztronomy.xyz/img/db_structure.png">
+<img src="https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/db_structure.png">
 
 ### Elasticsearch
 
 - quiz index
 
-<img src="https://quiztronomy.xyz/img/db_structure2.png">
+<img src="https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/db_structure2.png">
 
 ## Pressure test result
 
