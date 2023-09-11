@@ -94,7 +94,7 @@ You don't need to sign up to play the game, but you can only view the game histo
 
 ## Back-end Structure
 
-<img src="https://quiztronomy.xyz/img/structure.png">
+<img src="https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/structure.png">
 
 ## Database Schema
 
