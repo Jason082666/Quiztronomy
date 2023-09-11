@@ -28,7 +28,7 @@ As an game host, you can either create your own quiz manually or search from our
   ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/manal-generate.gif)     
 - Create your own quiz by robot
 
-  ![image](https://quiztronomy.xyz/img/ai-generate.gif)
+  ![image](https://github.com/Jason082666/Quiztronomy/blob/main/src/public/static/ai-generate.gif)
 
 - Adjust the quiz order and quiz time
 
